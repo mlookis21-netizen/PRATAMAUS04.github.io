@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info & Komunikasi</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+      color: #222;
+    }
+
+    header {
+      background: #1877f2;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    nav {
+      background: white;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    nav a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #1877f2;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 25px auto;
+      padding: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    button {
+      background: #1877f2;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Info & Komunikasi</h1>
+    <p>Tempat berbagi informasi dan berkomunikasi</p>
+  </header>
+
+  <nav>
+    <a href="#info">Info</a>
+    <a href="#chat">Chat</a>
+    <a href="#tentang">Tentang</a>
+  </nav>
+
+  <div class="container">
+
+    <div class="card" id="info">
+      <h2>📢 Informasi</h2>
+      <p>Selamat datang di website Info & Komunikasi.</p>
+      <p>Di sini kita bisa berbagi informasi dengan pengguna lainnya.</p>
+    </div>
+
+    <div class="card" id="chat">
+      <h2>💬 Komunikasi</h2>
+      <p>Fitur chat akan kita kembangkan selanjutnya.</p>
+      <button onclick="alert('Fitur chat sedang dikembangkan!')">
+        Mulai Chat
+      </button>
+    </div>
+
+    <div class="card" id="tentang">
+      <h2>ℹ️ Tentang</h2>
+      <p>
+        Website ini dibuat sebagai tempat berbagi informasi
+        dan membangun komunikasi antar pengguna.
+      </p>
+    </div>
+
+  </div>
+
+  <footer>
+    © 2026 Info & Komunikasi
+  </footer>
+
+</body>
+</html>
