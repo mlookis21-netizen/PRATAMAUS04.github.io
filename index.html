@@ -303,11 +303,27 @@ Editing index.html file contents
 
       if (data.session) {
         tampilkanUser(data.session.user);
+    ambilProfil(data.session.user);
       }
     }
 
     cekLogin();
+async function ambilProfil(user) {
 
+      const { data, error } =
+        await supabaseClient
+          .from("profiles")
+          .select("username, full_name, avatar_url")
+          .eq("id", user.id)
+          .single();
+
+      if (error) {
+        console.log("Profil belum ditemukan:", error.message);
+        return;
+      }
+
+      console.log("Profil pengguna:", data);
+    }
   </script>
 
 </body>
