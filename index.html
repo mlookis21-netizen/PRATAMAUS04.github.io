@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Info & Komunikasi</title>
 
   <style>
@@ -13,62 +14,115 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f2f4f7;
-      color: #222;
+      background: #f1f5f9;
+      color: #1e293b;
     }
 
     header {
-      background: #1877f2;
+      background: linear-gradient(135deg, #1877f2, #0057d9);
       color: white;
-      padding: 30px 20px;
+      padding: 45px 20px;
       text-align: center;
     }
 
     header h1 {
-      margin: 0 0 10px;
+      margin: 0;
+      font-size: 32px;
+    }
+
+    header p {
+      margin-top: 10px;
+      font-size: 16px;
     }
 
     nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
       background: white;
       padding: 15px;
       text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     }
 
     nav a {
-      margin: 0 12px;
-      text-decoration: none;
       color: #1877f2;
+      text-decoration: none;
       font-weight: bold;
+      margin: 0 12px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
     }
 
     .container {
-      max-width: 800px;
-      margin: 25px auto;
-      padding: 15px;
+      width: 92%;
+      max-width: 850px;
+      margin: 30px auto;
     }
 
     .card {
       background: white;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 25px;
+      margin-bottom: 22px;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.07);
     }
 
-    button {
+    .card h2 {
+      margin-top: 0;
+    }
+
+    .welcome {
+      text-align: center;
+    }
+
+    .button {
+      display: inline-block;
       background: #1877f2;
       color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      cursor: pointer;
+      padding: 13px 22px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .button:hover {
+      background: #0d5dcc;
     }
 
     footer {
+      background: #0f172a;
+      color: white;
       text-align: center;
-      padding: 25px;
-      color: #777;
+      padding: 30px 15px;
+      margin-top: 40px;
+    }
+
+    footer p {
+      margin: 7px 0;
+    }
+
+    .developer {
+      color: #60a5fa;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 26px;
+      }
+
+      nav a {
+        margin: 0 6px;
+        font-size: 14px;
+      }
+
+      .card {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -76,44 +130,63 @@
 <body>
 
   <header>
-    <h1>Info & Komunikasi</h1>
-    <p>Tempat berbagi informasi dan berkomunikasi</p>
+    <h1>🌐 Info & Komunikasi</h1>
+    <p>Tempat berbagi informasi dan membangun komunikasi</p>
   </header>
 
   <nav>
+    <a href="#beranda">Beranda</a>
     <a href="#info">Info</a>
     <a href="#chat">Chat</a>
     <a href="#tentang">Tentang</a>
   </nav>
 
-  <div class="container">
+  <main class="container">
 
-    <div class="card" id="info">
+    <section class="card welcome" id="beranda">
+      <h2>👋 Selamat Datang!</h2>
+      <p>
+        Selamat datang di platform Info & Komunikasi.
+        Tempat untuk berbagi informasi dan berkomunikasi
+        dengan pengguna lainnya.
+      </p>
+      <a class="button" href="#chat">💬 Mulai Komunikasi</a>
+    </section>
+
+    <section class="card" id="info">
       <h2>📢 Informasi</h2>
-      <p>Selamat datang di website Info & Komunikasi.</p>
-      <p>Di sini kita bisa berbagi informasi dengan pengguna lainnya.</p>
-    </div>
+      <p>
+        Bagian ini nantinya dapat digunakan untuk menampilkan
+        berita, pengumuman, informasi penting, dan berbagai
+        posting dari pengguna.
+      </p>
+    </section>
 
-    <div class="card" id="chat">
+    <section class="card" id="chat">
       <h2>💬 Komunikasi</h2>
-      <p>Fitur chat akan kita kembangkan selanjutnya.</p>
-      <button onclick="alert('Fitur chat sedang dikembangkan!')">
+      <p>
+        Fitur chat sedang dalam tahap pengembangan.
+        Nantinya pengguna dapat berkomunikasi secara langsung.
+      </p>
+
+      <button class="button" onclick="alert('Fitur chat akan segera dikembangkan!')">
         Mulai Chat
       </button>
-    </div>
+    </section>
 
-    <div class="card" id="tentang">
-      <h2>ℹ️ Tentang</h2>
+    <section class="card" id="tentang">
+      <h2>ℹ️ Tentang Website</h2>
       <p>
-        Website ini dibuat sebagai tempat berbagi informasi
-        dan membangun komunikasi antar pengguna.
+        Website ini dikembangkan sebagai tempat berbagi
+        informasi dan membangun komunikasi antar pengguna.
       </p>
-    </div>
+    </section>
 
-  </div>
+  </main>
 
   <footer>
-    © 2026 Info & Komunikasi
+    <p>© 2026 Info & Komunikasi</p>
+    <p>Developed by <span class="developer">M PRAJA PRATAMA US</span></p>
   </footer>
 
 </body>
