@@ -1,15 +1,4 @@
-<!eview
-Indent mode
-
-Spaces
-Indent size
-
-2
-Line wrap mode
-
-No wrap
-Editing index.html file contents
-  1DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -17,188 +6,450 @@ Editing index.html file contents
 
   <title>Info & Komunikasi</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #f4f8fc, #eef4fa);
       color: #1e293b;
+      line-height: 1.6;
+      min-height: 100vh;
     }
 
+    /* HEADER */
     header {
-      background: linear-gradient(135deg, #1877f2, #0057d9);
+      background: linear-gradient(135deg, #0f3d68, #1769aa);
       color: white;
-      padding: 40px 20px;
+      padding: 45px 20px 38px;
       text-align: center;
+      box-shadow: 0 8px 25px rgba(15, 61, 104, 0.18);
+      border-radius: 0 0 28px 28px;
     }
 
     header h1 {
-      margin: 0;
       font-size: 30px;
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
     }
 
+    header p {
+      font-size: 15px;
+      opacity: 0.9;
+    }
+
+    /* NAVIGASI */
     nav {
-      background: white;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      width: 92%;
+      max-width: 850px;
+      margin: -18px auto 30px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+      position: relative;
+      z-index: 5;
     }
 
     nav a {
-      color: #1877f2;
       text-decoration: none;
+      color: #334155;
       font-weight: bold;
-      margin: 0 10px;
+      font-size: 14px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      transition: all 0.2s ease;
     }
 
-    .container {
+    nav a:hover {
+      background: #eaf3fb;
+      color: #1769aa;
+      transform: translateY(-1px);
+    }
+
+    /* KONTEN */
+    main {
       width: 92%;
       max-width: 850px;
-      margin: 30px auto;
-    }
-
-    .card {
-      background: white;
-      padding: 25px;
-      margin-bottom: 20px;
-      border-radius: 16px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.07);
-    }
-
-    .auth-box {
-      max-width: 450px;
       margin: auto;
+      padding-bottom: 40px;
+    }
+
+    section {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.09);
+    }
+
+    section h2 {
+      color: #0f3d68;
+      font-size: 23px;
+      margin-bottom: 12px;
+    }
+
+    section p {
+      color: #64748b;
+      font-size: 15px;
+    }
+
+    /* AKUN */
+    .account-box {
+      max-width: 500px;
+      margin: 22px auto 0;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: #334155;
+      font-weight: bold;
+      font-size: 14px;
     }
 
     input {
       width: 100%;
-      padding: 13px;
-      margin: 8px 0;
+      padding: 13px 14px;
       border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      font-size: 16px;
+      border-radius: 11px;
+      outline: none;
+      font-size: 15px;
+      background: #f8fafc;
+      color: #1e293b;
+      transition: all 0.2s ease;
+    }
+
+    input:focus {
+      border-color: #2384c6;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(35, 132, 198, 0.10);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
     }
 
     button {
-      border: 0;
-      background: #1877f2;
-      color: white;
-      padding: 13px 20px;
-      border-radius: 10px;
+      flex: 1;
+      border: none;
+      padding: 13px 18px;
+      border-radius: 11px;
+      font-size: 14px;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 8px;
+      transition: all 0.2s ease;
     }
 
-    button:hover {
-      background: #0d5dcc;
+    .btn-primary {
+      background: #1769aa;
+      color: white;
+      box-shadow: 0 5px 14px rgba(23, 105, 170, 0.20);
     }
 
-    .secondary {
-      background: #64748b;
+    .btn-primary:hover {
+      background: #12588f;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #e8eef5;
+      color: #334155;
+    }
+
+    .btn-secondary:hover {
+      background: #dce6f0;
+      transform: translateY(-2px);
+    }
+
+    #message {
+      margin-top: 17px;
+      padding: 10px;
+      border-radius: 9px;
+      font-size: 14px;
+      text-align: center;
+      color: #475569;
+    }
+
+    /* AREA USER */
+    #userArea {
+      margin-top: 20px;
+    }
+
+    .user-card {
+      background: linear-gradient(135deg, #f5faff, #eef6fc);
+      border: 1px solid #d9e8f5;
+      border-radius: 15px;
+      padding: 20px;
+    }
+
+    .user-card h3 {
+      color: #0f3d68;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .user-card p {
+      margin: 4px 0;
+      color: #64748b;
+    }
+
+    .logout-btn {
+      width: 100%;
+      margin-top: 16px;
+      background: #475569;
+      color: white;
+    }
+
+    .logout-btn:hover {
+      background: #334155;
+      transform: translateY(-2px);
     }
 
     .hidden {
       display: none;
     }
 
-    #message {
-      margin-top: 15px;
-      font-weight: bold;
+    /* INFO */
+    .info-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 15px;
+      padding: 18px;
+      margin-top: 18px;
     }
 
+    .info-icon {
+      font-size: 27px;
+      line-height: 1;
+    }
+
+    .info-box p {
+      flex: 1;
+    }
+
+    /* FOOTER */
     footer {
-      background: #0f172a;
-      color: white;
       text-align: center;
-      padding: 25px;
-      margin-top: 40px;
+      padding: 30px 20px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    footer strong {
+      color: #1769aa;
+    }
+
+    /* RESPONSIVE HP */
+    @media (max-width: 600px) {
+      header {
+        padding: 38px 18px 32px;
+      }
+
+      header h1 {
+        font-size: 25px;
+      }
+
+      nav {
+        width: 94%;
+        gap: 3px;
+      }
+
+      nav a {
+        padding: 9px 11px;
+        font-size: 13px;
+      }
+
+      main {
+        width: 94%;
+      }
+
+      section {
+        padding: 22px 18px;
+        border-radius: 17px;
+      }
+
+      section h2 {
+        font-size: 21px;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .info-box {
+        gap: 10px;
+      }
     }
   </style>
 </head>
 
 <body>
 
+  <!-- HEADER -->
   <header>
     <h1>🌐 Info & Komunikasi</h1>
-    <p>Tempat berbagi informasi dan membangun komunikasi</p>
+    <p>Tempat berbagi informasi 🤝 membangun komunikasi</p>
   </header>
 
+  <!-- NAVIGASI -->
   <nav>
     <a href="#beranda">Beranda</a>
     <a href="#akun">Akun</a>
     <a href="#info">Info</a>
   </nav>
 
-  <main class="container">
+  <!-- KONTEN -->
+  <main>
 
-    <section class="card" id="beranda">
-      <h2>👋 Selamat Datang!</h2>
+    <!-- BERANDA -->
+    <section id="beranda">
+      <h2>🌐 Selamat Datang!</h2>
+
       <p>
-        Selamat datang di platform Info & Komunikasi.
+        💺 Selamat datang di platform Info & Komunikasi.
         Silakan buat akun atau login untuk melanjutkan.
       </p>
     </section>
 
-    <section class="card auth-box" id="akun">
+    <!-- AKUN -->
+    <section id="akun">
+      <h2>👤 Akun</h2>
 
-      <div id="authArea">
+      <div id="authArea" class="account-box">
 
-        <h2>🔐 Akun Pengguna</h2>
+        <div class="input-group">
+          <label for="email">📧 Email</label>
 
-        <input
-          type="email"
-          id="email"
-          placeholder="Email"
-        >
+          <input
+            type="email"
+            id="email"
+            placeholder="Masukkan email"
+          >
+        </div>
 
-        <input
-          type="password"
-          id="password"
-          placeholder="Password"
-        >
+        <div class="input-group">
+          <label for="password">🔒 Password</label>
 
-        <button onclick="daftar()">Daftar</button>
-        <button onclick="login()">Login</button>
+          <input
+            type="password"
+            id="password"
+            placeholder="Masukkan password"
+          >
+        </div>
+
+        <div class="button-row">
+
+          <button
+            class="btn-primary"
+            onclick="daftar()">
+            Daftar
+          </button>
+
+          <button
+            class="btn-secondary"
+            onclick="login()">
+            Login
+          </button>
+
+        </div>
 
         <p id="message"></p>
 
       </div>
 
+      <!-- USER SUDAH LOGIN -->
       <div id="userArea" class="hidden">
 
-        <h2>👤 Kamu sudah login</h2>
+        <div class="user-card">
 
-        <p id="userEmail"></p>
+          <h3>👤 Kamu sudah login</h3>
 
-        <button class="secondary" onclick="logout()">
-          Logout
-        </button>
+          <p id="userEmail"></p>
+
+          <p id="username"></p>
+
+          <button
+            class="logout-btn"
+            onclick="logout()">
+            Logout
+          </button>
+
+        </div>
 
       </div>
 
     </section>
 
-    <section class="card" id="info">
+    <!-- INFO -->
+    <section id="info">
+
       <h2>📢 Informasi</h2>
-      <p>
-        Nantinya bagian ini akan berisi posting,
-        informasi, komentar, dan komunikasi pengguna.
-      </p>
+
+      <div class="info-box">
+
+        <div class="info-icon">
+          🫆
+        </div>
+
+        <p>
+          Pada bagian ini akan berisi posting, informasi,
+          komentar, dan komunikasi pengguna secara publik
+          maupun privasi.
+        </p>
+
+      </div>
+
     </section>
 
   </main>
 
+  <!-- FOOTER -->
   <footer>
+
     <p>© 2026 Info & Komunikasi</p>
-    <p>Developed by <strong>M PRAJA PRATAMA US</strong></p>
+
+    <p>
+      Developed by
+      <strong>MAULANA PRAJA PRATAMA US</strong>
+    </p>
+
   </footer>
+
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
 
@@ -214,6 +465,7 @@ Editing index.html file contents
         SUPABASE_KEY
       );
 
+    /* DAFTAR */
     async function daftar() {
 
       const email =
@@ -226,8 +478,10 @@ Editing index.html file contents
         document.getElementById("message");
 
       if (!email || !password) {
+
         message.textContent =
           "Email dan password harus diisi.";
+
         return;
       }
 
@@ -238,14 +492,19 @@ Editing index.html file contents
         });
 
       if (error) {
+
         message.textContent =
           "Gagal daftar: " + error.message;
+
       } else {
+
         message.textContent =
           "Pendaftaran berhasil. Silakan login.";
+
       }
     }
 
+    /* LOGIN */
     async function login() {
 
       const email =
@@ -264,14 +523,19 @@ Editing index.html file contents
         });
 
       if (error) {
+
         message.textContent =
           "Login gagal: " + error.message;
+
         return;
       }
 
       tampilkanUser(data.user);
+
+      ambilProfil(data.user);
     }
 
+    /* LOGOUT */
     async function logout() {
 
       await supabaseClient.auth.signOut();
@@ -283,6 +547,7 @@ Editing index.html file contents
         .classList.add("hidden");
     }
 
+    /* TAMPILKAN USER */
     function tampilkanUser(user) {
 
       document.getElementById("authArea")
@@ -293,22 +558,27 @@ Editing index.html file contents
 
       document.getElementById("userEmail")
         .textContent =
-        "Login sebagai: " + user.email;
+          "Login sebagai: " + user.email;
     }
 
+    /* CEK LOGIN */
     async function cekLogin() {
 
       const { data } =
         await supabaseClient.auth.getSession();
 
       if (data.session) {
+
         tampilkanUser(data.session.user);
-    ambilProfil(data.session.user);
+
+        ambilProfil(data.session.user);
       }
     }
 
     cekLogin();
-async function ambilProfil(user) {
+
+    /* AMBIL PROFIL */
+    async function ambilProfil(user) {
 
       const { data, error } =
         await supabaseClient
@@ -318,12 +588,25 @@ async function ambilProfil(user) {
           .single();
 
       if (error) {
-        console.log("Profil belum ditemukan:", error.message);
+
+        console.log(
+          "Profil belum ditemukan:",
+          error.message
+        );
+
         return;
       }
 
-      console.log("Profil pengguna:", data);
+      console.log(
+        "Profil pengguna:",
+        data
+      );
+
+      document.getElementById("username")
+        .textContent =
+          "Username: " + data.username;
     }
+
   </script>
 
 </body>
