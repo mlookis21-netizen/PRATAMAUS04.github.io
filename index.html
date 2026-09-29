@@ -1,10 +1,23 @@
-<!DOCTYPE html>
+<!eview
+Indent mode
+
+Spaces
+Indent size
+
+2
+Line wrap mode
+
+No wrap
+Editing index.html file contents
+  1DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Info & Komunikasi</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     * {
@@ -21,24 +34,16 @@
     header {
       background: linear-gradient(135deg, #1877f2, #0057d9);
       color: white;
-      padding: 45px 20px;
+      padding: 40px 20px;
       text-align: center;
     }
 
     header h1 {
       margin: 0;
-      font-size: 32px;
-    }
-
-    header p {
-      margin-top: 10px;
-      font-size: 16px;
+      font-size: 30px;
     }
 
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 10;
       background: white;
       padding: 15px;
       text-align: center;
@@ -49,11 +54,7 @@
       color: #1877f2;
       text-decoration: none;
       font-weight: bold;
-      margin: 0 12px;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
+      margin: 0 10px;
     }
 
     .container {
@@ -65,64 +66,59 @@
     .card {
       background: white;
       padding: 25px;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       border-radius: 16px;
       box-shadow: 0 5px 20px rgba(0,0,0,0.07);
     }
 
-    .card h2 {
-      margin-top: 0;
+    .auth-box {
+      max-width: 450px;
+      margin: auto;
     }
 
-    .welcome {
-      text-align: center;
+    input {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 16px;
     }
 
-    .button {
-      display: inline-block;
+    button {
+      border: 0;
       background: #1877f2;
       color: white;
-      padding: 13px 22px;
+      padding: 13px 20px;
       border-radius: 10px;
-      text-decoration: none;
       font-weight: bold;
-      margin-top: 10px;
+      cursor: pointer;
+      margin-top: 8px;
     }
 
-    .button:hover {
+    button:hover {
       background: #0d5dcc;
+    }
+
+    .secondary {
+      background: #64748b;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
     }
 
     footer {
       background: #0f172a;
       color: white;
       text-align: center;
-      padding: 30px 15px;
+      padding: 25px;
       margin-top: 40px;
-    }
-
-    footer p {
-      margin: 7px 0;
-    }
-
-    .developer {
-      color: #60a5fa;
-      font-weight: bold;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 26px;
-      }
-
-      nav a {
-        margin: 0 6px;
-        font-size: 14px;
-      }
-
-      .card {
-        padding: 20px;
-      }
     }
   </style>
 </head>
@@ -136,49 +132,64 @@
 
   <nav>
     <a href="#beranda">Beranda</a>
+    <a href="#akun">Akun</a>
     <a href="#info">Info</a>
-    <a href="#chat">Chat</a>
-    <a href="#tentang">Tentang</a>
   </nav>
 
   <main class="container">
 
-    <section class="card welcome" id="beranda">
+    <section class="card" id="beranda">
       <h2>👋 Selamat Datang!</h2>
       <p>
         Selamat datang di platform Info & Komunikasi.
-        Tempat untuk berbagi informasi dan berkomunikasi
-        dengan pengguna lainnya.
+        Silakan buat akun atau login untuk melanjutkan.
       </p>
-      <a class="button" href="#chat">💬 Mulai Komunikasi</a>
+    </section>
+
+    <section class="card auth-box" id="akun">
+
+      <div id="authArea">
+
+        <h2>🔐 Akun Pengguna</h2>
+
+        <input
+          type="email"
+          id="email"
+          placeholder="Email"
+        >
+
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
+        >
+
+        <button onclick="daftar()">Daftar</button>
+        <button onclick="login()">Login</button>
+
+        <p id="message"></p>
+
+      </div>
+
+      <div id="userArea" class="hidden">
+
+        <h2>👤 Kamu sudah login</h2>
+
+        <p id="userEmail"></p>
+
+        <button class="secondary" onclick="logout()">
+          Logout
+        </button>
+
+      </div>
+
     </section>
 
     <section class="card" id="info">
       <h2>📢 Informasi</h2>
       <p>
-        Bagian ini nantinya dapat digunakan untuk menampilkan
-        berita, pengumuman, informasi penting, dan berbagai
-        posting dari pengguna.
-      </p>
-    </section>
-
-    <section class="card" id="chat">
-      <h2>💬 Komunikasi</h2>
-      <p>
-        Fitur chat sedang dalam tahap pengembangan.
-        Nantinya pengguna dapat berkomunikasi secara langsung.
-      </p>
-
-      <button class="button" onclick="alert('Fitur chat akan segera dikembangkan!')">
-        Mulai Chat
-      </button>
-    </section>
-
-    <section class="card" id="tentang">
-      <h2>ℹ️ Tentang Website</h2>
-      <p>
-        Website ini dikembangkan sebagai tempat berbagi
-        informasi dan membangun komunikasi antar pengguna.
+        Nantinya bagian ini akan berisi posting,
+        informasi, komentar, dan komunikasi pengguna.
       </p>
     </section>
 
@@ -186,8 +197,118 @@
 
   <footer>
     <p>© 2026 Info & Komunikasi</p>
-    <p>Developed by <span class="developer">M PRAJA PRATAMA US</span></p>
+    <p>Developed by <strong>M PRAJA PRATAMA US</strong></p>
   </footer>
+
+  <script>
+
+    const SUPABASE_URL =
+      "https://htwhiqxqtahxtmidzwud.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_jhuCqHXsUvF-BG5WBBHtMw_xgbxoo_1";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    async function daftar() {
+
+      const email =
+        document.getElementById("email").value;
+
+      const password =
+        document.getElementById("password").value;
+
+      const message =
+        document.getElementById("message");
+
+      if (!email || !password) {
+        message.textContent =
+          "Email dan password harus diisi.";
+        return;
+      }
+
+      const { error } =
+        await supabaseClient.auth.signUp({
+          email: email,
+          password: password
+        });
+
+      if (error) {
+        message.textContent =
+          "Gagal daftar: " + error.message;
+      } else {
+        message.textContent =
+          "Pendaftaran berhasil. Silakan login.";
+      }
+    }
+
+    async function login() {
+
+      const email =
+        document.getElementById("email").value;
+
+      const password =
+        document.getElementById("password").value;
+
+      const message =
+        document.getElementById("message");
+
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+      if (error) {
+        message.textContent =
+          "Login gagal: " + error.message;
+        return;
+      }
+
+      tampilkanUser(data.user);
+    }
+
+    async function logout() {
+
+      await supabaseClient.auth.signOut();
+
+      document.getElementById("authArea")
+        .classList.remove("hidden");
+
+      document.getElementById("userArea")
+        .classList.add("hidden");
+    }
+
+    function tampilkanUser(user) {
+
+      document.getElementById("authArea")
+        .classList.add("hidden");
+
+      document.getElementById("userArea")
+        .classList.remove("hidden");
+
+      document.getElementById("userEmail")
+        .textContent =
+        "Login sebagai: " + user.email;
+    }
+
+    async function cekLogin() {
+
+      const { data } =
+        await supabaseClient.auth.getSession();
+
+      if (data.session) {
+        tampilkanUser(data.session.user);
+      }
+    }
+
+    cekLogin();
+
+  </script>
 
 </body>
 </html>
