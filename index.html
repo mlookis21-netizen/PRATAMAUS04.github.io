@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Info & Komunikasi</title>
 
   <style>
@@ -79,7 +78,7 @@
       transform: translateY(-1px);
     }
 
-    /* KONTEN */
+    /* KONTEN Utama */
     main {
       width: 92%;
       max-width: 850px;
@@ -113,7 +112,7 @@
       font-size: 15px;
     }
 
-    /* AKUN */
+    /* AKUN & FORM */
     .account-box {
       max-width: 500px;
       margin: 22px auto 0;
@@ -196,7 +195,7 @@
       color: #475569;
     }
 
-    /* AREA USER */
+    /* AREA USER SUDAH LOGIN */
     #userArea {
       margin-top: 20px;
     }
@@ -235,7 +234,7 @@
       display: none;
     }
 
-    /* INFO */
+    /* INFORMASI */
     .info-box {
       display: flex;
       align-items: flex-start;
@@ -337,7 +336,6 @@
     <!-- BERANDA -->
     <section id="beranda">
       <h2>🌐 Selamat Datang!</h2>
-
       <p>
         💺 Selamat datang di platform Info & Komunikasi.
         Silakan buat akun atau login untuk melanjutkan.
@@ -349,264 +347,171 @@
       <h2>👤 Akun</h2>
 
       <div id="authArea" class="account-box">
-
         <div class="input-group">
           <label for="email">📧 Email</label>
-
-          <input
-            type="email"
-            id="email"
-            placeholder="Masukkan email"
-          >
+          <input type="email" id="email" placeholder="Masukkan email">
         </div>
 
         <div class="input-group">
           <label for="password">🔒 Password</label>
-
-          <input
-            type="password"
-            id="password"
-            placeholder="Masukkan password"
-          >
+          <input type="password" id="password" placeholder="Masukkan password">
         </div>
 
         <div class="button-row">
-
-          <button
-            class="btn-primary"
-            onclick="daftar()">
-            Daftar
-          </button>
-
-          <button
-            class="btn-secondary"
-            onclick="login()">
-            Login
-          </button>
-
+          <button class="btn-primary" onclick="daftar()">Daftar</button>
+          <button class="btn-secondary" onclick="login()">Login</button>
         </div>
 
         <p id="message"></p>
-
       </div>
 
       <!-- USER SUDAH LOGIN -->
       <div id="userArea" class="hidden">
-
         <div class="user-card">
-
           <h3>👤 Kamu sudah login</h3>
-
           <p id="userEmail"></p>
-
           <p id="username"></p>
-
-          <button
-            class="logout-btn"
-            onclick="logout()">
-            Logout
-          </button>
-
+          <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
-
       </div>
 
     </section>
 
     <!-- INFO -->
     <section id="info">
-
       <h2>📢 Informasi</h2>
-
       <div class="info-box">
-
-        <div class="info-icon">
-          🫆
-        </div>
-
+        <div class="info-icon">🫆</div>
         <p>
           Pada bagian ini akan berisi posting, informasi,
           komentar, dan komunikasi pengguna secara publik
           maupun privasi.
         </p>
-
       </div>
-
     </section>
 
   </main>
 
   <!-- FOOTER -->
   <footer>
-
     <p>© 2026 Info & Komunikasi</p>
-
     <p>
       Developed by
       <strong>MAULANA PRAJA PRATAMA US</strong>
     </p>
-
   </footer>
 
-  <!-- SUPABASE -->
+  <!-- LIBRARY SUPABASE CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <!-- SKRIP KONEKSI & FITUR -->
   <script>
+    const SUPABASE_URL = "https://htwhiqxqtahxtmidzwud.supabase.co";
+    
+    // CATATAN: Jika nanti muncul error saat Login/Daftar, 
+    // ganti SUPABASE_KEY di bawah dengan kunci Legacy (anon key) dari dashboard Supabase kamu.
+    const SUPABASE_KEY = "sb_publishable_jhuCqHXsUvF-BG5WBBHtMw_xgbxoo_1";
 
-    const SUPABASE_URL =
-      "https://htwhiqxqtahxtmidzwud.supabase.co";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const SUPABASE_KEY =
-      "sb_publishable_jhuCqHXsUvF-BG5WBBHtMw_xgbxoo_1";
-
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
-
-    /* DAFTAR */
+    /* FUNGSI DAFTAR */
     async function daftar() {
-
-      const email =
-        document.getElementById("email").value;
-
-      const password =
-        document.getElementById("password").value;
-
-      const message =
-        document.getElementById("message");
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
 
       if (!email || !password) {
-
-        message.textContent =
-          "Email dan password harus diisi.";
-
+        message.textContent = "Email dan password harus diisi.";
         return;
       }
 
-      const { error } =
-        await supabaseClient.auth.signUp({
-          email: email,
-          password: password
-        });
+      message.textContent = "Mendaftarkan...";
+
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password
+      });
 
       if (error) {
-
-        message.textContent =
-          "Gagal daftar: " + error.message;
-
+        message.textContent = "Gagal daftar: " + error.message;
       } else {
-
-        message.textContent =
-          "Pendaftaran berhasil. Silakan login.";
-
+        message.textContent = "Pendaftaran berhasil. Silakan cek email / langsung login.";
       }
     }
 
-    /* LOGIN */
+    /* FUNGSI LOGIN */
     async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message");
 
-      const email =
-        document.getElementById("email").value;
-
-      const password =
-        document.getElementById("password").value;
-
-      const message =
-        document.getElementById("message");
-
-      const { data, error } =
-        await supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
-
-      if (error) {
-
-        message.textContent =
-          "Login gagal: " + error.message;
-
+      if (!email || !password) {
+        message.textContent = "Email dan password harus diisi.";
         return;
       }
 
-      tampilkanUser(data.user);
+      message.textContent = "Proses login...";
 
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+      if (error) {
+        message.textContent = "Login gagal: " + error.message;
+        return;
+      }
+
+      message.textContent = "";
+      tampilkanUser(data.user);
       ambilProfil(data.user);
     }
 
-    /* LOGOUT */
+    /* FUNGSI LOGOUT */
     async function logout() {
-
       await supabaseClient.auth.signOut();
-
-      document.getElementById("authArea")
-        .classList.remove("hidden");
-
-      document.getElementById("userArea")
-        .classList.add("hidden");
+      document.getElementById("authArea").classList.remove("hidden");
+      document.getElementById("userArea").classList.add("hidden");
+      document.getElementById("email").value = "";
+      document.getElementById("password").value = "";
     }
 
-    /* TAMPILKAN USER */
+    /* TAMPILKAN USER TERHUBUNG */
     function tampilkanUser(user) {
-
-      document.getElementById("authArea")
-        .classList.add("hidden");
-
-      document.getElementById("userArea")
-        .classList.remove("hidden");
-
-      document.getElementById("userEmail")
-        .textContent =
-          "Login sebagai: " + user.email;
+      document.getElementById("authArea").classList.add("hidden");
+      document.getElementById("userArea").classList.remove("hidden");
+      document.getElementById("userEmail").textContent = "Login sebagai: " + user.email;
     }
 
-    /* CEK LOGIN */
+    /* CEK SESI LOGIN SAAT HALAMAN DIBUKA */
     async function cekLogin() {
-
-      const { data } =
-        await supabaseClient.auth.getSession();
-
+      const { data } = await supabaseClient.auth.getSession();
       if (data.session) {
-
         tampilkanUser(data.session.user);
-
         ambilProfil(data.session.user);
       }
     }
 
+    // Jalankan cek status login saat pertama kali halaman terbuka
     cekLogin();
 
-    /* AMBIL PROFIL */
+    /* AMBIL DATA PROFIL PENGGUNA */
     async function ambilProfil(user) {
-
-      const { data, error } =
-        await supabaseClient
-          .from("profiles")
-          .select("username, full_name, avatar_url")
-          .eq("id", user.id)
-          .single();
+      const { data, error } = await supabaseClient
+        .from("profiles")
+        .select("username, full_name, avatar_url")
+        .eq("id", user.id)
+        .single();
 
       if (error) {
-
-        console.log(
-          "Profil belum ditemukan:",
-          error.message
-        );
-
+        console.log("Profil belum ditemukan:", error.message);
         return;
       }
 
-      console.log(
-        "Profil pengguna:",
-        data
-      );
-
-      document.getElementById("username")
-        .textContent =
-          "Username: " + data.username;
+      if (data && data.username) {
+        document.getElementById("username").textContent = "Username: " + data.username;
+      }
     }
-
   </script>
 
 </body>
