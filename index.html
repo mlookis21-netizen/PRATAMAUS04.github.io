@@ -500,7 +500,7 @@
       const { data, error } = await supabaseClient
         .from("profiles")
         .select("username, full_name, avatar_url")
-        .eq("id", user.id)
+        .eq("user_id", user.id)
         .single();
 
       if (error) {
