@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -26,9 +25,6 @@
       min-height: 100vh;
     }
 
-    /* =========================
-       HEADER
-    ========================= */
     header {
       background: linear-gradient(135deg, #0f3d68, #1769aa);
       color: white;
@@ -49,9 +45,6 @@
       opacity: 0.9;
     }
 
-    /* =========================
-       NAVIGASI
-    ========================= */
     nav {
       width: 92%;
       max-width: 850px;
@@ -84,9 +77,6 @@
       transform: translateY(-1px);
     }
 
-    /* =========================
-       KONTEN UTAMA
-    ========================= */
     main {
       width: 92%;
       max-width: 850px;
@@ -101,12 +91,6 @@
       padding: 30px;
       margin-bottom: 24px;
       box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    section:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.09);
     }
 
     section h2 {
@@ -120,9 +104,6 @@
       font-size: 15px;
     }
 
-    /* =========================
-       AKUN & FORM
-    ========================= */
     .account-box {
       max-width: 500px;
       margin: 22px auto 0;
@@ -140,7 +121,8 @@
       font-size: 14px;
     }
 
-    input {
+    input,
+    textarea {
       width: 100%;
       padding: 13px 14px;
       border: 1px solid #cbd5e1;
@@ -149,13 +131,19 @@
       font-size: 15px;
       background: #f8fafc;
       color: #1e293b;
-      transition: all 0.2s ease;
+      font-family: inherit;
     }
 
-    input:focus {
+    input:focus,
+    textarea:focus {
       border-color: #2384c6;
       background: white;
       box-shadow: 0 0 0 4px rgba(35, 132, 198, 0.10);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
     }
 
     .button-row {
@@ -178,13 +166,18 @@
       flex: 1;
     }
 
-    .btn-primary {
+    .btn-primary,
+    .search-btn,
+    .profile-btn,
+    .send-btn {
       background: #1769aa;
       color: white;
-      box-shadow: 0 5px 14px rgba(23, 105, 170, 0.20);
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover,
+    .search-btn:hover,
+    .profile-btn:hover,
+    .send-btn:hover {
       background: #12588f;
       transform: translateY(-2px);
     }
@@ -196,7 +189,6 @@
 
     .btn-secondary:hover {
       background: #dce6f0;
-      transform: translateY(-2px);
     }
 
     #message {
@@ -208,9 +200,6 @@
       color: #475569;
     }
 
-    /* =========================
-       USER SUDAH LOGIN
-    ========================= */
     #userArea {
       margin-top: 20px;
     }
@@ -230,7 +219,6 @@
 
     .user-card p {
       margin: 4px 0;
-      color: #64748b;
     }
 
     .logout-btn {
@@ -242,16 +230,14 @@
 
     .logout-btn:hover {
       background: #334155;
-      transform: translateY(-2px);
     }
 
     .hidden {
-      display: none;
+      display: none !important;
     }
 
-    /* =========================
-       CARI PENGGUNA
-    ========================= */
+    /* CARI PENGGUNA */
+
     .search-box {
       max-width: 600px;
       margin: 20px auto 0;
@@ -268,14 +254,6 @@
 
     .search-btn {
       min-width: 110px;
-      background: #1769aa;
-      color: white;
-      box-shadow: 0 5px 14px rgba(23, 105, 170, 0.20);
-    }
-
-    .search-btn:hover {
-      background: #12588f;
-      transform: translateY(-2px);
     }
 
     #hasilPencarian {
@@ -307,12 +285,162 @@
 
     .search-result p {
       margin: 3px 0;
-      color: #64748b;
     }
 
-    /* =========================
-       INFORMASI
-    ========================= */
+    .result-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .result-buttons button {
+      flex: 1;
+    }
+
+    .profile-btn {
+      width: 100%;
+    }
+
+    /* PROFIL */
+
+    .profile-card {
+      background: linear-gradient(135deg, #f5faff, #eef6fc);
+      border: 1px solid #d9e8f5;
+      border-radius: 18px;
+      padding: 22px;
+      margin-top: 18px;
+    }
+
+    .profile-avatar {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: #1769aa;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .profile-card h3 {
+      color: #0f3d68;
+      margin-bottom: 8px;
+    }
+
+    .profile-card p {
+      margin: 5px 0;
+    }
+
+    .chat-open-btn {
+      width: 100%;
+      margin-top: 18px;
+      background: #1769aa;
+      color: white;
+    }
+
+    .back-btn {
+      background: #e8eef5;
+      color: #334155;
+      margin-bottom: 15px;
+    }
+
+    /* CHAT */
+
+    .chat-card {
+      border: 1px solid #d9e8f5;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #f8fafc;
+      margin-top: 18px;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #0f3d68, #1769aa);
+      color: white;
+      padding: 18px;
+    }
+
+    .chat-header h3 {
+      font-size: 18px;
+    }
+
+    .chat-header p {
+      color: white;
+      opacity: 0.85;
+      margin-top: 3px;
+    }
+
+    #chatMessages {
+      height: 350px;
+      overflow-y: auto;
+      padding: 18px;
+      background: #eef4fa;
+    }
+
+    .chat-empty {
+      text-align: center;
+      color: #64748b;
+      padding: 40px 15px;
+      font-size: 14px;
+    }
+
+    .chat-message {
+      display: flex;
+      margin-bottom: 12px;
+    }
+
+    .chat-message.mine {
+      justify-content: flex-end;
+    }
+
+    .chat-bubble {
+      max-width: 78%;
+      padding: 10px 13px;
+      border-radius: 14px;
+      background: white;
+      border: 1px solid #dce6f0;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+    }
+
+    .chat-message.mine .chat-bubble {
+      background: #1769aa;
+      color: white;
+      border-color: #1769aa;
+    }
+
+    .chat-time {
+      display: block;
+      font-size: 10px;
+      margin-top: 4px;
+      opacity: 0.65;
+      text-align: right;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 10px;
+      padding: 12px;
+      background: white;
+      border-top: 1px solid #dce6f0;
+    }
+
+    .chat-input-area textarea {
+      min-height: 48px;
+      max-height: 110px;
+      resize: none;
+      flex: 1;
+    }
+
+    .send-btn {
+      align-self: flex-end;
+      min-width: 85px;
+    }
+
+    /* INFO */
+
     .info-box {
       display: flex;
       align-items: flex-start;
@@ -333,9 +461,6 @@
       flex: 1;
     }
 
-    /* =========================
-       FOOTER
-    ========================= */
     footer {
       text-align: center;
       padding: 30px 20px;
@@ -347,9 +472,6 @@
       color: #1769aa;
     }
 
-    /* =========================
-       RESPONSIVE HP
-    ========================= */
     @media (max-width: 600px) {
       header {
         padding: 38px 18px 32px;
@@ -398,6 +520,22 @@
         width: 100%;
       }
 
+      .result-buttons {
+        flex-direction: column;
+      }
+
+      #chatMessages {
+        height: 300px;
+      }
+
+      .chat-input-area {
+        flex-direction: column;
+      }
+
+      .send-btn {
+        width: 100%;
+      }
+
       .info-box {
         gap: 10px;
       }
@@ -407,17 +545,11 @@
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================= -->
   <header>
     <h1>🌐 Info & Komunikasi</h1>
     <p>Tempat berbagi informasi 🤝 membangun komunikasi</p>
   </header>
 
-  <!-- =========================
-       NAVIGASI
-  ========================= -->
   <nav>
     <a href="#beranda">Beranda</a>
     <a href="#akun">Akun</a>
@@ -425,9 +557,6 @@
     <a href="#info">Info</a>
   </nav>
 
-  <!-- =========================
-       KONTEN
-  ========================= -->
   <main>
 
     <!-- BERANDA -->
@@ -463,17 +592,11 @@
         </div>
 
         <div class="button-row">
-          <button
-            class="btn-primary"
-            onclick="daftar()"
-          >
+          <button class="btn-primary" onclick="daftar()">
             Daftar
           </button>
 
-          <button
-            class="btn-secondary"
-            onclick="login()"
-          >
+          <button class="btn-secondary" onclick="login()">
             Login
           </button>
         </div>
@@ -481,7 +604,6 @@
         <p id="message"></p>
       </div>
 
-      <!-- USER SUDAH LOGIN -->
       <div id="userArea" class="hidden">
         <div class="user-card">
           <h3>👤 Kamu sudah login</h3>
@@ -489,10 +611,7 @@
           <p id="userEmail"></p>
           <p id="username"></p>
 
-          <button
-            class="logout-btn"
-            onclick="logout()"
-          >
+          <button class="logout-btn" onclick="logout()">
             Logout
           </button>
         </div>
@@ -516,15 +635,61 @@
             autocomplete="off"
           >
 
-          <button
-            class="search-btn"
-            onclick="cariPengguna()"
-          >
+          <button class="search-btn" onclick="cariPengguna()">
             Cari
           </button>
         </div>
 
         <div id="hasilPencarian"></div>
+      </div>
+    </section>
+
+    <!-- PROFIL -->
+    <section id="profil" class="hidden">
+      <h2>👤 Profil Pengguna</h2>
+
+      <button class="back-btn" onclick="tutupProfil()">
+        ← Kembali
+      </button>
+
+      <div id="profilContent"></div>
+    </section>
+
+    <!-- CHAT -->
+    <section id="chat" class="hidden">
+      <h2>💬 Pesan Pribadi</h2>
+
+      <button class="back-btn" onclick="tutupChat()">
+        ← Kembali
+      </button>
+
+      <div class="chat-card">
+
+        <div class="chat-header">
+          <h3 id="chatNama">Pengguna</h3>
+          <p id="chatUsername">@username</p>
+        </div>
+
+        <div id="chatMessages">
+          <div class="chat-empty">
+            Belum ada pesan.
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <textarea
+            id="chatInput"
+            placeholder="Tulis pesan..."
+          ></textarea>
+
+          <button
+            class="send-btn"
+            onclick="kirimPesan()"
+          >
+            Kirim
+          </button>
+        </div>
+
       </div>
     </section>
 
@@ -545,9 +710,6 @@
 
   </main>
 
-  <!-- =========================
-       FOOTER
-  ========================= -->
   <footer>
     <p>© 2026 Info & Komunikasi</p>
 
@@ -557,14 +719,8 @@
     </p>
   </footer>
 
-  <!-- =========================
-       SUPABASE CDN
-  ========================= -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- =========================
-       SCRIPT
-  ========================= -->
   <script>
     const SUPABASE_URL =
       "https://htwhiqxqtahxtmidzwud.supabase.co";
@@ -578,9 +734,13 @@
         SUPABASE_KEY
       );
 
+    let currentUser = null;
+    let selectedUser = null;
+
     /* =========================
-       FUNGSI DAFTAR
+       DAFTAR
     ========================= */
+
     async function daftar() {
       const email =
         document.getElementById("email").value.trim();
@@ -597,13 +757,12 @@
         return;
       }
 
-      message.textContent =
-        "Mendaftarkan...";
+      message.textContent = "Mendaftarkan...";
 
       const { error } =
         await supabaseClient.auth.signUp({
-          email: email,
-          password: password
+          email,
+          password
         });
 
       if (error) {
@@ -617,8 +776,9 @@
     }
 
     /* =========================
-       FUNGSI LOGIN
+       LOGIN
     ========================= */
+
     async function login() {
       const email =
         document.getElementById("email").value.trim();
@@ -635,13 +795,12 @@
         return;
       }
 
-      message.textContent =
-        "Proses login...";
+      message.textContent = "Proses login...";
 
       const { data, error } =
         await supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: password
+          email,
+          password
         });
 
       if (error) {
@@ -652,15 +811,21 @@
 
       message.textContent = "";
 
+      currentUser = data.user;
+
       tampilkanUser(data.user);
       ambilProfil(data.user);
     }
 
     /* =========================
-       FUNGSI LOGOUT
+       LOGOUT
     ========================= */
+
     async function logout() {
       await supabaseClient.auth.signOut();
+
+      currentUser = null;
+      selectedUser = null;
 
       document
         .getElementById("authArea")
@@ -670,14 +835,23 @@
         .getElementById("userArea")
         .classList.add("hidden");
 
+      document
+        .getElementById("profil")
+        .classList.add("hidden");
+
+      document
+        .getElementById("chat")
+        .classList.add("hidden");
+
       document.getElementById("email").value = "";
       document.getElementById("password").value = "";
       document.getElementById("username").textContent = "";
     }
 
     /* =========================
-       TAMPILKAN USER LOGIN
+       TAMPILKAN USER
     ========================= */
+
     function tampilkanUser(user) {
       document
         .getElementById("authArea")
@@ -692,24 +866,27 @@
     }
 
     /* =========================
-       CEK SESI LOGIN
+       CEK LOGIN
     ========================= */
+
     async function cekLogin() {
       const { data } =
         await supabaseClient.auth.getSession();
 
       if (data.session) {
-        tampilkanUser(data.session.user);
-        ambilProfil(data.session.user);
+        currentUser = data.session.user;
+
+        tampilkanUser(currentUser);
+        ambilProfil(currentUser);
       }
     }
 
-    /* Jalankan pengecekan saat halaman dibuka */
     cekLogin();
 
     /* =========================
-       AMBIL DATA PROFIL
+       PROFIL SENDIRI
     ========================= */
+
     async function ambilProfil(user) {
       const { data, error } =
         await supabaseClient
@@ -737,6 +914,7 @@
     /* =========================
        CARI PENGGUNA
     ========================= */
+
     async function cariPengguna() {
       const input =
         document
@@ -750,6 +928,7 @@
       if (!input) {
         hasil.textContent =
           "Masukkan username terlebih dahulu.";
+
         hasil.className = "search-message";
         return;
       }
@@ -774,6 +953,7 @@
 
         hasil.textContent =
           "Terjadi kesalahan saat mencari pengguna.";
+
         hasil.className = "search-message";
         return;
       }
@@ -781,6 +961,7 @@
       if (!data) {
         hasil.textContent =
           "Pengguna tidak ditemukan.";
+
         hasil.className = "search-message";
         return;
       }
@@ -801,9 +982,396 @@
         "Nama: " +
         (data.full_name || "Belum diatur");
 
+      const buttons =
+        document.createElement("div");
+
+      buttons.className = "result-buttons";
+
+      const profilButton =
+        document.createElement("button");
+
+      profilButton.className = "profile-btn";
+      profilButton.textContent = "👤 Lihat Profil";
+
+      profilButton.onclick = function () {
+        bukaProfil(data);
+      };
+
+      buttons.appendChild(profilButton);
+
       hasil.appendChild(judul);
       hasil.appendChild(nama);
+      hasil.appendChild(buttons);
     }
+
+    /* =========================
+       BUKA PROFIL
+    ========================= */
+
+    function bukaProfil(user) {
+      selectedUser = user;
+
+      document
+        .getElementById("profil")
+        .classList.remove("hidden");
+
+      document
+        .getElementById("chat")
+        .classList.add("hidden");
+
+      const content =
+        document.getElementById("profilContent");
+
+      content.innerHTML = "";
+
+      const card =
+        document.createElement("div");
+
+      card.className = "profile-card";
+
+      const avatar =
+        document.createElement("div");
+
+      avatar.className = "profile-avatar";
+
+      avatar.textContent =
+        (user.username || "?")
+          .charAt(0)
+          .toUpperCase();
+
+      const title =
+        document.createElement("h3");
+
+      title.textContent =
+        "@" + user.username;
+
+      const nama =
+        document.createElement("p");
+
+      nama.textContent =
+        "Nama: " +
+        (user.full_name || "Belum diatur");
+
+      const button =
+        document.createElement("button");
+
+      button.className = "chat-open-btn";
+      button.textContent = "💬 Kirim Pesan";
+
+      button.onclick = function () {
+        bukaChat(user);
+      };
+
+      card.appendChild(avatar);
+      card.appendChild(title);
+      card.appendChild(nama);
+      card.appendChild(button);
+
+      content.appendChild(card);
+
+      document
+        .getElementById("profil")
+        .scrollIntoView({
+          behavior: "smooth"
+        });
+    }
+
+    /* =========================
+       TUTUP PROFIL
+    ========================= */
+
+    function tutupProfil() {
+      document
+        .getElementById("profil")
+        .classList.add("hidden");
+    }
+
+    /* =========================
+       BUKA CHAT
+    ========================= */
+
+    async function bukaChat(user) {
+      if (!currentUser) {
+        alert("Silakan login terlebih dahulu.");
+        return;
+      }
+
+      if (!user || !user.user_id) {
+        alert("Data pengguna tidak lengkap.");
+        return;
+      }
+
+      if (currentUser.id === user.user_id) {
+        alert("Kamu tidak bisa mengirim pesan ke akun sendiri.");
+        return;
+      }
+
+      selectedUser = user;
+
+      document
+        .getElementById("profil")
+        .classList.add("hidden");
+
+      document
+        .getElementById("chat")
+        .classList.remove("hidden");
+
+      document.getElementById("chatNama").textContent =
+        user.full_name || "Pengguna";
+
+      document.getElementById("chatUsername").textContent =
+        "@" + user.username;
+
+      document.getElementById("chatInput").value = "";
+
+      document
+        .getElementById("chat")
+        .scrollIntoView({
+          behavior: "smooth"
+        });
+
+      await muatPesan();
+    }
+
+    /* =========================
+       TUTUP CHAT
+    ========================= */
+
+    function tutupChat() {
+      document
+        .getElementById("chat")
+        .classList.add("hidden");
+
+      selectedUser = null;
+    }
+
+    /* =========================
+       MUAT PESAN
+    ========================= */
+
+    async function muatPesan() {
+      const area =
+        document.getElementById("chatMessages");
+
+      if (!currentUser || !selectedUser) {
+        return;
+      }
+
+      area.innerHTML =
+        '<div class="chat-empty">Memuat pesan...</div>';
+
+      const { data, error } =
+        await supabaseClient
+          .from("messages")
+          .select(
+            "id, sender_id, receiver_id, content, created_at"
+          )
+          .or(
+            "and(sender_id.eq." +
+              currentUser.id +
+              ",receiver_id.eq." +
+              selectedUser.user_id +
+              "),and(sender_id.eq." +
+              selectedUser.user_id +
+              ",receiver_id.eq." +
+              currentUser.id +
+              ")"
+          )
+          .order("created_at", {
+            ascending: true
+          });
+
+      if (error) {
+        console.log(
+          "Error mengambil pesan:",
+          error.message
+        );
+
+        area.innerHTML =
+          '<div class="chat-empty">Pesan belum bisa dimuat. Pastikan tabel messages sudah dibuat.</div>';
+
+        return;
+      }
+
+      area.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        area.innerHTML =
+          '<div class="chat-empty">Belum ada pesan. Kirim pesan pertama 👋</div>';
+
+        return;
+      }
+
+      data.forEach(function (pesan) {
+        tampilkanPesan(pesan);
+      });
+
+      scrollChatKeBawah();
+    }
+
+    /* =========================
+       TAMPILKAN PESAN
+    ========================= */
+
+    function tampilkanPesan(pesan) {
+      const area =
+        document.getElementById("chatMessages");
+
+      const wrapper =
+        document.createElement("div");
+
+      wrapper.className = "chat-message";
+
+      if (
+        currentUser &&
+        pesan.sender_id === currentUser.id
+      ) {
+        wrapper.classList.add("mine");
+      }
+
+      const bubble =
+        document.createElement("div");
+
+      bubble.className = "chat-bubble";
+
+      const text =
+        document.createElement("div");
+
+      text.textContent = pesan.content;
+
+      const time =
+        document.createElement("span");
+
+      time.className = "chat-time";
+
+      time.textContent =
+        formatWaktu(pesan.created_at);
+
+      bubble.appendChild(text);
+      bubble.appendChild(time);
+
+      wrapper.appendChild(bubble);
+
+      area.appendChild(wrapper);
+    }
+
+    /* =========================
+       FORMAT WAKTU
+    ========================= */
+
+    function formatWaktu(waktu) {
+      if (!waktu) {
+        return "";
+      }
+
+      const tanggal = new Date(waktu);
+
+      return tanggal.toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    /* =========================
+       KIRIM PESAN
+    ========================= */
+
+    async function kirimPesan() {
+      if (!currentUser) {
+        alert("Silakan login terlebih dahulu.");
+        return;
+      }
+
+      if (!selectedUser) {
+        alert("Pilih pengguna terlebih dahulu.");
+        return;
+      }
+
+      const input =
+        document.getElementById("chatInput");
+
+      const content =
+        input.value.trim();
+
+      if (!content) {
+        return;
+      }
+
+      const tombol =
+        document.querySelector(".send-btn");
+
+      tombol.disabled = true;
+      tombol.textContent = "Mengirim...";
+
+      const { data, error } =
+        await supabaseClient
+          .from("messages")
+          .insert({
+            sender_id: currentUser.id,
+            receiver_id: selectedUser.user_id,
+            content: content
+          })
+          .select()
+          .single();
+
+      if (error) {
+        console.log(
+          "Error kirim pesan:",
+          error.message
+        );
+
+        alert(
+          "Pesan gagal dikirim: " +
+          error.message
+        );
+
+        tombol.disabled = false;
+        tombol.textContent = "Kirim";
+        return;
+      }
+
+      input.value = "";
+
+      if (data) {
+        tampilkanPesan(data);
+        scrollChatKeBawah();
+      }
+
+      tombol.disabled = false;
+      tombol.textContent = "Kirim";
+    }
+
+    /* =========================
+       SCROLL CHAT
+    ========================= */
+
+    function scrollChatKeBawah() {
+      const area =
+        document.getElementById("chatMessages");
+
+      area.scrollTop =
+        area.scrollHeight;
+    }
+
+    /* =========================
+       ENTER UNTUK KIRIM
+    ========================= */
+
+    document
+      .getElementById("chatInput")
+      .addEventListener("keydown", function (event) {
+
+        if (
+          event.key === "Enter" &&
+          !event.shiftKey
+        ) {
+          event.preventDefault();
+          kirimPesan();
+        }
+
+      });
   </script>
 
 </body>
