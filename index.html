@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Info & Komunikasi</title>
-
-  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Info & Komunikasi</title>  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -200,6 +195,49 @@
       background: #dce6f0;
     }
 
+    .google-btn {
+      width: 100%;
+      margin-top: 14px;
+      background: white;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+    }
+
+    .google-btn:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+
+    .google-icon {
+      width: 20px;
+      height: 20px;
+      font-size: 19px;
+      font-weight: bold;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0 4px;
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
+
     #message {
       margin-top: 17px;
       padding: 10px;
@@ -291,6 +329,13 @@
       justify-content: center;
       font-size: 21px;
       font-weight: bold;
+      overflow: hidden;
+    }
+
+    .inbox-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .inbox-content {
@@ -449,6 +494,13 @@
       font-size: 32px;
       font-weight: bold;
       margin-bottom: 15px;
+      overflow: hidden;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .profile-card h3 {
@@ -703,351 +755,340 @@
         font-size: 12px;
       }
     }
-  </style>
-</head>
-
-<body>
-
-  <header>
+  </style></head><body>  <header>
     <h1>🌐 Info & Komunikasi</h1>
     <p>Tempat berbagi informasi 🤝 membangun komunikasi</p>
-  </header>
-
-  <nav>
+  </header>  <nav>
     <a href="#beranda">Beranda</a>
     <a href="#akun">Akun</a>
     <a href="#pesan">💬 Pesan</a>
     <a href="#cari">Cari</a>
     <a href="#info">Info</a>
-  </nav>
+  </nav>  <main><!-- =========================
+     BERANDA
+========================= -->
 
-  <main>
+<section id="beranda">
+  <h2>🌐 Selamat Datang!</h2>
 
-    <!-- =========================
-         BERANDA
-    ========================= -->
-
-    <section id="beranda">
-      <h2>🌐 Selamat Datang!</h2>
-
-      <p>
-        💺 Selamat datang di platform Info & Komunikasi.
-        Silakan buat akun atau login untuk melanjutkan.
-      </p>
-    </section>
+  <p>
+    💺 Selamat datang di platform Info & Komunikasi.
+    Silakan buat akun atau login untuk melanjutkan.
+  </p>
+</section>
 
 
-    <!-- =========================
-         AKUN
-    ========================= -->
+<!-- =========================
+     AKUN
+========================= -->
 
-    <section id="akun">
-      <h2>👤 Akun</h2>
+<section id="akun">
+  <h2>👤 Akun</h2>
 
-      <div id="authArea" class="account-box">
+  <div id="authArea" class="account-box">
 
-        <div class="input-group">
-          <label for="email">📧 Email</label>
+    <div class="input-group">
+      <label for="email">📧 Email</label>
 
-          <input
-            type="email"
-            id="email"
-            placeholder="Masukkan email"
-            autocomplete="email"
-          >
-        </div>
-
-
-        <div class="input-group">
-          <label for="password">🔒 Password</label>
-
-          <input
-            type="password"
-            id="password"
-            placeholder="Masukkan password"
-            autocomplete="current-password"
-          >
-        </div>
+      <input
+        type="email"
+        id="email"
+        placeholder="Masukkan email"
+        autocomplete="email"
+      >
+    </div>
 
 
-        <div class="button-row">
+    <div class="input-group">
+      <label for="password">🔒 Password</label>
 
-          <button
-            class="btn-primary"
-            onclick="daftar()"
-          >
-            Daftar
-          </button>
-
-          <button
-            class="btn-secondary"
-            onclick="login()"
-          >
-            Login
-          </button>
-
-        </div>
+      <input
+        type="password"
+        id="password"
+        placeholder="Masukkan password"
+        autocomplete="current-password"
+      >
+    </div>
 
 
-        <p id="message"></p>
+    <div class="button-row">
 
-      </div>
+      <button
+        class="btn-primary"
+        onclick="daftar()"
+      >
+        Daftar
+      </button>
 
+      <button
+        class="btn-secondary"
+        onclick="login()"
+      >
+        Login
+      </button>
 
-      <div id="userArea" class="hidden">
-
-        <div class="user-card">
-
-          <h3>👤 Kamu sudah login</h3>
-
-          <p id="userEmail"></p>
-
-          <p id="username"></p>
-
-          <button
-            class="logout-btn"
-            onclick="logout()"
-          >
-            Logout
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
+    </div>
 
 
-    <!-- =========================
-         INBOX
-    ========================= -->
-
-    <section id="pesan">
-
-      <h2>💬 Pesan</h2>
-
-      <p>
-        Lihat percakapan dan lanjutkan pesan dengan pengguna lain.
-      </p>
-
-      <div class="inbox-box">
-
-        <button
-          class="inbox-refresh"
-          onclick="muatInbox()"
-        >
-          🔄 Refresh Percakapan
-        </button>
-
-        <div id="inboxList">
-
-          <div class="inbox-login">
-            Silakan login untuk melihat pesan.
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
+    <div class="auth-divider">
+      atau
+    </div>
 
 
-    <!-- =========================
-         CARI PENGGUNA
-    ========================= -->
-
-    <section id="cari">
-
-      <h2>🔎 Cari Pengguna</h2>
-
-      <p>
-        Cari pengguna berdasarkan username.
-      </p>
-
-
-      <div class="search-box">
-
-        <div class="search-row">
-
-          <input
-            type="text"
-            id="inputCariUser"
-            placeholder="Masukkan username..."
-            autocomplete="off"
-          >
-
-          <button
-            class="search-btn"
-            onclick="cariPengguna()"
-          >
-            Cari
-          </button>
-
-        </div>
-
-
-        <div id="hasilPencarian"></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         PROFIL
-    ========================= -->
-
-    <section
-      id="profil"
-      class="hidden"
+    <button
+      id="googleLoginButton"
+      class="google-btn"
+      onclick="loginDenganGoogle()"
     >
+      <span class="google-icon">G</span>
+      <span>Lanjut dengan Google</span>
+    </button>
 
-      <h2>👤 Profil Pengguna</h2>
+
+    <p id="message"></p>
+
+  </div>
+
+
+  <div id="userArea" class="hidden">
+
+    <div class="user-card">
+
+      <h3>👤 Kamu sudah login</h3>
+
+      <p id="userEmail"></p>
+
+      <p id="username"></p>
+
+      <button
+        class="logout-btn"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     INBOX
+========================= -->
+
+<section id="pesan">
+
+  <h2>💬 Pesan</h2>
+
+  <p>
+    Lihat percakapan dan lanjutkan pesan dengan pengguna lain.
+  </p>
+
+  <div class="inbox-box">
+
+    <button
+      class="inbox-refresh"
+      onclick="muatInbox()"
+    >
+      🔄 Refresh Percakapan
+    </button>
+
+    <div id="inboxList">
+
+      <div class="inbox-login">
+        Silakan login untuk melihat pesan.
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     CARI PENGGUNA
+========================= -->
+
+<section id="cari">
+
+  <h2>🔎 Cari Pengguna</h2>
+
+  <p>
+    Cari pengguna berdasarkan username.
+  </p>
+
+
+  <div class="search-box">
+
+    <div class="search-row">
+
+      <input
+        type="text"
+        id="inputCariUser"
+        placeholder="Masukkan username..."
+        autocomplete="off"
+      >
+
+      <button
+        class="search-btn"
+        onclick="cariPengguna()"
+      >
+        Cari
+      </button>
+
+    </div>
+
+
+    <div id="hasilPencarian"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     PROFIL
+========================= -->
+
+<section
+  id="profil"
+  class="hidden"
+>
+
+  <h2>👤 Profil Pengguna</h2>
+
+
+  <button
+    class="back-btn"
+    onclick="tutupProfil()"
+  >
+    ← Kembali
+  </button>
+
+
+  <div id="profilContent"></div>
+
+</section>
+
+
+<!-- =========================
+     CHAT
+========================= -->
+
+<section
+  id="chat"
+  class="hidden"
+>
+
+  <h2>💬 Pesan Pribadi</h2>
+
+
+  <button
+    class="back-btn"
+    onclick="tutupChat()"
+  >
+    ← Kembali
+  </button>
+
+
+  <div class="chat-card">
+
+    <div class="chat-header">
+
+      <h3 id="chatNama">
+        Pengguna
+      </h3>
+
+      <p id="chatUsername">
+        @username
+      </p>
+
+      <div
+        id="realtimeStatus"
+        class="realtime-status"
+      >
+        🔄 Menghubungkan realtime...
+      </div>
+
+    </div>
+
+
+    <div id="chatMessages">
+
+      <div class="chat-empty">
+        Belum ada pesan.
+      </div>
+
+    </div>
+
+
+    <div class="chat-input-area">
+
+      <textarea
+        id="chatInput"
+        placeholder="Tulis pesan..."
+        autocomplete="off"
+      ></textarea>
 
 
       <button
-        class="back-btn"
-        onclick="tutupProfil()"
+        id="sendButton"
+        class="send-btn"
+        onclick="kirimPesan()"
       >
-        ← Kembali
+        Kirim
       </button>
 
+    </div>
 
-      <div id="profilContent"></div>
+  </div>
 
-    </section>
-
-
-    <!-- =========================
-         CHAT
-    ========================= -->
-
-    <section
-      id="chat"
-      class="hidden"
-    >
-
-      <h2>💬 Pesan Pribadi</h2>
+</section>
 
 
-      <button
-        class="back-btn"
-        onclick="tutupChat()"
-      >
-        ← Kembali
-      </button>
+<!-- =========================
+     INFO
+========================= -->
+
+<section id="info">
+
+  <h2>📢 Informasi</h2>
 
 
-      <div class="chat-card">
+  <div class="info-box">
 
-        <div class="chat-header">
-
-          <h3 id="chatNama">
-            Pengguna
-          </h3>
-
-          <p id="chatUsername">
-            @username
-          </p>
-
-          <div
-            id="realtimeStatus"
-            class="realtime-status"
-          >
-            🔄 Menghubungkan realtime...
-          </div>
-
-        </div>
+    <div class="info-icon">
+      🫆
+    </div>
 
 
-        <div id="chatMessages">
+    <p>
+      Pada bagian ini akan berisi posting, informasi,
+      komentar, dan komunikasi pengguna secara publik
+      maupun privasi.
+    </p>
 
-          <div class="chat-empty">
-            Belum ada pesan.
-          </div>
+  </div>
 
-        </div>
+</section>
 
-
-        <div class="chat-input-area">
-
-          <textarea
-            id="chatInput"
-            placeholder="Tulis pesan..."
-            autocomplete="off"
-          ></textarea>
-
-
-          <button
-            id="sendButton"
-            class="send-btn"
-            onclick="kirimPesan()"
-          >
-            Kirim
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         INFO
-    ========================= -->
-
-    <section id="info">
-
-      <h2>📢 Informasi</h2>
-
-
-      <div class="info-box">
-
-        <div class="info-icon">
-          🫆
-        </div>
-
-
-        <p>
-          Pada bagian ini akan berisi posting, informasi,
-          komentar, dan komunikasi pengguna secara publik
-          maupun privasi.
-        </p>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- =========================
+  </main>  <!-- =========================
        FOOTER
-  ========================= -->
+  ========================= -->  <footer><p>
+  © 2026 Info & Komunikasi
+</p>
 
-  <footer>
+<p>
+  Developed by
+  <strong>MAULANA PRAJA PRATAMA US</strong>
+</p>
 
-    <p>
-      © 2026 Info & Komunikasi
-    </p>
-
-    <p>
-      Developed by
-      <strong>MAULANA PRAJA PRATAMA US</strong>
-    </p>
-
-  </footer>
-
-
-  <!-- =========================
+  </footer>  <!-- =========================
        SUPABASE
-  ========================= -->
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-  <script>
+  ========================= -->  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  <script>
 
     /* =========================
        SUPABASE
@@ -1072,16 +1113,18 @@
     ========================= */
 
     let currentUser = null;
-
     let selectedUser = null;
 
     let chatSubscription = null;
-
     let inboxSubscription = null;
 
     let realtimeGeneration = 0;
-
     let inboxRealtimeGeneration = 0;
+
+    let loadingMessages = false;
+    let pendingRealtimeMessages = [];
+
+    let inboxReloadTimer = null;
 
 
     /* =========================
@@ -1096,40 +1139,28 @@
           .value
           .trim();
 
-
       const password =
         document
           .getElementById("password")
           .value;
 
-
       const message =
-        document.getElementById(
-          "message"
-        );
-
+        document.getElementById("message");
 
       if (!email || !password) {
-
         message.textContent =
           "Email dan password harus diisi.";
-
         return;
       }
-
 
       if (password.length < 6) {
-
         message.textContent =
           "Password minimal 6 karakter.";
-
         return;
       }
-
 
       message.textContent =
         "Mendaftarkan...";
-
 
       const { error } =
         await supabaseClient.auth.signUp({
@@ -1137,25 +1168,21 @@
           password: password
         });
 
-
       if (error) {
-
         message.textContent =
           "Gagal daftar: " +
           error.message;
-
         return;
       }
 
-
       message.textContent =
-        "Pendaftaran berhasil. Silakan cek email / langsung login.";
+        "Pendaftaran berhasil. Silakan cek email / login.";
 
     }
 
 
     /* =========================
-       LOGIN
+       LOGIN EMAIL
     ========================= */
 
     async function login() {
@@ -1166,31 +1193,22 @@
           .value
           .trim();
 
-
       const password =
         document
           .getElementById("password")
           .value;
 
-
       const message =
-        document.getElementById(
-          "message"
-        );
-
+        document.getElementById("message");
 
       if (!email || !password) {
-
         message.textContent =
           "Email dan password harus diisi.";
-
         return;
       }
 
-
       message.textContent =
         "Proses login...";
-
 
       const { data, error } =
         await supabaseClient.auth.signInWithPassword({
@@ -1198,32 +1216,102 @@
           password: password
         });
 
-
       if (error) {
-
         message.textContent =
           "Login gagal: " +
           error.message;
-
         return;
       }
-
 
       message.textContent = "";
 
       currentUser =
         data.user;
 
+      await setelahLogin(
+        currentUser
+      );
+
+    }
+
+
+    /* =========================
+       LOGIN GOOGLE
+    ========================= */
+
+    async function loginDenganGoogle() {
+
+      const message =
+        document.getElementById(
+          "message"
+        );
+
+      const tombol =
+        document.getElementById(
+          "googleLoginButton"
+        );
+
+      tombol.disabled = true;
+
+      tombol.innerHTML =
+        '<span class="google-icon">G</span><span>Menghubungkan ke Google...</span>';
+
+      message.textContent =
+        "Membuka Google...";
+
+      const { error } =
+        await supabaseClient.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo:
+              window.location.origin +
+              window.location.pathname
+          }
+        });
+
+      if (error) {
+
+        console.error(
+          "Google Login Error:",
+          error
+        );
+
+        message.textContent =
+          "Login Google gagal: " +
+          error.message;
+
+        tombol.disabled = false;
+
+        tombol.innerHTML =
+          '<span class="google-icon">G</span><span>Lanjut dengan Google</span>';
+
+      }
+
+    }
+
+
+    /* =========================
+       SETELAH LOGIN
+    ========================= */
+
+    async function setelahLogin(
+      user
+    ) {
+
+      if (!user) {
+        return;
+      }
+
+      currentUser =
+        user;
 
       tampilkanUser(
         currentUser
       );
 
-
       await ambilProfil(
         currentUser
       );
-
 
       await muatInbox();
 
@@ -1242,54 +1330,53 @@
 
       await hentikanRealtimeInbox();
 
-
       await supabaseClient.auth.signOut();
 
-
       currentUser = null;
-
       selectedUser = null;
-
 
       document
         .getElementById("authArea")
         .classList.remove("hidden");
 
-
       document
         .getElementById("userArea")
         .classList.add("hidden");
-
 
       document
         .getElementById("profil")
         .classList.add("hidden");
 
-
       document
         .getElementById("chat")
         .classList.add("hidden");
-
 
       document
         .getElementById("email")
         .value = "";
 
-
       document
         .getElementById("password")
         .value = "";
-
 
       document
         .getElementById("username")
         .textContent = "";
 
-
       document
         .getElementById("inboxList")
         .innerHTML =
         '<div class="inbox-login">Silakan login untuk melihat pesan.</div>';
+
+      const tombol =
+        document.getElementById(
+          "googleLoginButton"
+        );
+
+      tombol.disabled = false;
+
+      tombol.innerHTML =
+        '<span class="google-icon">G</span><span>Lanjut dengan Google</span>';
 
     }
 
@@ -1306,17 +1393,18 @@
         .getElementById("authArea")
         .classList.add("hidden");
 
-
       document
         .getElementById("userArea")
         .classList.remove("hidden");
-
 
       document
         .getElementById("userEmail")
         .textContent =
         "Login sebagai: " +
-        user.email;
+        (
+          user.email ||
+          "Akun Google"
+        );
 
     }
 
@@ -1330,26 +1418,14 @@
       const { data } =
         await supabaseClient.auth.getSession();
 
-
       if (data.session) {
 
         currentUser =
           data.session.user;
 
-
-        tampilkanUser(
+        await setelahLogin(
           currentUser
         );
-
-
-        await ambilProfil(
-          currentUser
-        );
-
-
-        await muatInbox();
-
-        await mulaiRealtimeInbox();
 
       }
 
@@ -1377,18 +1453,15 @@
           currentUser =
             session.user;
 
-
           tampilkanUser(
             currentUser
           );
 
         }
 
-
         if (!session) {
 
           currentUser = null;
-
           selectedUser = null;
 
         }
@@ -1415,8 +1488,7 @@
             "user_id",
             user.id
           )
-          .single();
-
+          .maybeSingle();
 
       if (error) {
 
@@ -1426,8 +1498,8 @@
         );
 
         return;
-      }
 
+      }
 
       if (
         data &&
@@ -1456,19 +1528,17 @@
           "inboxList"
         );
 
-
       if (!currentUser) {
 
         area.innerHTML =
           '<div class="inbox-login">Silakan login untuk melihat pesan.</div>';
 
         return;
-      }
 
+      }
 
       area.innerHTML =
         '<div class="inbox-loading">🔄 Memuat percakapan...</div>';
-
 
       const { data: messages, error } =
         await supabaseClient
@@ -1489,7 +1559,6 @@
             }
           );
 
-
       if (error) {
 
         console.error(
@@ -1497,13 +1566,12 @@
           error
         );
 
-
         area.innerHTML =
           '<div class="inbox-empty">Inbox belum bisa dimuat.</div>';
 
         return;
-      }
 
+      }
 
       if (
         !messages ||
@@ -1514,27 +1582,22 @@
           '<div class="inbox-empty">📭 Belum ada percakapan.<br><br>Cari pengguna untuk memulai chat.</div>';
 
         return;
+
       }
-
-
-      /*
-        Simpan hanya pesan terbaru
-        dari setiap lawan bicara.
-      */
 
       const percakapanMap =
         new Map();
 
-
       messages.forEach(
-        function (pesan) {
+        function (
+          pesan
+        ) {
 
           const lawanBicara =
             pesan.sender_id ===
               currentUser.id
               ? pesan.receiver_id
               : pesan.sender_id;
-
 
           if (
             !percakapanMap.has(
@@ -1552,12 +1615,10 @@
         }
       );
 
-
       const userIds =
         Array.from(
           percakapanMap.keys()
         );
-
 
       if (
         userIds.length === 0
@@ -1567,8 +1628,8 @@
           '<div class="inbox-empty">📭 Belum ada percakapan.</div>';
 
         return;
-      }
 
+      }
 
       const { data: profiles, error: profileError } =
         await supabaseClient
@@ -1581,7 +1642,6 @@
             userIds
           );
 
-
       if (profileError) {
 
         console.error(
@@ -1589,20 +1649,20 @@
           profileError
         );
 
-
         area.innerHTML =
           '<div class="inbox-empty">Profil percakapan belum bisa dimuat.</div>';
 
         return;
-      }
 
+      }
 
       const profileMap =
         new Map();
 
-
       (profiles || []).forEach(
-        function (profile) {
+        function (
+          profile
+        ) {
 
           profileMap.set(
             profile.user_id,
@@ -1612,31 +1672,28 @@
         }
       );
 
-
       area.innerHTML = "";
 
-
       userIds.forEach(
-        function (userId) {
+        function (
+          userId
+        ) {
 
           const pesan =
             percakapanMap.get(
               userId
             );
 
-
           const profile =
             profileMap.get(
               userId
             );
-
 
           if (!profile) {
 
             return;
 
           }
-
 
           buatItemInbox(
             profile,
@@ -1645,7 +1702,6 @@
 
         }
       );
-
 
       if (
         area.children.length === 0
@@ -1673,91 +1729,98 @@
           "inboxList"
         );
 
-
       const item =
         document.createElement(
           "button"
         );
 
-
       item.type =
         "button";
 
-
       item.className =
         "inbox-item";
-
 
       const avatar =
         document.createElement(
           "div"
         );
 
-
       avatar.className =
         "inbox-avatar";
 
+      if (
+        profile.avatar_url
+      ) {
 
-      avatar.textContent =
-        (
-          profile.username ||
-          "?"
-        )
-          .charAt(0)
-          .toUpperCase();
+        const img =
+          document.createElement(
+            "img"
+          );
 
+        img.src =
+          profile.avatar_url;
+
+        img.alt =
+          "Foto profil";
+
+        avatar.appendChild(
+          img
+        );
+
+      }
+      else {
+
+        avatar.textContent =
+          (
+            profile.username ||
+            "?"
+          )
+            .charAt(0)
+            .toUpperCase();
+
+      }
 
       const content =
         document.createElement(
           "div"
         );
 
-
       content.className =
         "inbox-content";
-
 
       const top =
         document.createElement(
           "div"
         );
 
-
       top.className =
         "inbox-top";
-
 
       const name =
         document.createElement(
           "div"
         );
 
-
       name.className =
         "inbox-name";
-
 
       name.textContent =
         profile.full_name ||
         profile.username ||
         "Pengguna";
 
-
       const time =
         document.createElement(
           "div"
         );
 
-
       time.className =
         "inbox-time";
-
 
       time.textContent =
         formatWaktu(
           pesan.created_at
         );
-
 
       top.appendChild(
         name
@@ -1767,16 +1830,13 @@
         time
       );
 
-
       const username =
         document.createElement(
           "div"
         );
 
-
       username.className =
         "inbox-username";
-
 
       username.textContent =
         "@" +
@@ -1785,21 +1845,17 @@
           "username"
         );
 
-
       const preview =
         document.createElement(
           "div"
         );
 
-
       preview.className =
         "inbox-preview";
-
 
       const pesanText =
         pesan.content ||
         "";
-
 
       if (
         pesan.sender_id ===
@@ -1818,7 +1874,6 @@
 
       }
 
-
       content.appendChild(
         top
       );
@@ -1831,7 +1886,6 @@
         preview
       );
 
-
       item.appendChild(
         avatar
       );
@@ -1839,7 +1893,6 @@
       item.appendChild(
         content
       );
-
 
       item.onclick =
         function () {
@@ -1850,10 +1903,42 @@
 
         };
 
-
       area.appendChild(
         item
       );
+
+    }
+
+
+    /* =========================
+       JADWALKAN MUAT INBOX
+       Mencegah reload berulang
+    ========================= */
+
+    function jadwalkanMuatInbox() {
+
+      if (
+        inboxReloadTimer
+      ) {
+
+        clearTimeout(
+          inboxReloadTimer
+        );
+
+      }
+
+      inboxReloadTimer =
+        setTimeout(
+          async function () {
+
+            inboxReloadTimer =
+              null;
+
+            await muatInbox();
+
+          },
+          150
+        );
 
     }
 
@@ -1866,16 +1951,12 @@
 
       await hentikanRealtimeInbox();
 
-
       if (!currentUser) {
-
         return;
       }
 
-
       const generation =
         ++inboxRealtimeGeneration;
-
 
       const channelName =
         "inbox-" +
@@ -1883,12 +1964,9 @@
         "-" +
         Date.now();
 
-
       inboxSubscription =
         supabaseClient
           .channel(channelName)
-
-
           .on(
             "postgres_changes",
             {
@@ -1896,9 +1974,7 @@
               schema: "public",
               table: "messages"
             },
-
-
-            async function (
+            function (
               payload
             ) {
 
@@ -1908,18 +1984,15 @@
               ) {
 
                 return;
+
               }
 
-
               if (!currentUser) {
-
                 return;
               }
 
-
               const pesanBaru =
                 payload.new;
-
 
               const pesanUntukUser =
                 pesanBaru.sender_id ===
@@ -1928,28 +2001,18 @@
                 pesanBaru.receiver_id ===
                   currentUser.id;
 
-
               if (
                 !pesanUntukUser
               ) {
 
                 return;
+
               }
 
-
-              /*
-                Muat ulang Inbox agar
-                percakapan terbaru berada
-                di posisi paling atas.
-              */
-
-              await muatInbox();
+              jadwalkanMuatInbox();
 
             }
-
           )
-
-
           .subscribe(
             function (
               status
@@ -1974,6 +2037,18 @@
 
       inboxRealtimeGeneration++;
 
+      if (
+        inboxReloadTimer
+      ) {
+
+        clearTimeout(
+          inboxReloadTimer
+        );
+
+        inboxReloadTimer =
+          null;
+
+      }
 
       if (
         inboxSubscription
@@ -1982,10 +2057,8 @@
         const channel =
           inboxSubscription;
 
-
         inboxSubscription =
           null;
-
 
         try {
 
@@ -2023,12 +2096,10 @@
           .value
           .trim();
 
-
       const hasil =
         document.getElementById(
           "hasilPencarian"
         );
-
 
       if (!input) {
 
@@ -2039,8 +2110,8 @@
           "search-message";
 
         return;
-      }
 
+      }
 
       if (!currentUser) {
 
@@ -2051,16 +2122,14 @@
           "search-message";
 
         return;
-      }
 
+      }
 
       hasil.textContent =
         "Mencari...";
 
-
       hasil.className =
         "search-message";
-
 
       const { data, error } =
         await supabaseClient
@@ -2074,14 +2143,12 @@
           )
           .maybeSingle();
 
-
       if (error) {
 
         console.error(
           "Kesalahan pencarian:",
           error
         );
-
 
         hasil.textContent =
           "Terjadi kesalahan saat mencari pengguna.";
@@ -2090,8 +2157,8 @@
           "search-message";
 
         return;
-      }
 
+      }
 
       if (!data) {
 
@@ -2102,8 +2169,8 @@
           "search-message";
 
         return;
-      }
 
+      }
 
       if (
         data.user_id ===
@@ -2117,32 +2184,27 @@
           "search-message";
 
         return;
-      }
 
+      }
 
       hasil.className =
         "search-result";
 
-
       hasil.innerHTML = "";
-
 
       const judul =
         document.createElement(
           "h3"
         );
 
-
       judul.textContent =
         "👤 " +
         data.username;
-
 
       const nama =
         document.createElement(
           "p"
         );
-
 
       nama.textContent =
         "Nama: " +
@@ -2151,30 +2213,24 @@
           "Belum diatur"
         );
 
-
       const buttons =
         document.createElement(
           "div"
         );
 
-
       buttons.className =
         "result-buttons";
-
 
       const profilButton =
         document.createElement(
           "button"
         );
 
-
       profilButton.className =
         "profile-btn";
 
-
       profilButton.textContent =
         "👤 Lihat Profil";
-
 
       profilButton.onclick =
         function () {
@@ -2185,21 +2241,17 @@
 
         };
 
-
       buttons.appendChild(
         profilButton
       );
-
 
       hasil.appendChild(
         judul
       );
 
-
       hasil.appendChild(
         nama
       );
-
 
       hasil.appendChild(
         buttons
@@ -2219,13 +2271,11 @@
       selectedUser =
         user;
 
-
       document
         .getElementById("profil")
         .classList.remove(
           "hidden"
         );
-
 
       document
         .getElementById("chat")
@@ -2233,61 +2283,74 @@
           "hidden"
         );
 
-
       const content =
         document.getElementById(
           "profilContent"
         );
 
-
       content.innerHTML = "";
-
 
       const card =
         document.createElement(
           "div"
         );
 
-
       card.className =
         "profile-card";
-
 
       const avatar =
         document.createElement(
           "div"
         );
 
-
       avatar.className =
         "profile-avatar";
 
+      if (
+        user.avatar_url
+      ) {
 
-      avatar.textContent =
-        (
-          user.username ||
-          "?"
-        )
-          .charAt(0)
-          .toUpperCase();
+        const img =
+          document.createElement(
+            "img"
+          );
 
+        img.src =
+          user.avatar_url;
+
+        img.alt =
+          "Foto profil";
+
+        avatar.appendChild(
+          img
+        );
+
+      }
+      else {
+
+        avatar.textContent =
+          (
+            user.username ||
+            "?"
+          )
+            .charAt(0)
+            .toUpperCase();
+
+      }
 
       const title =
         document.createElement(
           "h3"
         );
 
-
       title.textContent =
         "@" +
         user.username;
-
 
       const nama =
         document.createElement(
           "p"
         );
-
 
       nama.textContent =
         "Nama: " +
@@ -2296,20 +2359,16 @@
           "Belum diatur"
         );
 
-
       const button =
         document.createElement(
           "button"
         );
 
-
       button.className =
         "chat-open-btn";
 
-
       button.textContent =
         "💬 Kirim Pesan";
-
 
       button.onclick =
         function () {
@@ -2319,7 +2378,6 @@
           );
 
         };
-
 
       card.appendChild(
         avatar
@@ -2337,11 +2395,9 @@
         button
       );
 
-
       content.appendChild(
         card
       );
-
 
       document
         .getElementById("profil")
@@ -2382,8 +2438,8 @@
         );
 
         return;
-      }
 
+      }
 
       if (
         !user ||
@@ -2395,8 +2451,8 @@
         );
 
         return;
-      }
 
+      }
 
       if (
         currentUser.id ===
@@ -2408,12 +2464,17 @@
         );
 
         return;
-      }
 
+      }
 
       selectedUser =
         user;
 
+      pendingRealtimeMessages =
+        [];
+
+      loadingMessages =
+        true;
 
       document
         .getElementById("profil")
@@ -2421,13 +2482,11 @@
           "hidden"
         );
 
-
       document
         .getElementById("chat")
         .classList.remove(
           "hidden"
         );
-
 
       document
         .getElementById("chatNama")
@@ -2435,35 +2494,25 @@
         user.full_name ||
         "Pengguna";
 
-
       document
         .getElementById("chatUsername")
         .textContent =
         "@" +
         user.username;
 
-
       document
         .getElementById("chatInput")
         .value = "";
 
-
       updateRealtimeStatus(
         "🔄 Menghubungkan realtime..."
       );
-
 
       document
         .getElementById("chat")
         .scrollIntoView({
           behavior: "smooth"
         });
-
-
-      /*
-        Realtime dipasang terlebih dahulu,
-        kemudian riwayat pesan dimuat.
-      */
 
       await mulaiRealtimeChat();
 
@@ -2480,6 +2529,11 @@
 
       await hentikanRealtimeChat();
 
+      loadingMessages =
+        false;
+
+      pendingRealtimeMessages =
+        [];
 
       document
         .getElementById("chat")
@@ -2487,16 +2541,8 @@
           "hidden"
         );
 
-
       selectedUser =
         null;
-
-
-      /*
-        Setelah kembali dari chat,
-        Inbox dimuat ulang supaya
-        preview pesan terbaru tampil.
-      */
 
       if (currentUser) {
 
@@ -2513,24 +2559,31 @@
 
     async function muatPesan() {
 
-      const area =
-        document.getElementById(
-          "chatMessages"
-        );
-
-
       if (
         !currentUser ||
         !selectedUser
       ) {
 
+        loadingMessages =
+          false;
+
         return;
+
       }
 
+      const targetUserId =
+        selectedUser.user_id;
+
+      const generation =
+        realtimeGeneration;
+
+      const area =
+        document.getElementById(
+          "chatMessages"
+        );
 
       area.innerHTML =
         '<div class="chat-empty">Memuat pesan...</div>';
-
 
       const { data, error } =
         await supabaseClient
@@ -2542,10 +2595,10 @@
             "and(sender_id.eq." +
             currentUser.id +
             ",receiver_id.eq." +
-            selectedUser.user_id +
+            targetUserId +
             ")," +
             "and(sender_id.eq." +
-            selectedUser.user_id +
+            targetUserId +
             ",receiver_id.eq." +
             currentUser.id +
             ")"
@@ -2557,6 +2610,19 @@
             }
           );
 
+      if (
+        generation !==
+        realtimeGeneration
+        ||
+        !selectedUser
+        ||
+        selectedUser.user_id !==
+        targetUserId
+      ) {
+
+        return;
+
+      }
 
       if (error) {
 
@@ -2565,30 +2631,84 @@
           error
         );
 
-
         area.innerHTML =
           '<div class="chat-empty">Pesan belum bisa dimuat.</div>';
 
-        return;
-      }
+        loadingMessages =
+          false;
 
+        pendingRealtimeMessages =
+          [];
+
+        return;
+
+      }
 
       area.innerHTML = "";
 
+      const ids =
+        new Set();
 
       if (
-        !data ||
-        data.length === 0
+        data &&
+        data.length
       ) {
 
-        area.innerHTML =
-          '<div class="chat-empty">Belum ada pesan. Kirim pesan pertama 👋</div>';
+        data.forEach(
+          function (
+            pesan
+          ) {
 
-        return;
+            ids.add(
+              String(
+                pesan.id
+              )
+            );
+
+            tampilkanPesan(
+              pesan
+            );
+
+          }
+        );
+
       }
 
+      const pending =
+        pendingRealtimeMessages
+          .filter(
+            function (
+              pesan
+            ) {
 
-      data.forEach(
+              const sesuai =
+                (
+                  pesan.sender_id ===
+                    currentUser.id &&
+                  pesan.receiver_id ===
+                    targetUserId
+                )
+                ||
+                (
+                  pesan.sender_id ===
+                    targetUserId &&
+                  pesan.receiver_id ===
+                    currentUser.id
+                );
+
+              return (
+                sesuai &&
+                !ids.has(
+                  String(
+                    pesan.id
+                  )
+                )
+              );
+
+            }
+          );
+
+      pending.forEach(
         function (
           pesan
         ) {
@@ -2600,6 +2720,22 @@
         }
       );
 
+      pendingRealtimeMessages =
+        [];
+
+      loadingMessages =
+        false;
+
+      if (
+        area.querySelectorAll(
+          ".chat-message"
+        ).length === 0
+      ) {
+
+        area.innerHTML =
+          '<div class="chat-empty">Belum ada pesan. Kirim pesan pertama 👋</div>';
+
+      }
 
       scrollChatKeBawah();
 
@@ -2614,36 +2750,34 @@
 
       await hentikanRealtimeChat();
 
-
       if (
         !currentUser ||
         !selectedUser
       ) {
 
         return;
-      }
 
+      }
 
       const generation =
         ++realtimeGeneration;
 
+      const targetUserId =
+        selectedUser.user_id;
 
       const channelName =
         "chat-" +
         currentUser.id +
         "-" +
-        selectedUser.user_id +
+        targetUserId +
         "-" +
         Date.now();
-
 
       chatSubscription =
         supabaseClient
           .channel(
             channelName
           )
-
-
           .on(
             "postgres_changes",
             {
@@ -2651,8 +2785,6 @@
               schema: "public",
               table: "messages"
             },
-
-
             function (
               payload
             ) {
@@ -2663,8 +2795,8 @@
               ) {
 
                 return;
-              }
 
+              }
 
               if (
                 !currentUser ||
@@ -2672,12 +2804,11 @@
               ) {
 
                 return;
-              }
 
+              }
 
               const pesanBaru =
                 payload.new;
-
 
               const percakapanSesuai =
                 (
@@ -2694,26 +2825,35 @@
                     currentUser.id
                 );
 
-
               if (
                 !percakapanSesuai
               ) {
 
                 return;
+
               }
 
+              if (
+                loadingMessages
+              ) {
+
+                pendingRealtimeMessages.push(
+                  pesanBaru
+                );
+
+                return;
+
+              }
 
               const area =
                 document.getElementById(
                   "chatMessages"
                 );
 
-
               const emptyEl =
                 area.querySelector(
                   ".chat-empty"
                 );
-
 
               if (emptyEl) {
 
@@ -2721,50 +2861,14 @@
 
               }
 
-
-              const pesanSudahAda =
-                Array.from(
-                  area.querySelectorAll(
-                    ".chat-message"
-                  )
-                ).some(
-                  function (
-                    element
-                  ) {
-
-                    return (
-                      element.getAttribute(
-                        "data-id"
-                      ) ===
-                      String(
-                        pesanBaru.id
-                      )
-                    );
-
-                  }
-                );
-
-
-              if (
-                pesanSudahAda
-              ) {
-
-                return;
-              }
-
-
               tampilkanPesan(
                 pesanBaru
               );
 
-
               scrollChatKeBawah();
 
             }
-
           )
-
-
           .subscribe(
             function (
               status
@@ -2775,15 +2879,14 @@
                 status
               );
 
-
               if (
                 generation !==
                 realtimeGeneration
               ) {
 
                 return;
-              }
 
+              }
 
               if (
                 status ===
@@ -2829,7 +2932,6 @@
             }
           );
 
-
       await tungguRealtimeAktif(
         chatSubscription,
         generation
@@ -2852,18 +2954,46 @@
           resolve
         ) {
 
+          let selesai =
+            false;
+
+          let cek = null;
+
+          const selesaiMenunggu =
+            function () {
+
+              if (selesai) {
+                return;
+              }
+
+              selesai =
+                true;
+
+              if (cek) {
+                clearInterval(
+                  cek
+                );
+              }
+
+              clearTimeout(
+                batasWaktu
+              );
+
+              resolve();
+
+            };
+
           const batasWaktu =
             setTimeout(
               function () {
 
-                resolve();
+                selesaiMenunggu();
 
               },
               5000
             );
 
-
-          const cek =
+          cek =
             setInterval(
               function () {
 
@@ -2872,19 +3002,11 @@
                   realtimeGeneration
                 ) {
 
-                  clearInterval(
-                    cek
-                  );
-
-                  clearTimeout(
-                    batasWaktu
-                  );
-
-                  resolve();
+                  selesaiMenunggu();
 
                   return;
-                }
 
+                }
 
                 if (
                   channel &&
@@ -2892,15 +3014,7 @@
                   "joined"
                 ) {
 
-                  clearInterval(
-                    cek
-                  );
-
-                  clearTimeout(
-                    batasWaktu
-                  );
-
-                  resolve();
+                  selesaiMenunggu();
 
                 }
 
@@ -2922,6 +3036,11 @@
 
       realtimeGeneration++;
 
+      loadingMessages =
+        false;
+
+      pendingRealtimeMessages =
+        [];
 
       if (
         chatSubscription
@@ -2930,10 +3049,8 @@
         const channel =
           chatSubscription;
 
-
         chatSubscription =
           null;
-
 
         try {
 
@@ -2954,7 +3071,6 @@
 
       }
 
-
       updateRealtimeStatus(
         "⚪ Realtime tidak aktif"
       );
@@ -2974,7 +3090,6 @@
         document.getElementById(
           "realtimeStatus"
         );
-
 
       if (element) {
 
@@ -2999,12 +3114,10 @@
           "chatMessages"
         );
 
-
       const semuaPesan =
         area.querySelectorAll(
           ".chat-message"
         );
-
 
       for (
         let i = 0;
@@ -3027,16 +3140,13 @@
 
       }
 
-
       const wrapper =
         document.createElement(
           "div"
         );
 
-
       wrapper.className =
         "chat-message";
-
 
       wrapper.setAttribute(
         "data-id",
@@ -3044,7 +3154,6 @@
           pesan.id
         )
       );
-
 
       if (
         currentUser &&
@@ -3058,57 +3167,46 @@
 
       }
 
-
       const bubble =
         document.createElement(
           "div"
         );
 
-
       bubble.className =
         "chat-bubble";
-
 
       const text =
         document.createElement(
           "div"
         );
 
-
       text.textContent =
         pesan.content;
-
 
       const time =
         document.createElement(
           "span"
         );
 
-
       time.className =
         "chat-time";
-
 
       time.textContent =
         formatWaktu(
           pesan.created_at
         );
 
-
       bubble.appendChild(
         text
       );
-
 
       bubble.appendChild(
         time
       );
 
-
       wrapper.appendChild(
         bubble
       );
-
 
       area.appendChild(
         wrapper
@@ -3126,17 +3224,13 @@
     ) {
 
       if (!waktu) {
-
         return "";
-
       }
-
 
       const tanggal =
         new Date(
           waktu
         );
-
 
       return tanggal.toLocaleString(
         "id-ID",
@@ -3164,8 +3258,8 @@
         );
 
         return;
-      }
 
+      }
 
       if (!selectedUser) {
 
@@ -3174,8 +3268,8 @@
         );
 
         return;
-      }
 
+      }
 
       if (!selectedUser.user_id) {
 
@@ -3184,8 +3278,8 @@
         );
 
         return;
-      }
 
+      }
 
       if (
         currentUser.id ===
@@ -3197,36 +3291,31 @@
         );
 
         return;
-      }
 
+      }
 
       const input =
         document.getElementById(
           "chatInput"
         );
 
-
       const content =
         input.value.trim();
 
-
       if (!content) {
-
         return;
       }
-
 
       const tombol =
         document.getElementById(
           "sendButton"
         );
 
-
-      tombol.disabled = true;
+      tombol.disabled =
+        true;
 
       tombol.textContent =
         "Mengirim...";
-
 
       const { data, error } =
         await supabaseClient
@@ -3240,11 +3329,9 @@
 
             content:
               content
-
           })
           .select()
           .single();
-
 
       if (error) {
 
@@ -3253,36 +3340,22 @@
           error
         );
 
-
         alert(
           "Pesan gagal dikirim: " +
           error.message
         );
 
-
         tombol.disabled =
           false;
-
 
         tombol.textContent =
           "Kirim";
 
-
         return;
+
       }
 
-
       input.value = "";
-
-
-      /*
-        Tampilkan langsung untuk
-        pengirim.
-
-        Jika realtime juga mengirim
-        event yang sama, ID pesan akan
-        mencegah duplikasi.
-      */
 
       if (data) {
 
@@ -3290,23 +3363,14 @@
           data
         );
 
-
         scrollChatKeBawah();
 
       }
 
-
-      /*
-        Perbarui Inbox setelah
-        pesan berhasil dikirim.
-      */
-
-      await muatInbox();
-
+      jadwalkanMuatInbox();
 
       tombol.disabled =
         false;
-
 
       tombol.textContent =
         "Kirim";
@@ -3324,7 +3388,6 @@
         document.getElementById(
           "chatMessages"
         );
-
 
       area.scrollTop =
         area.scrollHeight;
@@ -3361,7 +3424,5 @@
         }
       );
 
-  </script>
-
-</body>
+  </script></body>
 </html>
