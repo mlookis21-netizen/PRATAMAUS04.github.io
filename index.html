@@ -990,103 +990,211 @@
          AKUN
     ========================= -->
 
-    <section id="akun">
-      <div class="section-head">
-        <h2 data-i18n="accountTitle">👤 Akun</h2>
+<section id="akun">
+  <div class="section-head">
+    <h2 data-i18n="accountTitle">👤 Akun</h2>
+  </div>
+
+  <div id="authArea">
+
+    <div class="form-group">
+      <label for="email" data-i18n="emailLabel">
+        Email
+      </label>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Masukkan email"
+        autocomplete="email"
+        data-i18n-placeholder="emailPlaceholder"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="password" data-i18n="passwordLabel">
+        Password
+      </label>
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Minimal 6 karakter"
+        autocomplete="current-password"
+        data-i18n-placeholder="passwordPlaceholder"
+      >
+    </div>
+
+    <div class="button-row">
+      <button
+        type="button"
+        class="btn-primary"
+        onclick="daftar()"
+        id="registerButton"
+        data-i18n="registerButton"
+      >
+        Daftar
+      </button>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        onclick="login()"
+        id="loginButton"
+        data-i18n="loginButton"
+      >
+        Login
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="btn-google"
+      onclick="loginDenganGoogle()"
+      id="googleLoginButton"
+    >
+      🔵 <span data-i18n="googleButton">Lanjut dengan Google</span>
+    </button>
+
+    <div id="message"></div>
+  </div>
+
+  <!-- AREA USER SETELAH LOGIN -->
+
+  <div id="userArea" class="user-card hidden">
+
+    <h3 data-i18n="loggedInTitle">
+      Kamu sudah login ✅
+    </h3>
+
+    <p>
+      <span data-i18n="loginAs">
+        Login sebagai:
+      </span>
+      <strong id="userEmail"></strong>
+    </p>
+
+    <p class="username-text">
+      <span data-i18n="usernameLabel">
+        Username:
+      </span>
+      <span id="username">-</span>
+    </p>
+
+    <div class="button-row">
+
+      <button
+        type="button"
+        class="btn-primary"
+        onclick="bukaEditProfil()"
+      >
+        ✏️ Edit Profil
+      </button>
+
+      <button
+        type="button"
+        class="btn-danger"
+        onclick="logout()"
+        data-i18n="logoutButton"
+      >
+        Logout
+      </button>
+
+    </div>
+
+    <!-- FORM EDIT PROFIL -->
+
+    <div id="editProfileArea" class="hidden">
+
+      <h3>✏️ Edit Profil</h3>
+
+      <div class="form-group">
+        <label for="editFullName">
+          Nama Lengkap
+        </label>
+
+        <input
+          type="text"
+          id="editFullName"
+          placeholder="Nama lengkap"
+        >
       </div>
 
-      <div id="authArea">
+      <div class="form-group">
+        <label for="editBio">
+          Bio
+        </label>
 
-        <div class="form-group">
-          <label for="email" data-i18n="emailLabel">
-            Email
-          </label>
+        <textarea
+          id="editBio"
+          placeholder="Ceritakan tentang kamu"
+          rows="3"
+        ></textarea>
+      </div>
 
-          <input
-            type="email"
-            id="email"
-            placeholder="Masukkan email"
-            autocomplete="email"
-            data-i18n-placeholder="emailPlaceholder"
-          >
-        </div>
+      <div class="form-group">
+        <label for="editWebsite">
+          Website
+        </label>
 
-        <div class="form-group">
-          <label for="password" data-i18n="passwordLabel">
-            Password
-          </label>
+        <input
+          type="url"
+          id="editWebsite"
+          placeholder="https://contoh.com"
+        >
+      </div>
 
-          <input
-            type="password"
-            id="password"
-            placeholder="Minimal 6 karakter"
-            autocomplete="current-password"
-            data-i18n-placeholder="passwordPlaceholder"
-          >
-        </div>
+      <div class="form-group">
+        <label for="editLocation">
+          Lokasi
+        </label>
 
-        <div class="button-row">
-          <button
-            type="button"
-            class="btn-primary"
-            onclick="daftar()"
-            id="registerButton"
-            data-i18n="registerButton"
-          >
-            Daftar
-          </button>
+        <input
+          type="text"
+          id="editLocation"
+          placeholder="Kota / daerah"
+        >
+      </div>
 
-          <button
-            type="button"
-            class="btn-secondary"
-            onclick="login()"
-            id="loginButton"
-            data-i18n="loginButton"
-          >
-            Login
-          </button>
-        </div>
+      <div class="form-group">
+        <label for="editAvatar">
+          URL Foto Profil
+        </label>
+
+        <input
+          type="url"
+          id="editAvatar"
+          placeholder="https://..."
+        >
+      </div>
+
+      <div class="button-row">
 
         <button
           type="button"
-          class="btn-google"
-          onclick="loginDenganGoogle()"
-          id="googleLoginButton"
+          class="btn-primary"
+          onclick="simpanEditProfil()"
         >
-          🔵 <span data-i18n="googleButton">Lanjut dengan Google</span>
+          💾 Simpan
         </button>
 
-        <div id="message"></div>
+        <button
+          type="button"
+          class="btn-secondary"
+          onclick="tutupEditProfil()"
+        >
+          Batal
+        </button>
+
       </div>
 
-      <!-- AREA USER SETELAH LOGIN -->
+      <div id="editProfileMessage"></div>
 
-      <div id="userArea" class="user-card hidden">
-        <h3 data-i18n="loggedInTitle">Kamu sudah login ✅</h3>
+    </div>
 
-        <p>
-          <span data-i18n="loginAs">Login sebagai:</span>
-          <strong id="userEmail"></strong>
-        </p>
-
-        <p class="username-text">
-          <span data-i18n="usernameLabel">Username:</span>
-          <span id="username">-</span>
-        </p>
-
-        <div class="button-row">
-          <button
-            type="button"
-            class="btn-danger"
-            onclick="logout()"
-            data-i18n="logoutButton"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-    </section>
-
+  </div>
+</section>
+    
     <!-- =========================
          PESAN / INBOX
     ========================= -->
@@ -1520,35 +1628,43 @@
     /* =========================
        AMBIL PROFIL
     ========================= */
+async function ambilProfil(user) {
+  if (!user) return;
 
-    async function ambilProfil(user) {
-      if (!user) return;
+  const { data, error } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "username, full_name, avatar_url, bio, website, location"
+      )
+      .eq("user_id", user.id)
+      .maybeSingle();
 
-      const { data, error } =
-        await supabaseClient
-          .from("profiles")
-          .select(
-            "username, full_name, avatar_url"
-          )
-          .eq("user_id", user.id)
-          .maybeSingle();
+  if (error) {
+    console.error(
+      "Gagal mengambil profil:",
+      error
+    );
+    return;
+  }
 
-      if (error) {
-        console.error(
-          "Gagal mengambil profil:",
-          error
-        );
-        return;
-      }
+  if (data) {
+    document.getElementById(
+      "username"
+    ).textContent =
+      data.username || "-";
 
-      if (data) {
-        document.getElementById(
-          "username"
-        ).textContent =
-          data.username || "-";
-      }
-    }
-
+    window.profilSaya = {
+      user_id: user.id,
+      username: data.username || "",
+      full_name: data.full_name || "",
+      avatar_url: data.avatar_url || "",
+      bio: data.bio || "",
+      website: data.website || "",
+      location: data.location || ""
+    };
+  }
+}
     /* =========================
        LOGOUT
     ========================= */
@@ -3172,6 +3288,130 @@
       bahasaTersimpan
     );
 
+function bukaEditProfil() {
+  const area = document.getElementById("editProfileArea");
+
+  if (!area) return;
+
+  const profil = window.profilSaya || {};
+
+  document.getElementById("editFullName").value =
+    profil.full_name || "";
+
+  document.getElementById("editBio").value =
+    profil.bio || "";
+
+  document.getElementById("editWebsite").value =
+    profil.website || "";
+
+  document.getElementById("editLocation").value =
+    profil.location || "";
+
+  document.getElementById("editAvatar").value =
+    profil.avatar_url || "";
+
+  document.getElementById("editProfileMessage").textContent = "";
+
+  area.classList.remove("hidden");
+
+  area.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function tutupEditProfil() {
+  const area =
+    document.getElementById("editProfileArea");
+
+  if (!area) return;
+
+  area.classList.add("hidden");
+
+  document.getElementById(
+    "editProfileMessage"
+  ).textContent = "";
+}
+
+async function simpanEditProfil() {
+  if (!currentUser) {
+    return;
+  }
+
+  const message =
+    document.getElementById(
+      "editProfileMessage"
+    );
+
+  const full_name =
+    document.getElementById(
+      "editFullName"
+    ).value.trim();
+
+  const bio =
+    document.getElementById(
+      "editBio"
+    ).value.trim();
+
+  const website =
+    document.getElementById(
+      "editWebsite"
+    ).value.trim();
+
+  const location =
+    document.getElementById(
+      "editLocation"
+    ).value.trim();
+
+  const avatar_url =
+    document.getElementById(
+      "editAvatar"
+    ).value.trim();
+
+  message.textContent =
+    "⏳ Menyimpan...";
+
+  const { error } =
+    await supabaseClient
+      .from("profiles")
+      .update({
+        full_name,
+        bio,
+        website,
+        location,
+        avatar_url
+      })
+      .eq("user_id", currentUser.id);
+
+  if (error) {
+    console.error(
+      "Gagal menyimpan profil:",
+      error
+    );
+
+    message.textContent =
+      "❌ Gagal menyimpan profil.";
+
+    return;
+  }
+
+  window.profilSaya = {
+    ...window.profilSaya,
+    full_name,
+    bio,
+    website,
+    location,
+    avatar_url
+  };
+
+  message.textContent =
+    "✅ Profil berhasil diperbarui.";
+
+  setTimeout(() => {
+    tutupEditProfil();
+  }, 1000);
+}
+    
     /* =========================
        MULAI APLIKASI
     ========================= */
