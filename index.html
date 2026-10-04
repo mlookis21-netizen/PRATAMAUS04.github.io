@@ -964,6 +964,31 @@
   background: transparent;
   font-size: 22px !important;
 }
+
+.status-list {
+  margin-top: 20px;
+}
+
+.status-item {
+  background: white;
+  padding: 18px;
+  margin-bottom: 12px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.status-text {
+  font-size: 17px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.status-item small {
+  display: block;
+  margin-top: 10px;
+  opacity: 0.6;
+  font-size: 12px;
+}
     
   </style>
 </head>
@@ -3518,24 +3543,38 @@ function tutupStatusTeks() {
 }
 
 function publikasikanStatusTeks() {
-  const teks = document
-    .getElementById("statusTeksInput")
-    .value
-    .trim();
+const input = document.getElementById("statusTeksInput");
+const teks = input.value.trim();
 
-  if (!teks) {
-    alert("Tulis status terlebih dahulu.");
-    return;
-  }
-
-  alert("Status berhasil dibuat:\n\n" + teks);
-
-  document
-    .getElementById("statusTeksInput")
-    .value = "";
-
-  tutupStatusTeks();
+if (!teks) {
+alert("Tulis status terlebih dahulu.");
+return;
 }
+
+const statusList = document.getElementById("statusList");
+
+const status = document.createElement("div");
+status.className = "status-item";
+
+const waktuBuat = Date.now();
+const waktuHapus = waktuBuat + (24 * 60 * 60 * 1000);
+
+status.dataset.expire = waktuHapus;
+
+status.innerHTML = `     <div class="status-text">${teks}</div>     <small>Baru saja • berlaku 24 jam</small>
+  `;
+
+statusList.prepend(status);
+
+input.value = "";
+tutupStatusTeks();
+
+setTimeout(() => {
+status.remove();
+}, 24 * 60 * 60 * 1000);
+}
+
+    
 function buatStatusFoto() {
   alert("Fitur status foto akan kita buat selanjutnya.");
 }
