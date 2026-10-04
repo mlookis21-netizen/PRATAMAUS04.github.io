@@ -3542,36 +3542,63 @@ function tutupStatusTeks() {
     .classList.add("hidden");
 }
 
-function publikasikanStatusTeks() {
-const input = document.getElementById("statusTeksInput");
-const teks = input.value.trim();
+async function publikasikanStatusTeks() {
+  const input = document.getElementById("statusTeksInput");
+  const teks = input.value.trim();
 
-if (!teks) {
-alert("Tulis status terlebih dahulu.");
-return;
-}
+  if (!teks) {
+    alert("Tulis status terlebih dahulu.");
+    return;
+  }
 
-const statusList = document.getElementById("statusList");
+  if (!currentUser) {
+    alert("Silakan login terlebih dahulu.");
+    return;
+  }
 
-const status = document.createElement("div");
-status.className = "status-item";
+  const expiresAt = new Date(
+    Date.now() + 24 * 60 * 60 * 1000
+  ).toISOString();
 
-const waktuBuat = Date.now();
-const waktuHapus = waktuBuat + (24 * 60 * 60 * 1000);
+  const { data, error } = await supabaseClient
+    .from("statuses")
+    .insert({
+      user_id: currentUser.id,
+      type: "text",
+      content: teks,
+      expires_at: expiresAt
+    })
+    .select()
+    .single();
 
-status.dataset.expire = waktuHapus;
+  if (error) {
+    console.error("Gagal membuat status:", error);
+    alert("Status gagal dibuat.");
+    return;
+  }
 
-status.innerHTML = `     <div class="status-text">${teks}</div>     <small>Baru saja • berlaku 24 jam</small>
+  const statusList = document.getElementById("statusList");
+
+  const status = document.createElement("div");
+  status.className = "status-item";
+
+  status.dataset.expire = new Date(data.expires_at).getTime();
+
+  status.innerHTML = `
+    <div class="status-text"></div>
+    <small>Baru saja • berlaku 24 jam</small>
   `;
 
-statusList.prepend(status);
+  status.querySelector(".status-text").textContent = data.content;
 
-input.value = "";
-tutupStatusTeks();
+  statusList.prepend(status);
 
-setTimeout(() => {
-status.remove();
-}, 24 * 60 * 60 * 1000);
+  input.value = "";
+  tutupStatusTeks();
+
+  setTimeout(() => {
+    status.remove();
+  }, 24 * 60 * 60 * 1000);
 }
 
     
