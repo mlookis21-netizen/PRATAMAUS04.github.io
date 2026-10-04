@@ -970,24 +970,46 @@
 }
 
 .status-item {
-  background: white;
-  padding: 18px;
-  margin-bottom: 12px;
+  position: relative;
+  background: linear-gradient(135deg, #1877f2, #7b2ff7);
+  color: white;
+  padding: 22px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.status-item::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  pointer-events: none;
 }
 
 .status-text {
-  font-size: 17px;
+  position: relative;
+  z-index: 1;
+  font-size: 18px;
   line-height: 1.5;
+  font-weight: 500;
   word-wrap: break-word;
 }
 
 .status-item small {
   display: block;
   margin-top: 10px;
-  opacity: 0.6;
+  opacity: 0.8;
   font-size: 12px;
+  position: relative;
+  z-index: 1;
 }
     
   </style>
