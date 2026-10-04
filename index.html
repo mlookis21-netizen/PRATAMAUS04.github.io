@@ -1011,6 +1011,62 @@
   position: relative;
   z-index: 1;
 }
+
+.story-viewer {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.story-viewer.hidden {
+  display: none;
+}
+
+.story-viewer-content {
+  width: 92%;
+  max-width: 500px;
+  min-height: 70vh;
+  background: linear-gradient(135deg, #1877f2, #7b2ff7);
+  border-radius: 22px;
+  padding: 30px 22px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.story-viewer-text {
+  font-size: 24px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.story-viewer-time {
+  margin-top: 20px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.story-viewer-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: auto !important;
+  padding: 8px 12px !important;
+  margin: 0 !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white;
+  font-size: 22px !important;
+  border-radius: 50% !important;
+}
     
   </style>
 </head>
@@ -3604,7 +3660,13 @@ async function publikasikanStatusTeks() {
   const status = document.createElement("div");
   status.className = "status-item";
 
-  status.dataset.expire = new Date(data.expires_at).getTime();
+status.style.cursor = "pointer";
+
+status.onclick = function () {
+  bukaStory(data.content);
+};
+
+status.dataset.expire = new Date(data.expires_at).getTime();
 
   status.innerHTML = `
     <div class="status-text"></div>
@@ -3623,6 +3685,20 @@ async function publikasikanStatusTeks() {
   }, 24 * 60 * 60 * 1000);
 }
 
+    function bukaStory(teks) {
+  const viewer = document.getElementById("storyViewer");
+  const viewerText = document.getElementById("storyViewerText");
+
+  viewerText.textContent = teks;
+
+  viewer.classList.remove("hidden");
+}
+
+function tutupStory() {
+  const viewer = document.getElementById("storyViewer");
+
+  viewer.classList.add("hidden");
+}
     
 function buatStatusFoto() {
   alert("Fitur status foto akan kita buat selanjutnya.");
@@ -3660,7 +3736,7 @@ async function muatStatusAktif() {
     status.style.cursor = "pointer";
     
     status.onclick = function () {
-  alert("Story dibuka!");
+  bukaStory(item.content);
 };
     
     const waktuKedaluwarsa = new Date(item.expires_at).getTime();
@@ -3751,6 +3827,38 @@ muatStatusAktif();
     </div>
 
   </div>
+
+<!-- =========================
+     STORY VIEWER
+========================= -->
+
+<div id="storyViewer" class="story-viewer hidden">
+
+  <div class="story-viewer-content">
+
+    <button
+      type="button"
+      class="story-viewer-close"
+      onclick="tutupStory()"
+    >
+      ✕
+    </button>
+
+    <div
+      id="storyViewerText"
+      class="story-viewer-text"
+    ></div>
+
+    <div
+      id="storyViewerTime"
+      class="story-viewer-time"
+    >
+      Story • berlaku 24 jam
+    </div>
+
+  </div>
+
+</div>
   
 </body>
 </html>
