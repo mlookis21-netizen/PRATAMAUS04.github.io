@@ -3657,7 +3657,8 @@ async function muatStatusAktif() {
   data.forEach((item) => {
     const status = document.createElement("div");
     status.className = "status-item";
-
+    status.style.cursor = "pointer";
+    
     const waktuKedaluwarsa = new Date(item.expires_at).getTime();
     const sisaWaktu = waktuKedaluwarsa - Date.now();
 
