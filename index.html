@@ -3659,6 +3659,10 @@ async function muatStatusAktif() {
     status.className = "status-item";
     status.style.cursor = "pointer";
     
+    status.onclick = function () {
+  alert("Story dibuka!");
+};
+    
     const waktuKedaluwarsa = new Date(item.expires_at).getTime();
     const sisaWaktu = waktuKedaluwarsa - Date.now();
 
