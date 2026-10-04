@@ -3489,9 +3489,36 @@ function tutupBuatStatus() {
 }
 
 function buatStatusTeks() {
-  alert("Fitur status teks akan kita buat selanjutnya.");
+  tutupBuatStatus();
+
+  document.getElementById("statusTeksModal").classList.remove("hidden");
 }
 
+function tutupStatusTeks() {
+  document
+    .getElementById("statusTeksModal")
+    .classList.add("hidden");
+}
+
+function publikasikanStatusTeks() {
+  const teks = document
+    .getElementById("statusTeksInput")
+    .value
+    .trim();
+
+  if (!teks) {
+    alert("Tulis status terlebih dahulu.");
+    return;
+  }
+
+  alert("Status berhasil dibuat:\n\n" + teks);
+
+  document
+    .getElementById("statusTeksInput")
+    .value = "";
+
+  tutupStatusTeks();
+}
 function buatStatusFoto() {
   alert("Fitur status foto akan kita buat selanjutnya.");
 }
@@ -3537,5 +3564,40 @@ function buatStatusVideo() {
 
   </div>
 
+  <!-- =========================
+       POPUP STATUS TEKS
+  ========================= -->
+
+  <div id="statusTeksModal" class="status-modal hidden">
+
+    <div class="status-modal-content">
+
+      <button
+        type="button"
+        class="status-close"
+        onclick="tutupStatusTeks()"
+      >
+        ✕
+      </button>
+
+      <h2>✍️ Status Teks</h2>
+
+      <textarea
+        id="statusTeksInput"
+        placeholder="Tulis status kamu..."
+        rows="6"
+      ></textarea>
+
+      <button
+        type="button"
+        onclick="publikasikanStatusTeks()"
+      >
+        📤 Publikasikan
+      </button>
+
+    </div>
+
+  </div>
+  
 </body>
 </html>
