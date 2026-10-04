@@ -3614,8 +3614,51 @@ function buatStatusVideo() {
        MULAI APLIKASI
     ========================= */
 
-    cekLogin();
-  </script>
+async function muatStatusAktif() {
+  const statusList = document.getElementById("statusList");
+
+  if (!statusList) return;
+
+  const { data, error } = await supabaseClient
+    .from("statuses")
+    .select("*")
+    .gt("expires_at", new Date().toISOString())
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Gagal memuat status:", error);
+    return;
+  }
+
+  statusList.innerHTML = "";
+
+  data.forEach((item) => {
+    const status = document.createElement("div");
+    status.className = "status-item";
+
+    const waktuKedaluwarsa = new Date(item.expires_at).getTime();
+    const sisaWaktu = waktuKedaluwarsa - Date.now();
+
+    if (sisaWaktu <= 0) return;
+
+    status.innerHTML = `
+      <div class="status-text"></div>
+      <small>Story • berlaku 24 jam</small>
+    `;
+
+    status.querySelector(".status-text").textContent = item.content;
+
+    statusList.appendChild(status);
+
+   setTimeout(() => {
+  status.remove();
+}, sisaWaktu);
+});
+}
+
+cekLogin();
+muatStatusAktif();
+</script>
 
   <!-- =========================
        POPUP BUAT STATUS
