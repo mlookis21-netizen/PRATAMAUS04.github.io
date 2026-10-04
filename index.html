@@ -924,6 +924,47 @@
         display: none;
       }
     }
+
+.status-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.status-modal.hidden {
+  display: none;
+}
+
+.status-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  padding: 25px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.status-modal-content button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+}
+
+.status-close {
+  width: auto !important;
+  float: right;
+  margin-top: -10px !important;
+  background: transparent;
+  font-size: 22px !important;
+}
+    
   </style>
 </head>
 
