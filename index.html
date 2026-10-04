@@ -999,9 +999,9 @@
           Bagikan foto, video, atau tulisan kepada pengguna lainnya.
         </p>
 
-        <button type="button">
-          ➕ Buat Status
-        </button>
+        <button type="button" onclick="bukaBuatStatus()">
+  ➕ Buat Status
+</button>
       </div>
     </section>
     
@@ -3430,6 +3430,34 @@ async function simpanEditProfil() {
     tutupEditProfil();
   }, 1000);
 }
+
+    /* =========================
+   STATUS
+========================= */
+
+function bukaBuatStatus() {
+  document
+    .getElementById("statusModal")
+    .classList.remove("hidden");
+}
+
+function tutupBuatStatus() {
+  document
+    .getElementById("statusModal")
+    .classList.add("hidden");
+}
+
+function buatStatusTeks() {
+  alert("Fitur status teks akan kita buat selanjutnya.");
+}
+
+function buatStatusFoto() {
+  alert("Fitur status foto akan kita buat selanjutnya.");
+}
+
+function buatStatusVideo() {
+  alert("Fitur status video akan kita buat selanjutnya.");
+}
     
     /* =========================
        MULAI APLIKASI
@@ -3437,6 +3465,36 @@ async function simpanEditProfil() {
 
     cekLogin();
   </script>
+
+  <!-- =========================
+       POPUP BUAT STATUS
+  ========================= -->
+
+  <div id="statusModal" class="status-modal hidden">
+
+    <div class="status-modal-content">
+
+      <button type="button" class="status-close" onclick="tutupBuatStatus()">
+        ✕
+      </button>
+
+      <h2>🟢 Buat Status</h2>
+
+      <button type="button" onclick="buatStatusTeks()">
+        ✍️ Teks
+      </button>
+
+      <button type="button" onclick="buatStatusFoto()">
+        📷 Foto
+      </button>
+
+      <button type="button" onclick="buatStatusVideo()">
+        🎥 Video
+      </button>
+
+    </div>
+
+  </div>
 
 </body>
 </html>
