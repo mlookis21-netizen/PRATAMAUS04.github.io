@@ -2655,3 +2655,229 @@ nav#tabs button.active .ui-icon {
     transition: none !important;
   }
 }
+
+
+/* =========================================
+   WELCOME INTRO — AURORA CINEMATIC
+========================================= */
+
+.welcome-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 24px;
+  color: #f7f5ff;
+  background:
+    radial-gradient(ellipse at 50% 42%, #22235b 0%, transparent 48%),
+    linear-gradient(135deg, #050817, #10102f 55%, #090b1c);
+}
+
+.welcome-intro.is-active {
+  display: flex;
+  animation: welcomeFadeIn 0.45s ease both;
+}
+
+.welcome-portal,
+.welcome-portal-inner {
+  position: absolute;
+  z-index: -1;
+  width: min(75vw, 650px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.welcome-portal {
+  border: 1px solid rgba(124, 110, 255, 0.85);
+  box-shadow:
+    0 0 25px rgba(105, 87, 255, 0.45),
+    inset 0 0 35px rgba(105, 87, 255, 0.18);
+  animation: welcomePortal 3.8s ease-in-out both;
+}
+
+.welcome-portal-inner {
+  width: min(52vw, 440px);
+  border: 1px solid rgba(91, 205, 255, 0.4);
+  box-shadow: 0 0 50px rgba(67, 135, 255, 0.2);
+  animation: welcomePortalInner 3.8s ease-in-out both;
+}
+
+.welcome-intro-content {
+  width: 100%;
+  max-width: 520px;
+  text-align: center;
+  animation: welcomeContent 3.8s ease both;
+}
+
+.welcome-logo {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 94px;
+  height: 94px;
+  margin: 0 auto 28px;
+  overflow: hidden;
+  border: 1px solid rgba(176, 164, 255, 0.75);
+  border-radius: 28px;
+  background: linear-gradient(145deg, #25265d, #11152e);
+  box-shadow:
+    0 0 35px rgba(113, 88, 255, 0.45),
+    inset 0 0 20px rgba(118, 107, 255, 0.18);
+}
+
+.welcome-logo span {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -5px;
+  background: linear-gradient(120deg, #fff, #a9c7ff, #c5aaff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.welcome-logo i {
+  position: absolute;
+  top: -30%;
+  left: -70%;
+  width: 45%;
+  height: 160%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.85),
+    transparent
+  );
+  transform: rotate(25deg);
+  animation: welcomeLightSweep 1.3s ease-in-out 0.45s both;
+}
+
+.welcome-kicker {
+  margin: 0 0 16px;
+  color: #b8b7ff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  animation: welcomeText 0.7s ease 0.35s both;
+}
+
+.welcome-intro-content h1 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 52px);
+  line-height: 1.15;
+  letter-spacing: -1.8px;
+  font-weight: 800;
+  animation: welcomeText 0.7s ease 0.65s both;
+}
+
+.welcome-caption {
+  max-width: 410px;
+  margin: 18px auto 0;
+  color: #c0c5df;
+  font-size: 14px;
+  line-height: 1.8;
+  animation: welcomeText 0.7s ease 0.9s both;
+}
+
+.welcome-brand {
+  margin-top: 36px;
+  color: #a6aac8;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  animation: welcomeText 0.7s ease 1.15s both;
+}
+
+.welcome-brand span {
+  padding: 0 7px;
+  color: #a99aff;
+}
+
+@keyframes welcomeFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes welcomePortal {
+  0% {
+    transform: scale(0.15);
+    opacity: 0;
+  }
+  35% { opacity: 0.9; }
+  75% {
+    transform: scale(1.12);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes welcomePortalInner {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  40% { opacity: 0.7; }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@keyframes welcomeLightSweep {
+  from { left: -70%; }
+  to { left: 140%; }
+}
+
+@keyframes welcomeText {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes welcomeContent {
+  0% { opacity: 0; }
+  15%, 78% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (max-width: 480px) {
+  .welcome-intro { padding: 20px; }
+  .welcome-logo {
+    width: 78px;
+    height: 78px;
+    border-radius: 23px;
+  }
+  .welcome-logo span { font-size: 44px; }
+  .welcome-caption { font-size: 13px; }
+  .welcome-brand {
+    font-size: 8px;
+    letter-spacing: 1.4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-intro.is-active,
+  .welcome-portal,
+  .welcome-portal-inner,
+  .welcome-logo i,
+  .welcome-kicker,
+  .welcome-intro-content h1,
+  .welcome-caption,
+  .welcome-brand,
+  .welcome-intro-content {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+}
