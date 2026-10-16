@@ -374,7 +374,17 @@ async function loadStatus() {
     if (s.user_id === me.id) {
       const wrap = el("div", "list");
       const del = el("button", "btn danger sm", "Hapus status");
-      del.onclick = async () => { const { error } = await sb.from("statuses").delete().eq("id", s.id); error ? toast("Gagal menghapus.") : loadStatus(); };
+      del.onclick = async () => {
+  const { error } = await sb.from("statuses").delete().eq("id", s.id);
+
+  if (error) {
+    console.error("Gagal menghapus status:", error);
+    toast("Gagal menghapus: " + error.message);
+  } else {
+    toast("Status berhasil dihapus.");
+    await loadStatus();
+  }
+};
       wrap.append(b, del); box.appendChild(wrap);
     } else box.appendChild(b);
   });
