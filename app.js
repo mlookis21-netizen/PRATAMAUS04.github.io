@@ -73,6 +73,44 @@ const loaders = {
   profile: fillProfile
 };
 
+
+/* ===== ANIMASI PEMBUKA BERDASARKAN STATUS LOGIN ===== */
+let welcomeIntroPlayed = false;
+let welcomeIntroTimer = null;
+
+function playWelcomeIntro() {
+  const intro = document.getElementById("welcomeIntro");
+
+  if (!intro || welcomeIntroPlayed) return;
+
+  welcomeIntroPlayed = true;
+
+  if (welcomeIntroTimer) {
+    clearTimeout(welcomeIntroTimer);
+  }
+
+  intro.classList.add("is-active");
+
+  welcomeIntroTimer = setTimeout(() => {
+    intro.classList.remove("is-active");
+    welcomeIntroTimer = null;
+  }, 3800);
+}
+
+function hideWelcomeIntro() {
+  const intro = document.getElementById("welcomeIntro");
+
+  if (welcomeIntroTimer) {
+    clearTimeout(welcomeIntroTimer);
+    welcomeIntroTimer = null;
+  }
+
+  if (intro) {
+    intro.classList.remove("is-active");
+  }
+}
+
+
 function show(v) {
   if (!VIEWS.includes(v)) return;
 
