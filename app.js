@@ -275,6 +275,13 @@ $("btnLogout").onclick = () => sb.auth.signOut();
 sb.auth.onAuthStateChange((_evt, session) => setTimeout(() => handleSession(session), 0));
 async function handleSession(session) {
   const user = session && session.user;
+
+ if (user) {
+    hideWelcomeIntro();
+  } else {
+    playWelcomeIntro();
+  }
+  
   if (user && (!me || me.id !== user.id)) {
     me = user;
     await loadMyProfile();
