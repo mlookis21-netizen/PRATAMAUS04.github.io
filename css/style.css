@@ -1267,3 +1267,257 @@ nav#tabs button.active .ui-icon {
   }
 }
 
+
+/* =========================================
+   TAHAP 2 — CHAT MODERN
+   Tampilan saja, tanpa mengubah fungsi realtime
+========================================= */
+
+/* Halaman daftar chat dan ruang percakapan */
+#v-chats,
+#v-room {
+  min-width: 0;
+}
+
+#v-chats .card,
+#v-room .card {
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Daftar percakapan */
+#inboxList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+#inboxList .item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--text, #1f2937);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+#inboxList .item:hover {
+  background: var(--surface-hover, rgba(100, 116, 139, 0.08));
+  border-color: var(--border, #e5e7eb);
+}
+
+#inboxList .item .avatar {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border-radius: 50%;
+}
+
+#inboxList .item .meta {
+  flex: 1;
+  min-width: 0;
+}
+
+#inboxList .item .name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+#inboxList .item .name span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+#inboxList .item .name small {
+  flex-shrink: 0;
+  color: var(--muted, #667085);
+  font-size: 11px;
+}
+
+#inboxList .item .sub {
+  margin-top: 5px;
+  overflow: hidden;
+  color: var(--muted, #667085);
+  font-size: 13px;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Bagian atas ruang chat */
+#v-room #roomName {
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+#v-room #roomUser {
+  color: var(--muted, #667085);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+#v-room #roomAvatar .avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+/* Area pesan */
+#roomMsgs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  min-height: 260px;
+  max-height: min(60vh, 560px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px 12px;
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at 1px 1px,
+      rgba(120, 140, 160, 0.09) 1px,
+      transparent 0
+    );
+  background-size: 18px 18px;
+  scrollbar-width: thin;
+}
+
+#roomMsgs .bubble {
+  align-self: flex-start;
+  width: fit-content;
+  max-width: min(82%, 480px);
+  padding: 10px 13px 7px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 15px 15px 15px 5px;
+  background: var(--surface, #fff);
+  color: var(--text, #1f2937);
+  box-shadow: 0 2px 7px rgba(20, 35, 55, 0.04);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  animation: chatBubbleIn 0.16s ease-out;
+}
+
+#roomMsgs .bubble.mine {
+  align-self: flex-end;
+  border-color: transparent;
+  border-radius: 15px 15px 5px 15px;
+  background: var(--primary, #1769aa);
+  color: #fff;
+}
+
+#roomMsgs .bubble small {
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+  text-align: right;
+  opacity: 0.72;
+}
+
+/* Kolom mengetik dan tombol kirim */
+#roomForm {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+#roomForm #roomInput {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  max-height: 120px;
+  border-radius: 15px;
+}
+
+#roomForm #btnSend {
+  min-width: 48px;
+  min-height: 44px;
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+
+/* Tombol kembali dan muat ulang */
+#v-room #btnBackRoom,
+#v-chats #btnRefresh {
+  border-radius: 12px;
+}
+
+/* Tema gelap */
+:root[data-theme="dark"] #inboxList .item {
+  color: var(--text, #f3f4f6);
+}
+
+:root[data-theme="dark"] #roomMsgs .bubble:not(.mine) {
+  border-color: var(--border, #303846);
+  background: var(--surface, #151c25);
+  color: var(--text, #f3f4f6);
+}
+
+/* Tampilan HP */
+@media (max-width: 520px) {
+  #v-chats .card,
+  #v-room .card {
+    border-radius: 16px;
+  }
+
+  #inboxList .item {
+    gap: 10px;
+    padding: 11px 8px;
+  }
+
+  #inboxList .item .avatar {
+    width: 43px;
+    height: 43px;
+    flex-basis: 43px;
+  }
+
+  #roomMsgs {
+    min-height: 220px;
+    max-height: 55vh;
+    padding: 12px 8px;
+  }
+
+  #roomMsgs .bubble {
+    max-width: 88%;
+    padding: 9px 11px 6px;
+    font-size: 14px;
+  }
+
+  #roomForm {
+    gap: 7px;
+  }
+}
+
+@keyframes chatBubbleIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #roomMsgs .bubble {
+    animation: none;
+  }
+}
