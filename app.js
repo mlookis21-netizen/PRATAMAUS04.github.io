@@ -53,18 +53,164 @@ async function upload(file, folder) {
 }
 
 /* ===== Navigasi antar halaman ===== */
-const VIEWS = ["auth", "chats", "room", "status", "feed", "search", "user", "profile"];
-const loaders = { chats: loadInbox, status: loadStatus, feed: loadFeed, profile: fillProfile };
+
+const VIEWS = [
+  "auth",
+  "chats",
+  "room",
+  "status",
+  "feed",
+  "search",
+  "user",
+  "profile",
+  "settings"
+];
+
+const loaders = {
+  chats: loadInbox,
+  status: loadStatus,
+  feed: loadFeed,
+  profile: fillProfile
+};
+
 function show(v) {
+  if (!VIEWS.includes(v)) return;
+
   currentView = v;
-  VIEWS.forEach((x) => $("v-" + x).classList.toggle("hidden", x !== v));
-  const tab = v === "room" ? "chats" : v === "user" ? "search" : v;
-  document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("active", b.dataset.view === tab));
-  $("tabs").classList.toggle("hidden", v === "auth" || v === "room");
-  if (loaders[v]) loaders[v]();
+
+  // Tampilkan halaman yang dipilih dan sembunyikan halaman lain.
+  VIEWS.forEach((x) => {
+    const section = $("v-" + x);
+
+    if (section) {
+      section.classList.toggle("hidden", x !== v);
+    }
+  });
+
+  // Samakan status aktif menu desktop dan HP.
+  const activeTab =
+    v === "room" ? "chats" :
+    v === "user" ? "search" :
+    v;
+
+  document.querySelectorAll("[data-view]").forEach((button) => {
+    button.classList.toggle(
+      "active",
+      button.dataset.view === activeTab
+    );
+  });
+
+  // Navigasi bawah disembunyikan saat login atau membuka ruang chat.
+  const tabs = $("tabs");
+
+  if (tabs) {
+    tabs.classList.toggle(
+      "hidden",
+      v === "auth" || v === "room"
+    );
+  }
+
+  // Muat ulang data untuk halaman yang memerlukannya.
+  if (loaders[v]) {
+    loaders[v]();
+  }
+
   window.scrollTo(0, 0);
 }
-$("tabs").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) show(b.dataset.view); });
+
+/* Navigasi sidebar desktop dan menu bawah HP */
+document.addEventListener("click", (e) => {
+  const button = e.target.closest("[data-view]");
+
+  if (!button) return;
+
+  const isSidebarButton = button.closest("#sidebar");
+  const isMobileButton = button.closest("#tabs");
+
+  if (!isSidebarButton && !isMobileButton) return;
+
+  show(button.dataset.view);
+});
+
+/* Logo kembali ke Beranda */
+const brandHome = $("brandHome");
+
+if (brandHome) {
+  brandHome.addEventListener("click", (e) => {
+    e.preventDefault();
+    show("feed");
+  });
+}
+
+/* Tombol Pengaturan di header */
+const btnOpenSettings = $("btnOpenSettings");
+
+if (btnOpenSettings) {
+  btnOpenSettings.addEventListener("click", () => {
+    show("settings");
+  });
+}
+
+/* Tombol Profil di halaman Pengaturan */
+const btnSettingsProfile = $("btnSettingsProfile");
+
+if (btnSettingsProfile) {
+  btnSettingsProfile.addEventListener("click", () => {
+    show("profile");
+  });
+}
+
+
+/* ===== Pengaturan tema tampilan ===== */
+const THEME_STORAGE_KEY = "ik-theme";
+
+function applyTheme(choice, save = true) {
+  const allowed = ["light", "dark", "system"];
+
+  if (!allowed.includes(choice)) {
+    choice = "system";
+  }
+
+  if (choice === "system") {
+    document.documentElement.removeAttribute("data-theme");
+  } else {
+    document.documentElement.setAttribute("data-theme", choice);
+  }
+
+  document.querySelectorAll("[data-theme-choice]").forEach((button) => {
+    const selected = button.dataset.themeChoice === choice;
+
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+
+  if (save) {
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, choice);
+    } catch (err) {
+      console.warn("Preferensi tema tidak dapat disimpan.", err);
+    }
+  }
+}
+
+/* Pilih tema dari halaman Pengaturan */
+document.querySelectorAll("[data-theme-choice]").forEach((button) => {
+  button.addEventListener("click", () => {
+    applyTheme(button.dataset.themeChoice);
+  });
+});
+
+/* Pulihkan tema saat halaman dibuka */
+let savedTheme = "system";
+
+try {
+  savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "system";
+} catch (err) {
+  console.warn("Preferensi tema tidak dapat dibaca.", err);
+}
+
+applyTheme(savedTheme, false);
+
 
 /* ===== Autentikasi ===== */
 function authMsg(t) { $("authMsg").textContent = t; }
