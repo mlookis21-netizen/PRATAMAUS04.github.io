@@ -1521,3 +1521,332 @@ nav#tabs button.active .ui-icon {
     animation: none;
   }
 }
+
+
+/* =========================================
+   TAHAP 3 — FEED & STATUS / STORY
+   Peningkatan tampilan saja
+========================================= */
+
+/* Ruang feed dan status */
+#v-feed,
+#v-status {
+  min-width: 0;
+}
+
+#v-feed .card,
+#v-status .card {
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 20px;
+}
+
+/* Form buat postingan */
+#postForm,
+#statusForm {
+  display: grid;
+  gap: 12px;
+}
+
+#postForm textarea,
+#statusForm textarea {
+  width: 100%;
+  min-width: 0;
+  border-radius: 14px;
+  line-height: 1.6;
+}
+
+#postForm textarea:focus,
+#statusForm textarea:focus {
+  outline: none;
+  border-color: var(--primary, #1769aa);
+  box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.12);
+}
+
+#postForm input[type="file"],
+#statusForm input[type="file"] {
+  max-width: 100%;
+  padding: 10px;
+  border: 1px dashed var(--border, #d1d5db);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+#postPreview {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 15px;
+  background: var(--surface, #f3f4f6);
+}
+
+#postPreview.hidden {
+  display: none !important;
+}
+
+/* Daftar postingan */
+#feedList {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+#feedList .post {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 18px;
+  background: var(--surface, #fff);
+  color: var(--text, #1f2937);
+  box-shadow: 0 5px 20px rgba(20, 35, 55, 0.045);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#feedList .post:hover {
+  border-color: rgba(23, 105, 170, 0.35);
+  box-shadow: 0 8px 25px rgba(20, 35, 55, 0.075);
+}
+
+#feedList .post > header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  padding: 14px 15px;
+}
+
+#feedList .post > header .avatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 50%;
+}
+
+#feedList .post > header .grow {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#feedList .post > header strong {
+  font-size: 14px;
+  font-weight: 750;
+}
+
+#feedList .post .time {
+  color: var(--muted, #667085);
+  font-size: 12px;
+}
+
+#feedList .post > .pic {
+  display: block;
+  width: 100%;
+  max-height: 620px;
+  object-fit: contain;
+  background: #f0f2f5;
+}
+
+#feedList .post > p {
+  margin: 0;
+  padding: 14px 16px 18px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+/* Tombol hapus postingan */
+#feedList .post .danger {
+  flex-shrink: 0;
+  border-radius: 10px;
+}
+
+/* Daftar status/story */
+#statusList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  align-items: start;
+  gap: 12px;
+  min-width: 0;
+}
+
+#statusList > .story,
+#statusList > .list {
+  min-width: 0;
+}
+
+#statusList .story {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 100%;
+  min-height: 155px;
+  padding: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 17px;
+  background: var(--surface, #fff);
+  color: var(--text, #1f2937);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+#statusList .story:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary, #1769aa);
+}
+
+#statusList .story .who {
+  position: relative;
+  z-index: 1;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+#statusList .story .txt {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+#statusList .story.photo {
+  padding: 0;
+  gap: 0;
+  background: #17202c;
+  color: #fff;
+}
+
+#statusList .story.photo .who {
+  padding: 12px;
+}
+
+#statusList .story.photo img {
+  display: block;
+  width: 100%;
+  max-height: 250px;
+  min-height: 120px;
+  object-fit: cover;
+}
+
+#statusList .story.photo .txt {
+  padding: 10px 12px 12px;
+}
+
+/* Tombol hapus pada status milik sendiri */
+#statusList .list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+#statusList .list .story {
+  flex: 1;
+}
+
+#statusList .list .danger {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* Tampilan penampil status */
+#viewer:not(.hidden) {
+  animation: storyViewerIn 0.18s ease-out;
+}
+
+#viewerBody {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+#viewerBody img {
+  display: block;
+  max-width: 100%;
+  max-height: 70vh;
+  margin-inline: auto;
+  border-radius: 14px;
+  object-fit: contain;
+}
+
+#viewerBody p {
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Tema gelap */
+:root[data-theme="dark"] #feedList .post,
+:root[data-theme="dark"] #statusList .story:not(.photo) {
+  background: var(--surface, #151c25);
+  color: var(--text, #f3f4f6);
+}
+
+:root[data-theme="dark"] #feedList .post > .pic {
+  background: #10151d;
+}
+
+/* Responsif HP */
+@media (max-width: 520px) {
+  #v-feed .card,
+  #v-status .card {
+    border-radius: 16px;
+  }
+
+  #feedList {
+    gap: 13px;
+  }
+
+  #feedList .post {
+    border-radius: 15px;
+  }
+
+  #feedList .post > header {
+    padding: 12px;
+  }
+
+  #feedList .post > .pic {
+    max-height: 480px;
+  }
+
+  #feedList .post > p {
+    padding: 12px 13px 15px;
+    font-size: 14px;
+  }
+
+  #statusList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  #statusList .story {
+    min-height: 135px;
+    border-radius: 14px;
+  }
+
+  #statusList .story.photo img {
+    max-height: 210px;
+  }
+}
+
+@keyframes storyViewerIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #feedList .post,
+  #statusList .story,
+  #viewer:not(.hidden) {
+    animation: none;
+    transition: none;
+  }
+}
