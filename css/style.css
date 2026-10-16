@@ -1042,3 +1042,228 @@ nav#tabs button.active .ui-icon {
     scroll-behavior: auto !important;
   }
 }
+
+
+/* =========================================
+   TAHAP 1 — PROFIL & PENGATURAN
+   Peningkatan tampilan tanpa mengubah fungsi JS
+========================================= */
+
+/* Kartu profil dan bagian pengaturan */
+#v-profile .card,
+#v-settings .card,
+#v-settings .settings-section {
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(20, 35, 55, 0.055);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#v-profile .card {
+  padding: clamp(18px, 4vw, 28px);
+}
+
+#v-profile .card:hover,
+#v-settings .settings-section:hover {
+  border-color: var(--primary, #1769aa);
+}
+
+/* Avatar profil */
+#myAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+#myAvatar .avatar.lg {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  border: 3px solid var(--surface, #fff);
+  outline: 2px solid var(--primary, #1769aa);
+  box-shadow: 0 5px 18px rgba(23, 105, 170, 0.15);
+  font-size: 32px;
+}
+
+#myAvatar .avatar img,
+#myAvatar .avatar.lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* Formulir profil */
+#profileForm {
+  display: grid;
+  gap: 16px;
+}
+
+#profileForm label {
+  display: block;
+  font-weight: 600;
+}
+
+#profileForm input,
+#profileForm textarea {
+  width: 100%;
+  margin-top: 7px;
+  border-radius: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#profileForm input:focus,
+#profileForm textarea:focus {
+  outline: none;
+  border-color: var(--primary, #1769aa);
+  box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.12);
+}
+
+#profileForm input[type="file"] {
+  padding: 10px;
+  cursor: pointer;
+}
+
+#profileForm button[type="submit"] {
+  min-height: 46px;
+  border-radius: 13px;
+  font-weight: 700;
+}
+
+/* Email akun */
+#myEmail {
+  overflow-wrap: anywhere;
+  color: var(--muted, #667085);
+  font-size: 14px;
+}
+
+/* Bagian pengaturan */
+#v-settings {
+  gap: 18px;
+}
+
+#v-settings .settings-section {
+  padding: clamp(16px, 3vw, 22px);
+  margin-bottom: 16px;
+}
+
+#v-settings .settings-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-weight: 750;
+}
+
+/* Pilihan tema */
+#v-settings .theme-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#v-settings .theme-option {
+  min-height: 76px;
+  padding: 12px 8px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 14px;
+  background: var(--surface, #fff);
+  color: var(--text, #1f2937);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+#v-settings .theme-option:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary, #1769aa);
+}
+
+#v-settings .theme-option.active {
+  border: 2px solid var(--primary, #1769aa);
+  background: var(--primary-soft, rgba(23, 105, 170, 0.09));
+  font-weight: 700;
+}
+
+#v-settings .theme-option:focus-visible,
+#v-settings .settings-link:focus-visible {
+  outline: 3px solid rgba(23, 105, 170, 0.35);
+  outline-offset: 3px;
+}
+
+/* Tombol navigasi pengaturan */
+#v-settings .settings-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 15px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 13px;
+  background: var(--surface, #fff);
+  color: var(--text, #1f2937);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+#v-settings .settings-link:hover {
+  border-color: var(--primary, #1769aa);
+  background: var(--primary-soft, rgba(23, 105, 170, 0.06));
+}
+
+#v-settings .settings-footnote {
+  color: var(--muted, #667085);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* Tema gelap */
+:root[data-theme="dark"] #v-profile .card,
+:root[data-theme="dark"] #v-settings .settings-section {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="dark"] #v-settings .theme-option,
+:root[data-theme="dark"] #v-settings .settings-link {
+  background: var(--surface, #151c25);
+  color: var(--text, #f3f4f6);
+}
+
+/* Tampilan HP */
+@media (max-width: 520px) {
+  #v-profile .card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  #myAvatar .avatar.lg {
+    width: 88px;
+    height: 88px;
+  }
+
+  #v-settings .theme-options {
+    gap: 7px;
+  }
+
+  #v-settings .theme-option {
+    min-height: 68px;
+    padding: 10px 5px;
+    font-size: 13px;
+  }
+}
+
+/* Hormati preferensi animasi perangkat */
+@media (prefers-reduced-motion: reduce) {
+  #v-profile *,
+  #v-settings * {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
