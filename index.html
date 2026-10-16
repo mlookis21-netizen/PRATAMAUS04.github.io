@@ -153,43 +153,150 @@
   <main>
 
     <!-- 4.1 LOGIN DAN PENDAFTARAN -->
-    <section id="v-auth" class="view">
+   
+<section id="v-auth" class="view">
+  <div class="auth-cinematic">
+
+    <!-- SISI VISUAL -->
+    <div class="auth-visual" aria-hidden="true">
+      <div class="auth-aurora aurora-one"></div>
+      <div class="auth-aurora aurora-two"></div>
+      <div class="auth-grid"></div>
+
+      <div class="auth-orbit orbit-one"></div>
+      <div class="auth-orbit orbit-two"></div>
+
+      <div class="auth-network">
+        <span class="network-line line-one"></span>
+        <span class="network-line line-two"></span>
+        <span class="network-line line-three"></span>
+
+        <span class="network-node node-one"></span>
+        <span class="network-node node-two"></span>
+        <span class="network-node node-three"></span>
+        <span class="network-node node-four"></span>
+
+        <div class="auth-logo-mark">
+          <span>M</span>
+          <div class="logo-light-sweep"></div>
+        </div>
+      </div>
+
+      <div class="auth-visual-copy">
+        <span class="auth-eyebrow">
+          CONNECT · SHARE · GROW
+        </span>
+
+        <h1>Semua terhubung,<br>lebih dekat.</h1>
+
+        <p>
+          Satu tempat untuk berbagi informasi,
+          membangun komunikasi, dan terhubung
+          dengan orang lain.
+        </p>
+
+        <div class="auth-visual-indicator">
+          <span></span>
+          Ruang komunikasi digitalmu
+        </div>
+      </div>
+
+      <div class="auth-visual-footer">
+        INFO &amp; KOMUNIKASI
+        <span>•</span>
+        CONNECTED TOGETHER
+      </div>
+    </div>
+
+    <!-- SISI FORMULIR -->
+    <div class="auth-panel">
       <div class="card auth-card">
-        <h2>Masuk atau buat akun</h2>
 
-        <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          autocomplete="email"
-          placeholder="nama@email.com"
-        >
+        <div class="auth-mobile-brand" aria-hidden="true">
+          <div class="auth-mobile-logo">M</div>
+          <span>INFO &amp; KOMUNIKASI</span>
+        </div>
 
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Minimal 6 karakter"
-        >
+        <div class="auth-heading">
+          <span class="auth-kicker">SELAMAT DATANG</span>
+          <h2>Mulai perjalananmu.</h2>
+          <p>
+            Masuk ke akunmu atau buat akun baru
+            untuk mulai terhubung.
+          </p>
+        </div>
 
-        <div class="row">
-          <button class="btn primary" id="btnLogin" type="button">
-            Login
+        <div class="auth-form-fields">
+          <label for="email">Alamat email</label>
+          <div class="auth-input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="3"></rect>
+              <path d="m4 7 8 6 8-6"></path>
+            </svg>
+            <input
+              id="email"
+              type="email"
+              autocomplete="email"
+              placeholder="nama@email.com"
+            >
+          </div>
+
+          <label for="password">Password</label>
+          <div class="auth-input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="3"></rect>
+              <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+              <path d="M12 14v3"></path>
+            </svg>
+            <input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Minimal 6 karakter"
+            >
+          </div>
+        </div>
+
+        <div class="auth-actions">
+          <button class="btn primary auth-login" id="btnLogin" type="button">
+            <span>Masuk ke akun</span>
+            <span aria-hidden="true">→</span>
           </button>
 
-          <button class="btn soft" id="btnSignup" type="button">
-            Daftar
+          <button class="btn soft auth-signup" id="btnSignup" type="button">
+            Buat akun baru
           </button>
         </div>
 
-        <button class="btn ghost full" id="btnGoogle" type="button">
-          Lanjut dengan Google
+        <div class="auth-divider">
+          <span></span>
+          <small>atau lanjutkan dengan</small>
+          <span></span>
+        </div>
+
+        <button class="btn ghost full auth-google" id="btnGoogle" type="button">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z" transform="translate(0 4) scale(1)"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 38.02 46.98 31.91 46.98 24.55Z"/>
+            <path fill="#FBBC05" d="M10.53 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.2a23.9 23.9 0 0 0 0 21.58l7.98-6.2Z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.9 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.2C6.51 42.62 14.62 48 24 48Z"/>
+          </svg>
+          Lanjutkan dengan Google
         </button>
 
-        <p id="authMsg" class="note" role="status"></p>
+        <p id="authMsg" class="note auth-message" role="status" aria-live="polite"></p>
+
+        <div class="auth-legal">
+          Dengan melanjutkan, gunakan akunmu secara bertanggung jawab
+          dan jaga keamanan informasi pribadi.
+        </div>
+
       </div>
-    </section>
+    </div>
+
+  </div>
+</section>
+
 
     <!-- 4.2 DAFTAR PERCAKAPAN -->
     <section id="v-chats" class="view hidden">
