@@ -339,6 +339,18 @@
         </button>
       </div>
 
+      <label class="inbox-search" for="chatSearchInput">
+        <span class="inbox-search-icon" aria-hidden="true">⌕</span>
+        <input
+          id="chatSearchInput"
+          type="search"
+          placeholder="Cari orang atau pesan..."
+          autocomplete="off"
+          aria-label="Cari percakapan"
+        >
+        <button id="clearChatSearch" class="inbox-search-clear" type="button" aria-label="Hapus pencarian" hidden>×</button>
+      </label>
+
       <div id="inboxList" class="list"></div>
     </section>
 
