@@ -18,6 +18,8 @@ let viewerPaused = false;
 let viewerPointerStart = null;
 let viewerProgressFills = [];
 
+let viewerProgressIndexes = [];
+
 const STORY_DURATION = 5000;
 
 /* ===== Util ===== */
@@ -553,18 +555,24 @@ function closeStoryViewer() {
   viewerIndex = -1;
   viewerRemaining = STORY_DURATION;
   viewerProgressFills = [];
+  viewerProgressIndexes = [];
 
   $("viewer").classList.add("hidden");
 }
 
 function updateStoryProgress() {
   const elapsed = STORY_DURATION - viewerRemaining;
-  const progress = Math.max(0, Math.min(100, (elapsed / STORY_DURATION) * 100));
+  const progress = Math.max(
+    0,
+    Math.min(100, (elapsed / STORY_DURATION) * 100)
+  );
 
   viewerProgressFills.forEach((fill, index) => {
+    const storyIndex = viewerProgressIndexes[index];
+
     fill.style.width =
-      index < viewerIndex ? "100%" :
-      index === viewerIndex ? `${progress}%` :
+      storyIndex < viewerIndex ? "100%" :
+      storyIndex === viewerIndex ? `${progress}%` :
       "0%";
   });
 }
@@ -611,6 +619,7 @@ function resumeStoryViewer() {
   startViewerTimer();
 }
 
+
 function renderStoryViewer() {
   const body = $("viewerBody");
   const story = activeStatuses[viewerIndex];
@@ -623,35 +632,53 @@ function renderStoryViewer() {
   const p = statusProfileMap.get(story.user_id) || {};
   const url = safeUrl(story.media_url);
 
+  // Tentukan rentang status milik akun yang sedang dibuka.
+  let groupStart = viewerIndex;
+  let groupEnd = viewerIndex;
+
+  while (
+    groupStart > 0 &&
+    activeStatuses[groupStart - 1].user_id === story.user_id
+  ) {
+    groupStart--;
+  }
+
+  while (
+    groupEnd < activeStatuses.length - 1 &&
+    activeStatuses[groupEnd + 1].user_id === story.user_id
+  ) {
+    groupEnd++;
+  }
+
   body.replaceChildren();
   body.classList.add("story-viewer-body");
 
-  // Progress bar untuk seluruh rangkaian status.
+  // Progress bar hanya untuk status akun ini.
   const progressRow = el("div", "story-progress-row");
 
   viewerProgressFills = [];
+  viewerProgressIndexes = [];
 
-  activeStatuses.forEach((item, index) => {
+  for (let index = groupStart; index <= groupEnd; index++) {
     const track = el("div", "story-progress-track");
     const fill = el("div", "story-progress-fill");
 
     track.appendChild(fill);
     progressRow.appendChild(track);
+
     viewerProgressFills.push(fill);
-  });
+    viewerProgressIndexes.push(index);
+  }
 
   body.appendChild(progressRow);
 
   // Informasi pemilik status.
   const header = el("div", "story-viewer-header");
   const userInfo = el("div", "story-viewer-user");
+  const meta = el("div", "story-viewer-user-meta");
 
-  userInfo.append(
-    avatar(p),
-    el("div", "story-viewer-user-meta")
-  );
+  userInfo.append(avatar(p), meta);
 
-  const meta = userInfo.lastElementChild;
   meta.append(
     el("strong", "", displayName(p)),
     el("small", "", fmt(story.created_at))
@@ -671,16 +698,20 @@ function renderStoryViewer() {
   }
 
   if (story.content) {
-    content.appendChild(el("p", "story-viewer-text", story.content));
+    content.appendChild(
+      el("p", "story-viewer-text", story.content)
+    );
   }
 
   body.appendChild(content);
 
-  updateStoryProgress();
   viewerRemaining = STORY_DURATION;
   viewerPaused = false;
+
+  updateStoryProgress();
   startViewerTimer();
 }
+
 
 function openViewer(s) {
   if (!activeStatuses.length) return;
