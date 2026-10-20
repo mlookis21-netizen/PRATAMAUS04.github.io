@@ -81,10 +81,17 @@ const VIEWS = [
   "settings"
 ];
 
+async function loadHome() {
+  await Promise.all([
+    loadStatus(),
+    loadFeed()
+  ]);
+}
+
 const loaders = {
   chats: loadInbox,
   status: loadStatus,
-  feed: loadFeed,
+  feed: loadHome,
   profile: fillProfile
 };
 
@@ -417,6 +424,9 @@ $("statusForm").onsubmit = (e) => {
 };
 async function loadStatus() {
   const box = $("statusList");
+  const myStatusBox = $("myStatusList");
+  myStatusBox.replaceChildren();
+  
   if (!me) return empty(box, "Login untuk melihat status.");
   const { data, error } = await sb.from("statuses")
   .select("*")
@@ -449,7 +459,9 @@ groupedStatuses.forEach((statuses) => {
 });
 
 if (!activeStatuses.length) {
-  return empty(box, "Belum ada status aktif. Jadi yang pertama membagikan.");
+  empty(box, "Belum ada status aktif. Jadi yang pertama membagikan.");
+  empty(myStatusBox, "Belum ada status milikmu.");
+  return;
 }
 
 const pm = await profilesFor(activeStatuses.map((s) => s.user_id));
@@ -503,42 +515,41 @@ statusProfileMap = pm;
     accountButton.onclick = () => openViewer(statuses[0]);
     box.appendChild(accountButton);
 
-    // Tetap sediakan tombol hapus untuk status milik sendiri.
-    if (userId === me.id) {
-      statuses.forEach((status) => {
-        const del = el(
-          "button",
-          "btn danger sm",
-          "Hapus status · " + fmt(status.created_at)
-        );
+  // Tombol hapus status milik sendiri ditampilkan di halaman Status.
+if (userId === me.id) {
+  statuses.forEach((status) => {
+    const del = el(
+      "button",
+      "btn danger sm",
+      "Hapus status · " + fmt(status.created_at)
+    );
 
-        del.type = "button";
-        del.onclick = async () => {
-          if (!window.confirm("Yakin ingin menghapus status ini?")) {
-            return;
-          }
+    del.type = "button";
+    del.onclick = async () => {
+      if (!window.confirm("Yakin ingin menghapus status ini?")) {
+        return;
+      }
 
-          const { error } = await sb
-            .from("statuses")
-            .delete()
-            .eq("id", status.id);
+      const { error } = await sb
+        .from("statuses")
+        .delete()
+        .eq("id", status.id);
 
-          if (error) {
-            console.error("Gagal menghapus status:", error);
-            toast("Gagal menghapus: " + error.message);
-          } else {
-            toast("Status berhasil dihapus.");
-            await loadStatus();
-          }
-        };
+      if (error) {
+        console.error("Gagal menghapus status:", error);
+        toast("Gagal menghapus: " + error.message);
+      } else {
+        toast("Status berhasil dihapus.");
+        await loadStatus();
+      }
+    };
 
-        box.appendChild(del);
-      });
-    }
+    myStatusBox.appendChild(del);
+  });
+}
   });
 }
 
-  
 /* ===== Story Viewer: progres, jeda, dan urutan status ===== */
 
 function stopViewerTimer() {
