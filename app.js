@@ -452,33 +452,91 @@ if (!activeStatuses.length) {
 
 const pm = await profilesFor(activeStatuses.map((s) => s.user_id));
 statusProfileMap = pm;
-  box.replaceChildren();
-  activeStatuses.forEach((s) => {
-    const p = pm.get(s.user_id) || {};
-    const url = safeUrl(s.media_url);
-    const b = el("button", "story" + (url ? " photo" : ""));
-    b.appendChild(el("div", "who", displayName(p) + " · " + fmt(s.created_at)));
-    if (url) { const i = el("img"); i.src = url; i.alt = "Status"; b.appendChild(i); }
-    if (s.content) b.appendChild(el("div", "txt", s.content));
-    b.onclick = () => openViewer(s);
-    if (s.user_id === me.id) {
-      const wrap = el("div", "list");
-      const del = el("button", "btn danger sm", "Hapus status");
-      del.onclick = async () => {
-  const { error } = await sb.from("statuses").delete().eq("id", s.id);
 
-  if (error) {
-    console.error("Gagal menghapus status:", error);
-    toast("Gagal menghapus: " + error.message);
-  } else {
-    toast("Status berhasil dihapus.");
-    await loadStatus();
-  }
-};
-      wrap.append(b, del); box.appendChild(wrap);
-    } else box.appendChild(b);
+
+  box.replaceChildren();
+
+  // Satu akun hanya memiliki satu lingkaran Story.
+  const accountGroups = new Map();
+
+  activeStatuses.forEach((status) => {
+    if (!accountGroups.has(status.user_id)) {
+      accountGroups.set(status.user_id, []);
+    }
+    accountGroups.get(status.user_id).push(status);
+  });
+
+  accountGroups.forEach((statuses, userId) => {
+    const profile = pm.get(userId) || {};
+    const name = displayName(profile);
+    const avatarUrl = safeUrl(profile.avatar_url);
+
+    const accountButton = el("button", "story story-account");
+    accountButton.type = "button";
+    accountButton.title = name;
+
+    const avatar = el("div", "story-account-avatar");
+
+    if (avatarUrl) {
+      const image = el("img");
+      image.src = avatarUrl;
+      image.alt = "";
+      avatar.appendChild(image);
+    } else {
+      avatar.textContent = name.trim().charAt(0).toUpperCase() || "?";
+    }
+
+    accountButton.appendChild(avatar);
+    accountButton.appendChild(
+      el("div", "story-account-name", name)
+    );
+
+    if (statuses.length > 1) {
+      accountButton.appendChild(
+        el("div", "story-account-count", statuses.length + " status")
+      );
+    }
+
+    // Membuka Story pertama dari akun yang dipilih.
+    accountButton.onclick = () => openViewer(statuses[0]);
+    box.appendChild(accountButton);
+
+    // Tetap sediakan tombol hapus untuk status milik sendiri.
+    if (userId === me.id) {
+      statuses.forEach((status) => {
+        const del = el(
+          "button",
+          "btn danger sm",
+          "Hapus status · " + fmt(status.created_at)
+        );
+
+        del.type = "button";
+        del.onclick = async () => {
+          if (!window.confirm("Yakin ingin menghapus status ini?")) {
+            return;
+          }
+
+          const { error } = await sb
+            .from("statuses")
+            .delete()
+            .eq("id", status.id);
+
+          if (error) {
+            console.error("Gagal menghapus status:", error);
+            toast("Gagal menghapus: " + error.message);
+          } else {
+            toast("Status berhasil dihapus.");
+            await loadStatus();
+          }
+        };
+
+        box.appendChild(del);
+      });
+    }
   });
 }
+
+  
 /* ===== Story Viewer: progres, jeda, dan urutan status ===== */
 
 function stopViewerTimer() {
