@@ -3782,3 +3782,39 @@ select {
 @media (prefers-reduced-motion: reduce) {
   #v-feed .feed-composer-trigger { transition: none; }
 }
+
+
+/* ===== Akses profil pengguna dari berbagai bagian aplikasi ===== */
+.profile-target {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.profile-target:focus-visible {
+  outline: 2px solid rgba(129, 140, 248, .85);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+#v-room #roomAvatar,
+#v-room .room-head .grow {
+  cursor: pointer;
+}
+#v-room #roomAvatar:focus-visible,
+#v-room .room-head .grow:focus-visible {
+  outline: 2px solid rgba(129, 140, 248, .85);
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+#v-user .user-profile-bio {
+  max-width: 620px;
+  margin: 14px auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+}
+#v-user .user-profile-website {
+  display: inline-block;
+  max-width: 100%;
+  margin: 4px auto 16px;
+  overflow-wrap: anywhere;
+  color: var(--brand, #818cf8);
+}
