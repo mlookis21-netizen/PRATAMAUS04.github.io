@@ -7,6 +7,19 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = (id) => document.getElementById(id);
 let me = null, profile = {}, peer = null, channel = null, currentView = "auth";
 
+/* ===== Kontrol Story/Status Viewer ===== */
+let activeStatuses = [];
+let statusProfileMap = new Map();
+let viewerIndex = -1;
+let viewerTimer = null;
+let viewerStartedAt = 0;
+let viewerRemaining = 5000;
+let viewerPaused = false;
+let viewerPointerStart = null;
+let viewerProgressFills = [];
+
+const STORY_DURATION = 5000;
+
 /* ===== Util ===== */
 function el(tag, cls, text) {
   const e = document.createElement(tag);
@@ -403,12 +416,44 @@ $("statusForm").onsubmit = (e) => {
 async function loadStatus() {
   const box = $("statusList");
   if (!me) return empty(box, "Login untuk melihat status.");
-  const { data, error } = await sb.from("statuses").select("*").gt("expires_at", new Date().toISOString()).order("created_at", { ascending: false });
-  if (error) return empty(box, "Gagal memuat status.");
-  if (!data.length) return empty(box, "Belum ada status aktif. Jadi yang pertama membagikan.");
-  const pm = await profilesFor(data.map((s) => s.user_id));
+  const { data, error } = await sb.from("statuses")
+  .select("*")
+  .gt("expires_at", new Date().toISOString())
+  .order("created_at", { ascending: false });
+
+if (error) return empty(box, "Gagal memuat status.");
+
+// Kelompokkan status berdasarkan pemilik.
+// Urutan pengguna mengikuti status terbaru mereka.
+// Di dalam kelompok, status diputar dari yang paling lama.
+const groupedStatuses = new Map();
+
+(data || []).forEach((status) => {
+  if (!groupedStatuses.has(status.user_id)) {
+    groupedStatuses.set(status.user_id, []);
+  }
+
+  groupedStatuses.get(status.user_id).push(status);
+});
+
+activeStatuses = [];
+
+groupedStatuses.forEach((statuses) => {
+  statuses.sort(
+    (a, b) => new Date(a.created_at) - new Date(b.created_at)
+  );
+
+  activeStatuses.push(...statuses);
+});
+
+if (!activeStatuses.length) {
+  return empty(box, "Belum ada status aktif. Jadi yang pertama membagikan.");
+}
+
+const pm = await profilesFor(activeStatuses.map((s) => s.user_id));
+statusProfileMap = pm;
   box.replaceChildren();
-  data.forEach((s) => {
+  activeStatuses.forEach((s) => {
     const p = pm.get(s.user_id) || {};
     const url = safeUrl(s.media_url);
     const b = el("button", "story" + (url ? " photo" : ""));
@@ -434,15 +479,259 @@ async function loadStatus() {
     } else box.appendChild(b);
   });
 }
-function openViewer(s) {
-  const body = $("viewerBody"); body.replaceChildren();
-  const url = safeUrl(s.media_url);
-  if (url) { const i = el("img"); i.src = url; i.alt = "Status"; body.appendChild(i); }
-  if (s.content) body.appendChild(el("p", "", s.content));
-  $("viewer").classList.remove("hidden");
+/* ===== Story Viewer: progres, jeda, dan urutan status ===== */
+
+function stopViewerTimer() {
+  if (viewerTimer) {
+    clearInterval(viewerTimer);
+    viewerTimer = null;
+  }
 }
-$("viewerClose").onclick = () => $("viewer").classList.add("hidden");
-$("viewer").onclick = (e) => { if (e.target.id === "viewer") $("viewer").classList.add("hidden"); };
+
+function closeStoryViewer() {
+  stopViewerTimer();
+  viewerPaused = false;
+  viewerPointerStart = null;
+  viewerIndex = -1;
+  viewerRemaining = STORY_DURATION;
+  viewerProgressFills = [];
+
+  $("viewer").classList.add("hidden");
+}
+
+function updateStoryProgress() {
+  const elapsed = STORY_DURATION - viewerRemaining;
+  const progress = Math.max(0, Math.min(100, (elapsed / STORY_DURATION) * 100));
+
+  viewerProgressFills.forEach((fill, index) => {
+    fill.style.width =
+      index < viewerIndex ? "100%" :
+      index === viewerIndex ? `${progress}%` :
+      "0%";
+  });
+}
+
+function startViewerTimer() {
+  stopViewerTimer();
+
+  if (viewerPaused || viewerIndex < 0) return;
+
+  viewerStartedAt = Date.now();
+
+  viewerTimer = setInterval(() => {
+    const elapsed = Date.now() - viewerStartedAt;
+    viewerRemaining = Math.max(0, viewerRemaining - elapsed);
+    viewerStartedAt = Date.now();
+
+    updateStoryProgress();
+
+    if (viewerRemaining <= 0) {
+      stopViewerTimer();
+      showNextStory();
+    }
+  }, 30);
+}
+
+function pauseStoryViewer() {
+  if (viewerPaused || viewerIndex < 0) return;
+
+  viewerPaused = true;
+
+  if (viewerTimer) {
+    const elapsed = Date.now() - viewerStartedAt;
+    viewerRemaining = Math.max(0, viewerRemaining - elapsed);
+    stopViewerTimer();
+  }
+
+  updateStoryProgress();
+}
+
+function resumeStoryViewer() {
+  if (!viewerPaused || viewerIndex < 0) return;
+
+  viewerPaused = false;
+  startViewerTimer();
+}
+
+function renderStoryViewer() {
+  const body = $("viewerBody");
+  const story = activeStatuses[viewerIndex];
+
+  if (!story) {
+    closeStoryViewer();
+    return;
+  }
+
+  const p = statusProfileMap.get(story.user_id) || {};
+  const url = safeUrl(story.media_url);
+
+  body.replaceChildren();
+  body.classList.add("story-viewer-body");
+
+  // Progress bar untuk seluruh rangkaian status.
+  const progressRow = el("div", "story-progress-row");
+
+  viewerProgressFills = [];
+
+  activeStatuses.forEach((item, index) => {
+    const track = el("div", "story-progress-track");
+    const fill = el("div", "story-progress-fill");
+
+    track.appendChild(fill);
+    progressRow.appendChild(track);
+    viewerProgressFills.push(fill);
+  });
+
+  body.appendChild(progressRow);
+
+  // Informasi pemilik status.
+  const header = el("div", "story-viewer-header");
+  const userInfo = el("div", "story-viewer-user");
+
+  userInfo.append(
+    avatar(p),
+    el("div", "story-viewer-user-meta")
+  );
+
+  const meta = userInfo.lastElementChild;
+  meta.append(
+    el("strong", "", displayName(p)),
+    el("small", "", fmt(story.created_at))
+  );
+
+  header.appendChild(userInfo);
+  body.appendChild(header);
+
+  // Konten foto atau teks.
+  const content = el("div", "story-viewer-content");
+
+  if (url) {
+    const img = el("img", "story-viewer-image");
+    img.src = url;
+    img.alt = "Story";
+    content.appendChild(img);
+  }
+
+  if (story.content) {
+    content.appendChild(el("p", "story-viewer-text", story.content));
+  }
+
+  body.appendChild(content);
+
+  updateStoryProgress();
+  viewerRemaining = STORY_DURATION;
+  viewerPaused = false;
+  startViewerTimer();
+}
+
+function openViewer(s) {
+  if (!activeStatuses.length) return;
+
+  const index = activeStatuses.findIndex(
+  (item) => item.user_id === s.user_id
+);
+  if (index < 0) return;
+
+  stopViewerTimer();
+  viewerIndex = index;
+  viewerRemaining = STORY_DURATION;
+  viewerPaused = false;
+
+  $("viewer").classList.remove("hidden");
+  renderStoryViewer();
+}
+
+
+function showNextStory() {
+  if (viewerIndex < 0) return;
+
+  const nextIndex = viewerIndex + 1;
+
+  // Tutup viewer jika seluruh story sudah selesai.
+  if (nextIndex >= activeStatuses.length) {
+    closeStoryViewer();
+    return;
+  }
+
+  // Lanjut ke story berikutnya.
+  // Urutan activeStatuses sudah dikelompokkan berdasarkan pengguna.
+  viewerIndex = nextIndex;
+  viewerRemaining = STORY_DURATION;
+  viewerPaused = false;
+
+  renderStoryViewer();
+}
+
+function showPreviousStory() {
+  if (viewerIndex <= 0) {
+    viewerRemaining = STORY_DURATION;
+    renderStoryViewer();
+    return;
+  }
+
+  viewerIndex--;
+  viewerRemaining = STORY_DURATION;
+  renderStoryViewer();
+}
+
+/* Tekan untuk jeda; lepas untuk melanjutkan. Ketukan singkat berpindah status. */
+const storyViewerBody = $("viewerBody");
+
+
+storyViewerBody.onpointerdown = (e) => {
+  if (viewerIndex < 0) return;
+
+  viewerPointerStart = {
+    time: Date.now(),
+    x: e.clientX,
+    y: e.clientY
+  };
+
+  if (storyViewerBody.setPointerCapture) {
+    storyViewerBody.setPointerCapture(e.pointerId);
+  }
+
+  pauseStoryViewer();
+};
+
+storyViewerBody.onpointerup = (e) => {
+  if (!viewerPointerStart) return;
+
+  const press = viewerPointerStart;
+  viewerPointerStart = null;
+
+  const duration = Date.now() - press.time;
+  const deltaX = e.clientX - press.x;
+  const deltaY = e.clientY - press.y;
+
+  if (
+    duration < 220 &&
+    Math.abs(deltaX) < 30 &&
+    Math.abs(deltaY) < 30
+  ) {
+    if (press.x < window.innerWidth * 0.35) {
+      showPreviousStory();
+    } else {
+      showNextStory();
+    }
+
+    return;
+  }
+
+  resumeStoryViewer();
+};
+
+storyViewerBody.onpointercancel = () => {
+  viewerPointerStart = null;
+  resumeStoryViewer();
+};
+$("viewerClose").onclick = closeStoryViewer;
+
+$("viewer").onclick = (e) => {
+  if (e.target.id === "viewer") {
+    closeStoryViewer();
+  }
+};
 
 /* ===== Feed postingan ===== */
 $("postFile").onchange = (e) => {
