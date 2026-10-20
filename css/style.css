@@ -3547,3 +3547,62 @@ select {
     scroll-behavior: auto !important;
   }
 }
+
+
+/* ===== Pencarian cepat di bagian atas daftar pesan ===== */
+#v-chats .inbox-search {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  margin:2px 0 14px;
+  padding:0 13px;
+  border:1px solid var(--border, rgba(148,163,184,.22));
+  border-radius:15px;
+  background:var(--surface, rgba(15,23,42,.42));
+  color:var(--muted, #94a3b8);
+  box-shadow:0 5px 18px rgba(2,8,23,.08);
+  transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+#v-chats .inbox-search:focus-within {
+  border-color:rgba(129,140,248,.8);
+  box-shadow:0 0 0 3px rgba(99,102,241,.12);
+}
+#v-chats .inbox-search-icon {
+  flex:0 0 auto;
+  font-size:25px;
+  line-height:1;
+  transform:rotate(-20deg);
+}
+#v-chats #chatSearchInput {
+  width:100%;
+  min-width:0;
+  min-height:46px;
+  padding:10px 0;
+  border:0;
+  outline:0;
+  background:transparent;
+  box-shadow:none;
+  color:var(--text, #e5e7eb);
+  font:inherit;
+}
+#v-chats #chatSearchInput::placeholder { color:var(--muted, #94a3b8); opacity:.9; }
+#v-chats .inbox-search-clear {
+  flex:0 0 auto;
+  width:28px;
+  height:28px;
+  border:0;
+  border-radius:50%;
+  background:rgba(148,163,184,.14);
+  color:var(--text, #e5e7eb);
+  font-size:21px;
+  line-height:1;
+  cursor:pointer;
+}
+#v-chats .inbox-search-clear[hidden] { display:none; }
+#inboxList .item[hidden] { display:none !important; }
+#inboxSearchEmpty { margin:8px 0; }
+@media (max-width:480px) {
+  #v-chats .inbox-search { margin-bottom:11px; border-radius:13px; }
+  #v-chats #chatSearchInput { min-height:44px; }
+}
