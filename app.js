@@ -330,6 +330,7 @@ async function handleSession(session) {
   if (user && (!me || me.id !== user.id)) {
     me = user;
     await loadMyProfile();
+    updateFeedComposerAvatar();
     startRealtime();
     show(profile.username ? "chats" : "profile");
     if (!profile.username) toast("Atur username dulu agar bisa dicari orang lain.");
