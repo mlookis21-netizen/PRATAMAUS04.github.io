@@ -58,12 +58,34 @@ async function profilesFor(ids) {
   (data || []).forEach((p) => map.set(p.user_id, p));
   return map;
 }
+async function detectImageType(file) {
+  // Periksa tanda tangan file, bukan hanya nama atau MIME dari browser.
+  const bytes = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+  const startsWith = (...signature) => signature.every((byte, index) => bytes[index] === byte);
+
+  if (startsWith(0xFF, 0xD8, 0xFF)) return { mime: "image/jpeg", ext: "jpg" };
+  if (startsWith(0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A)) return { mime: "image/png", ext: "png" };
+  if (startsWith(0x47, 0x49, 0x46, 0x38) && (bytes[4] === 0x37 || bytes[4] === 0x39) && bytes[5] === 0x61) {
+    return { mime: "image/gif", ext: "gif" };
+  }
+  if (startsWith(0x52, 0x49, 0x46, 0x46) && bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50) {
+    return { mime: "image/webp", ext: "webp" };
+  }
+
+  throw new Error("Format gambar tidak didukung. Gunakan JPG, PNG, GIF, atau WebP.");
+}
+
 async function upload(file, folder) {
   if (!file) return "";
+  if (file.size <= 0) throw new Error("File gambar kosong atau tidak valid.");
   if (file.size > 5 * 1024 * 1024) throw new Error("Ukuran foto maksimal 5 MB.");
-  const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
-  const path = `${me.id}/${folder}-${Date.now()}.${ext}`;
-  const { error } = await sb.storage.from("media").upload(path, file, { contentType: file.type });
+
+  const imageType = await detectImageType(file);
+  const path = `${me.id}/${folder}-${Date.now()}.${imageType.ext}`;
+  const { error } = await sb.storage.from("media").upload(path, file, {
+    contentType: imageType.mime,
+    upsert: false
+  });
   if (error) throw error;
   return sb.storage.from("media").getPublicUrl(path).data.publicUrl;
 }
