@@ -961,6 +961,34 @@ $("viewer").onclick = (e) => {
 };
 
 /* ===== Feed postingan ===== */
+const postComposerDialog = $("postComposerDialog");
+$("openPostComposer").onclick = () => {
+  if (!me) return toast("Login dulu untuk membuat postingan.");
+  if (typeof postComposerDialog.showModal === "function") {
+    postComposerDialog.showModal();
+    $("postCaption").focus();
+  } else {
+    postComposerDialog.setAttribute("open", "");
+    $("postCaption").focus();
+  }
+};
+$("closePostComposer").onclick = () => {
+  if (typeof postComposerDialog.close === "function") postComposerDialog.close();
+  else postComposerDialog.removeAttribute("open");
+};
+postComposerDialog.addEventListener("click", (e) => {
+  if (e.target === postComposerDialog) {
+    if (typeof postComposerDialog.close === "function") postComposerDialog.close();
+    else postComposerDialog.removeAttribute("open");
+  }
+});
+function updateFeedComposerAvatar() {
+  const target = $("feedComposerAvatar");
+  if (!target) return;
+  target.replaceChildren(avatar(profile, "feed-composer-avatar-inner"));
+}
+updateFeedComposerAvatar();
+
 $("postFile").onchange = (e) => {
   const f = e.target.files[0], img = $("postPreview");
   if (!f) return img.classList.add("hidden");
@@ -976,6 +1004,8 @@ $("postForm").onsubmit = (e) => {
       const { error } = await sb.from("posts").insert({ user_id: me.id, caption, image_url: image_url || null });
       if (error) throw error;
       $("postCaption").value = ""; $("postFile").value = ""; $("postPreview").classList.add("hidden");
+      if (typeof postComposerDialog.close === "function") postComposerDialog.close();
+      else postComposerDialog.removeAttribute("open");
       toast("Postingan dibagikan."); loadFeed();
     } catch (err) { toast("Posting gagal: " + err.message); }
   });
@@ -1044,6 +1074,7 @@ $("btnBackUser").onclick = () => show("search");
 function fillProfile() {
   if (!me) return;
   $("myAvatar").replaceChildren(avatar(profile, "lg"));
+  updateFeedComposerAvatar();
   $("myEmail").textContent = me.email || "";
   $("pUsername").value = profile.username || "";
   $("pName").value = profile.full_name || "";
