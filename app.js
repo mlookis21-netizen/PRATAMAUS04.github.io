@@ -5,7 +5,7 @@ const SUPABASE_KEY = "sb_publishable_jhuCqHXsUvF-BG5WBBHtMw_xgbxoo_1";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const $ = (id) => document.getElementById(id);
-let me = null, profile = {}, peer = null, channel = null, currentView = "auth";
+let me = null, profile = {}, peer = null, channel = null, currentView = "auth", previousUserView = "search";
 
 /* ===== Kontrol Story/Status Viewer ===== */
 let activeStatuses = [];
@@ -46,6 +46,25 @@ function avatar(p, cls = "") {
   if (url) { const i = el("img"); i.src = url; i.alt = ""; a.appendChild(i); }
   else a.textContent = (displayName(p || {})[0] || "?").toUpperCase();
   return a;
+}
+function setProfileTarget(node, p, label) {
+  if (!node || !p || !p.user_id) return;
+  node.classList.add("profile-target");
+  node.setAttribute("role", "button");
+  node.tabIndex = 0;
+  node.setAttribute("aria-label", label || "Lihat profil " + displayName(p));
+  node.title = "Lihat profil " + displayName(p);
+  node.onclick = (e) => {
+    e.stopPropagation();
+    openUser(p, currentView);
+  };
+  node.onkeydown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      e.stopPropagation();
+      openUser(p, currentView);
+    }
+  };
 }
 async function busy(btn, fn) {
   if (btn) btn.disabled = true;
@@ -408,11 +427,16 @@ async function loadInbox() {
     const p = pm.get(uid) || { user_id: uid, username: "pengguna" };
     const b = el("button", "item");
     const meta = el("div", "meta");
-    const name = el("div", "name"); name.append(el("span", "", displayName(p)), el("small", "", fmt(m.created_at)));
+    const name = el("div", "name");
+    const nameTarget = el("span", "profile-target", displayName(p));
+    setProfileTarget(nameTarget, p, "Lihat profil " + displayName(p));
+    name.append(nameTarget, el("small", "", fmt(m.created_at)));
     const preview = (m.sender_id === me.id ? "Kamu: " : "") + (m.content || "");
     meta.append(name, el("div", "sub", preview));
     b.dataset.search = [displayName(p), p.username || "", preview].join(" ");
-    b.append(avatar(p), meta);
+    const personAvatar = avatar(p);
+    setProfileTarget(personAvatar, p, "Lihat profil " + displayName(p));
+    b.append(personAvatar, meta);
     b.onclick = () => openRoom(p);
     box.appendChild(b);
   });
@@ -428,6 +452,8 @@ async function openRoom(p) {
   $("roomName").textContent = displayName(p);
   $("roomUser").textContent = p.username ? "@" + p.username : "";
   $("roomAvatar").replaceChildren(avatar(p));
+  setProfileTarget($("roomAvatar"), p, "Lihat profil " + displayName(p));
+  setProfileTarget($("roomName").parentElement, p, "Lihat profil " + displayName(p));
   empty($("roomMsgs"), "Memuat pesan...");
   show("room");
   const a = me.id, b = p.user_id;
@@ -815,6 +841,25 @@ function renderStoryViewer() {
     el("small", "", fmt(story.created_at))
   );
 
+  userInfo.classList.add("profile-target");
+  userInfo.setAttribute("role", "button");
+  userInfo.tabIndex = 0;
+  userInfo.setAttribute("aria-label", "Lihat profil " + displayName(p));
+  userInfo.title = "Lihat profil " + displayName(p);
+  const returnView = currentView;
+  const openStoryOwnerProfile = (e) => {
+    e.stopPropagation();
+    closeStoryViewer();
+    openUser(p, returnView);
+  };
+  userInfo.onclick = openStoryOwnerProfile;
+  userInfo.onkeydown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openStoryOwnerProfile(e);
+    }
+  };
+
   header.appendChild(userInfo);
   body.appendChild(header);
 
@@ -1015,7 +1060,10 @@ async function loadFeed() {
     const p = pm.get(x.user_id) || {};
     const card = el("article", "post"), head = el("header");
     const who = el("div", "grow"); who.append(el("strong", "", displayName(p)), el("br"), el("small", "time", fmt(x.created_at)));
-    head.append(avatar(p), who);
+    const postAvatar = avatar(p);
+    setProfileTarget(postAvatar, p, "Lihat profil " + displayName(p));
+    setProfileTarget(who, p, "Lihat profil " + displayName(p));
+    head.append(postAvatar, who);
     if (x.user_id === me.id) {
       const del = el("button", "btn danger sm", "Hapus");
       del.onclick = async () => { const { error } = await sb.from("posts").delete().eq("id", x.id); error ? toast("Gagal menghapus.") : loadFeed(); };
@@ -1051,17 +1099,27 @@ $("searchForm").onsubmit = async (e) => {
 };
 
 /* ===== Profil pengguna lain ===== */
-function openUser(p) {
-  const c = $("userCard"); c.replaceChildren(avatar(p, "lg"), el("h3", "", displayName(p)), el("div", "note", "@" + p.username));
-  if (p.bio) c.appendChild(el("p", "", p.bio));
+function openUser(p, returnView = currentView) {
+  if (!p || !p.user_id) return toast("Profil pengguna tidak tersedia.");
+  previousUserView = returnView || "search";
+  const c = $("userCard");
+  c.replaceChildren(avatar(p, "lg"), el("h3", "", displayName(p)), el("div", "note", p.username ? "@" + p.username : ""));
+  if (p.bio) c.appendChild(el("p", "user-profile-bio", p.bio));
   if (p.location) c.appendChild(el("div", "note", "📍 " + p.location));
   const site = safeUrl(p.website);
-  if (site) { const a = el("a", "", site); a.href = site; a.target = "_blank"; a.rel = "noopener noreferrer"; c.appendChild(a); }
-  const b = el("button", "btn primary", "Kirim pesan"); b.onclick = () => openRoom(p);
+  if (site) {
+    const a = el("a", "user-profile-website", site);
+    a.href = site;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    c.appendChild(a);
+  }
+  const b = el("button", "btn primary", "Kirim pesan");
+  b.onclick = () => openRoom(p);
   c.appendChild(b);
   show("user");
 }
-$("btnBackUser").onclick = () => show("search");
+$("btnBackUser").onclick = () => show(previousUserView || "search");
 
 /* ===== Profil saya ===== */
 function fillProfile() {
