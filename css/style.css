@@ -3882,3 +3882,13 @@ select {
     transition: none;
   }
 }
+
+
+/* ===== Performa chat: pemuatan pesan bertahap ===== */
+#v-room .load-older-messages {
+  display: block;
+  margin: 12px auto;
+}
+#v-room .load-older-messages[hidden] {
+  display: none !important;
+}
