@@ -3078,3 +3078,130 @@ nav#tabs button.active .ui-icon {
     transition: none;
   }
 }
+
+
+/* =========================================
+   BERANDA — STORY HORIZONTAL
+   Khusus tampilan Story di Beranda
+========================================= */
+
+#v-feed .home-stories {
+  width: 100%;
+  min-width: 0;
+  padding: 15px 14px 10px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+#v-feed .home-stories > .head {
+  margin-bottom: 10px;
+}
+
+#v-feed .home-stories > .head h2 {
+  font-size: 16px;
+  letter-spacing: -0.3px;
+}
+
+#v-feed #statusList {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 15px;
+  width: 100%;
+  min-width: 0;
+  padding: 2px 1px 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+#v-feed #statusList > .story-account {
+  display: flex;
+  flex: 0 0 76px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  width: 76px;
+  min-width: 76px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: center;
+  box-shadow: none;
+}
+
+#v-feed #statusList > .story-account:hover {
+  transform: none;
+  background: transparent;
+}
+
+#v-feed #statusList .story-account-avatar {
+  display: grid;
+  flex: 0 0 66px;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  overflow: hidden;
+  border: 2px solid var(--brand);
+  border-radius: 50%;
+  background: var(--soft);
+  color: var(--brand);
+  font-size: 23px;
+  font-weight: 800;
+}
+
+#v-feed #statusList .story-account-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+#v-feed #statusList .story-account-name {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#v-feed #statusList .story-account-count {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* Responsif HP */
+@media (max-width: 520px) {
+  #v-feed .home-stories {
+    padding: 13px 11px 8px;
+    border-radius: 15px;
+  }
+
+  #v-feed #statusList {
+    gap: 12px;
+  }
+
+  #v-feed #statusList > .story-account {
+    flex-basis: 70px;
+    width: 70px;
+    min-width: 70px;
+  }
+
+  #v-feed #statusList .story-account-avatar {
+    flex-basis: 62px;
+    width: 62px;
+    height: 62px;
+  }
+}
