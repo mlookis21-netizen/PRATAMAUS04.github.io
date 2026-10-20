@@ -3606,3 +3606,179 @@ select {
   #v-chats .inbox-search { margin-bottom:11px; border-radius:13px; }
   #v-chats #chatSearchInput { min-height:44px; }
 }
+
+
+/* ===== Beranda: composer ringkas dan formulir posting modal ===== */
+#v-feed .feed-composer-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  margin: 12px 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--premium-edge, rgba(148,163,205,.22));
+  border-radius: 17px;
+  background: var(--surface, rgba(255,255,255,.035));
+  color: var(--ink, #e8edf8);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 7px 22px rgba(7,12,28,.045), inset 0 1px 0 rgba(255,255,255,.035);
+  transition: border-color .16s ease, background .16s ease, box-shadow .16s ease;
+}
+#v-feed .feed-composer-trigger:hover {
+  border-color: rgba(129,140,248,.58);
+  background: var(--soft, rgba(129,140,248,.06));
+  box-shadow: 0 8px 24px rgba(7,12,28,.07);
+}
+#v-feed .feed-composer-trigger:focus-visible {
+  outline: 2px solid rgba(129,140,248,.8);
+  outline-offset: 3px;
+}
+#v-feed .feed-composer-avatar {
+  display: grid;
+  flex: 0 0 40px;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+#v-feed .feed-composer-avatar .avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 50%;
+  background: var(--soft, rgba(129,140,248,.12));
+  color: var(--brand, #818cf8);
+  font-size: 15px;
+  font-weight: 800;
+}
+#v-feed .feed-composer-avatar .avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+#v-feed .feed-composer-prompt {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--muted, #94a3b8);
+  font-size: 14px;
+  font-weight: 600;
+}
+#v-feed .feed-composer-plus {
+  display: grid;
+  flex: 0 0 36px;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #727bf4, #5964d9);
+  color: #fff;
+  font-size: 27px;
+  font-weight: 400;
+  line-height: 1;
+  box-shadow: 0 5px 13px rgba(89,100,217,.22);
+}
+#postComposerDialog.post-composer-dialog {
+  width: min(560px, calc(100vw - 28px));
+  max-width: none;
+  max-height: min(88dvh, 760px);
+  margin: auto;
+  padding: 20px;
+  overflow: auto;
+  border: 1px solid var(--premium-edge, rgba(148,163,205,.26));
+  border-radius: 22px;
+  background: var(--surface, #111827);
+  color: var(--ink, #e8edf8);
+  box-shadow: 0 28px 90px rgba(0,0,0,.38);
+}
+#postComposerDialog::backdrop {
+  background: rgba(3,7,18,.66);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+#postComposerDialog .post-composer-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+#postComposerDialog .post-composer-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--brand, #818cf8);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+#postComposerDialog .post-composer-heading h3 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: -.5px;
+}
+#postComposerDialog .post-composer-close {
+  display: grid;
+  flex: 0 0 38px;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--premium-edge, rgba(148,163,205,.22));
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+#postComposerDialog .post-composer-form {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+#postComposerDialog #postCaption {
+  min-height: 120px;
+  resize: vertical;
+}
+#postComposerDialog .post-composer-form .row {
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+@media (max-width: 520px) {
+  #v-feed .feed-composer-trigger {
+    gap: 10px;
+    margin: 10px 0 14px;
+    padding: 10px 11px;
+    border-radius: 15px;
+  }
+  #v-feed .feed-composer-avatar,
+  #v-feed .feed-composer-avatar .avatar {
+    width: 37px;
+    height: 37px;
+    flex-basis: 37px;
+  }
+  #v-feed .feed-composer-plus {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+  #postComposerDialog.post-composer-dialog {
+    width: calc(100vw - 20px);
+    max-height: 90dvh;
+    padding: 16px;
+    border-radius: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #v-feed .feed-composer-trigger { transition: none; }
+}
