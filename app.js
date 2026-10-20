@@ -6,6 +6,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const $ = (id) => document.getElementById(id);
 let me = null, profile = {}, peer = null, channel = null, currentView = "auth", previousUserView = "search";
+let roomOldestAt = null, roomCanLoadOlder = false, roomLoadingOlder = false, roomLoadToken = 0;
 
 /* ===== Kontrol Story/Status Viewer ===== */
 let activeStatuses = [];
@@ -498,6 +499,13 @@ async function openRoom(p) {
   if (!me) return toast("Login dulu.");
   if (p.user_id === me.id) return toast("Tidak bisa mengirim pesan ke diri sendiri.");
   peer = p;
+  const loadToken = ++roomLoadToken;
+  roomOldestAt = null;
+  roomCanLoadOlder = false;
+  roomLoadingOlder = false;
+  $("loadOlderMessages").hidden = true;
+  $("loadOlderMessages").disabled = false;
+  $("loadOlderMessages").textContent = "Muat pesan sebelumnya";
   $("roomName").textContent = displayName(p);
   $("roomUser").textContent = p.username ? "@" + p.username : "";
   $("roomAvatar").replaceChildren(avatar(p));
@@ -507,15 +515,81 @@ async function openRoom(p) {
   show("room");
   const a = me.id, b = p.user_id;
   const { data, error } = await sb.from("messages").select("id, sender_id, receiver_id, content, created_at")
-    .or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`).order("created_at", { ascending: true });
-  if (peer !== p) return;
+    .or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`)
+    .order("created_at", { ascending: false }).limit(100);
+  if (peer !== p || loadToken !== roomLoadToken) return;
   const box = $("roomMsgs");
   if (error) return empty(box, "Gagal memuat pesan.");
+  const messages = (data || []).reverse();
   box.replaceChildren();
-  if (!data.length) empty(box, "Belum ada pesan. Mulai percakapan.");
-  else data.forEach(addBubble);
+  if (!messages.length) {
+    empty(box, "Belum ada pesan. Mulai percakapan.");
+  } else {
+    messages.forEach(addBubble);
+    roomOldestAt = messages[0].created_at;
+    roomCanLoadOlder = messages.length === 100;
+    $("loadOlderMessages").hidden = !roomCanLoadOlder;
+  }
   scrollMsgs();
 }
+
+$("loadOlderMessages").onclick = async () => {
+  if (!me || !peer || !roomOldestAt || roomLoadingOlder) return;
+  const currentPeer = peer;
+  const loadToken = roomLoadToken;
+  const before = roomOldestAt;
+  const button = $("loadOlderMessages");
+  const box = $("roomMsgs");
+  roomLoadingOlder = true;
+  button.disabled = true;
+  button.textContent = "Memuat...";
+  const oldHeight = box.scrollHeight;
+  const oldTop = box.scrollTop;
+  const existingIds = new Set(Array.from(box.querySelectorAll(".bubble"), (node) => node.dataset.id));
+
+  try {
+    const a = me.id, b = currentPeer.user_id;
+    const { data, error } = await sb.from("messages")
+      .select("id, sender_id, receiver_id, content, created_at")
+      .or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`)
+      .lt("created_at", before)
+      .order("created_at", { ascending: false })
+      .limit(100);
+
+    if (peer !== currentPeer || loadToken !== roomLoadToken) return;
+    if (error) throw error;
+    const olderMessages = (data || []).reverse();
+    if (!olderMessages.length) {
+      roomCanLoadOlder = false;
+      button.hidden = true;
+      return;
+    }
+
+    olderMessages.forEach(addBubble);
+    const addedNodes = Array.from(box.querySelectorAll(".bubble"))
+      .filter((node) => !existingIds.has(node.dataset.id));
+    const fragment = document.createDocumentFragment();
+    addedNodes.forEach((node) => fragment.appendChild(node));
+    const firstExisting = Array.from(box.querySelectorAll(".bubble"))
+      .find((node) => existingIds.has(node.dataset.id));
+    box.insertBefore(fragment, firstExisting || box.firstChild);
+
+    roomOldestAt = olderMessages[0].created_at;
+    roomCanLoadOlder = olderMessages.length === 100;
+    button.hidden = !roomCanLoadOlder;
+    requestAnimationFrame(() => {
+      box.scrollTop = oldTop + (box.scrollHeight - oldHeight);
+    });
+  } catch (error) {
+    toast("Pesan lama gagal dimuat: " + error.message);
+  } finally {
+    if (loadToken === roomLoadToken) {
+      roomLoadingOlder = false;
+      button.disabled = false;
+      button.textContent = "Muat pesan sebelumnya";
+    }
+  }
+};
 function addBubble(m) {
   const box = $("roomMsgs");
   if (box.querySelector(`[data-id="${m.id}"]`)) return;
