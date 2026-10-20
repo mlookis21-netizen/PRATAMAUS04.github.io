@@ -3295,3 +3295,255 @@ nav#tabs button.active .ui-icon {
 @media(prefers-reduced-motion:reduce) {
   #inboxList .item, #roomForm #btnSend { transition:none!important; }
 }
+
+
+/* =====================================================
+   PREMIUM DETAIL PASS — EDGES, SURFACES & CALMER MOTION
+   Visual-only overrides; auth and application logic untouched.
+   ===================================================== */
+:root {
+  --premium-edge: rgba(148, 163, 205, 0.22);
+  --premium-edge-soft: rgba(148, 163, 205, 0.13);
+  --premium-highlight: rgba(255, 255, 255, 0.055);
+  --premium-shadow: 0 16px 42px rgba(7, 12, 28, 0.10);
+}
+
+/* Consistent, intentional outlines across the signed-in experience */
+.top {
+  border-bottom-color: var(--premium-edge);
+  box-shadow: 0 4px 18px rgba(8, 14, 30, 0.035);
+}
+.sidebar {
+  border-right-color: var(--premium-edge);
+}
+.card,
+#v-feed .home-stories,
+#v-status .card,
+#v-profile .card,
+#v-settings .card,
+#v-search .card,
+#v-user .card {
+  border-color: var(--premium-edge);
+  box-shadow: 0 8px 26px rgba(9, 18, 38, 0.045), inset 0 1px 0 var(--premium-highlight);
+}
+#v-feed .card,
+#v-status .card,
+#v-profile .card,
+#v-settings .card {
+  border-radius: 18px;
+}
+#v-profile .card:hover {
+  border-color: rgba(91, 123, 210, 0.35);
+  box-shadow: 0 12px 30px rgba(9, 18, 38, 0.075), inset 0 1px 0 var(--premium-highlight);
+}
+
+/* Cleaner edges and calmer focus rings on fields */
+input,
+textarea,
+select {
+  border-color: var(--premium-edge);
+}
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(95, 124, 225, 0.78);
+  box-shadow: 0 0 0 3px rgba(95, 124, 225, 0.11);
+}
+.btn,
+.icon,
+.item,
+.sidebar-nav button,
+.sidebar-bottom > button,
+nav#tabs button {
+  -webkit-tap-highlight-color: transparent;
+}
+.btn.ghost,
+.icon,
+#btnOpenSettings,
+#v-chats #btnRefresh,
+#v-room #btnBackRoom {
+  border-color: var(--premium-edge);
+}
+
+/* Inbox, lists and content surfaces get a restrained outline instead of glow */
+.item {
+  border-color: var(--premium-edge-soft);
+}
+.item:hover {
+  border-color: rgba(91, 123, 210, 0.42);
+}
+#v-feed .post,
+#feedList > *,
+#searchList > *,
+#statusList > * {
+  outline-color: var(--premium-edge-soft);
+}
+#v-profile .avatar,
+#v-user .avatar,
+#inboxList .avatar {
+  outline: 1px solid rgba(153, 174, 221, 0.20);
+  outline-offset: 2px;
+}
+
+/* Login / registration: premium frame, precise divider and calmer surfaces */
+#v-auth:not(.hidden) {
+  max-width: 1120px;
+  padding: 18px;
+  animation: none;
+}
+#v-auth .auth-cinematic {
+  border: 1px solid rgba(159, 174, 230, 0.28);
+  border-radius: 24px;
+  background: linear-gradient(135deg, #0c1328 0%, #090e1d 54%, #111029 100%);
+  box-shadow: 0 24px 66px rgba(3, 7, 18, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+#v-auth .auth-visual {
+  border-right: 1px solid rgba(158, 174, 230, 0.16);
+}
+#v-auth .auth-panel {
+  position: relative;
+  border-left: 1px solid rgba(255, 255, 255, 0.025);
+}
+#v-auth .auth-card {
+  max-width: 400px;
+}
+#v-auth .auth-heading {
+  margin-bottom: 25px;
+}
+#v-auth .auth-heading h2 {
+  letter-spacing: -1.15px;
+}
+#v-auth .auth-input-wrap input {
+  min-height: 50px;
+  border-color: rgba(151, 166, 215, 0.25);
+  border-radius: 11px;
+  background: rgba(10, 17, 36, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  transition: border-color 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+}
+#v-auth .auth-input-wrap input:focus {
+  border-color: rgba(151, 143, 255, 0.78);
+  background: rgba(19, 25, 50, 0.96);
+  box-shadow: 0 0 0 3px rgba(126, 105, 255, 0.10);
+}
+#v-auth .auth-actions .btn,
+#v-auth .auth-google {
+  min-height: 47px;
+  border-radius: 11px;
+  transition: border-color 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+}
+#v-auth .auth-actions .auth-login {
+  border-color: rgba(168, 170, 255, 0.52);
+  background: linear-gradient(110deg, #4b60cf, #6554ce 72%, #7650c9);
+  box-shadow: 0 6px 18px rgba(80, 78, 190, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+#v-auth .auth-actions .auth-signup,
+#v-auth .auth-google {
+  border-color: rgba(157, 170, 215, 0.24);
+  background: rgba(255, 255, 255, 0.025);
+}
+#v-auth .auth-actions .btn:hover,
+#v-auth .auth-google:hover {
+  transform: none;
+}
+#v-auth .auth-actions .auth-login:hover {
+  border-color: rgba(190, 190, 255, 0.72);
+  box-shadow: 0 8px 22px rgba(80, 78, 190, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+#v-auth .auth-actions .auth-signup:hover,
+#v-auth .auth-google:hover {
+  border-color: rgba(159, 164, 255, 0.52);
+  background: rgba(126, 105, 255, 0.055);
+}
+#v-auth .auth-divider span {
+  background: rgba(155, 164, 211, 0.22);
+}
+#v-auth .auth-legal {
+  border-top-color: rgba(155, 164, 211, 0.17);
+}
+
+/* Static, crisp auth artwork: keep the visual identity without constant movement */
+#v-auth .auth-aurora,
+#v-auth .auth-orbit,
+#v-auth .network-node,
+#v-auth .auth-logo-mark,
+#v-auth .logo-light-sweep {
+  animation: none !important;
+}
+#v-auth .auth-aurora {
+  filter: blur(52px);
+  opacity: 0.28;
+}
+#v-auth .network-node {
+  box-shadow: 0 0 8px rgba(113, 139, 255, 0.55);
+}
+#v-auth .auth-logo-mark {
+  transform: translateX(-50%);
+  box-shadow: 0 0 26px rgba(95, 103, 255, 0.20), inset 0 0 22px rgba(151, 135, 255, 0.08);
+}
+#v-auth .auth-logo-mark > span {
+  text-shadow: 0 0 14px rgba(155, 173, 255, 0.42);
+}
+
+/* Short, subtle interaction feedback instead of repeated movement */
+#inboxList .item,
+#roomForm #btnSend,
+#v-profile .card,
+#profileForm input,
+#profileForm textarea,
+#profileForm button[type="submit"],
+.btn,
+.item,
+.icon,
+input,
+textarea,
+select {
+  transition-duration: 0.14s;
+}
+#inboxList .item:hover,
+#profileForm button[type="submit"]:hover {
+  transform: none;
+}
+#roomMsgs .bubble {
+  animation: none;
+}
+#v-feed .story-account,
+#v-feed #statusList > .story-account:hover {
+  transition-duration: 0.14s;
+}
+
+/* Small-screen edge spacing */
+@media (max-width: 640px) {
+  #v-auth:not(.hidden) {
+    padding: 8px;
+  }
+  #v-auth .auth-cinematic {
+    border-radius: 18px;
+    border-color: rgba(159, 174, 230, 0.25);
+    box-shadow: 0 14px 38px rgba(3, 7, 18, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  #v-auth .auth-panel {
+    border-left: 0;
+  }
+  #v-auth .auth-mobile-logo {
+    border-color: rgba(185, 190, 255, 0.48);
+    box-shadow: 0 0 16px rgba(111, 84, 255, 0.18), inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  #v-feed .card,
+  #v-status .card,
+  #v-profile .card,
+  #v-settings .card,
+  #v-feed .home-stories {
+    border-radius: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #v-auth *,
+  #inboxList .item,
+  #roomMsgs .bubble,
+  #roomForm #btnSend {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
