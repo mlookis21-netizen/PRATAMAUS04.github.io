@@ -330,7 +330,6 @@ async function handleSession(session) {
   if (user && (!me || me.id !== user.id)) {
     me = user;
     await loadMyProfile();
-    updateFeedComposerAvatar();
     startRealtime();
     show(profile.username ? "chats" : "profile");
     if (!profile.username) toast("Atur username dulu agar bisa dicari orang lain.");
@@ -983,13 +982,6 @@ postComposerDialog.addEventListener("click", (e) => {
     else postComposerDialog.removeAttribute("open");
   }
 });
-function updateFeedComposerAvatar() {
-  const target = $("feedComposerAvatar");
-  if (!target) return;
-  target.replaceChildren(avatar(profile, "feed-composer-avatar-inner"));
-}
-updateFeedComposerAvatar();
-
 $("postFile").onchange = (e) => {
   const f = e.target.files[0], img = $("postPreview");
   if (!f) return img.classList.add("hidden");
@@ -1075,7 +1067,6 @@ $("btnBackUser").onclick = () => show("search");
 function fillProfile() {
   if (!me) return;
   $("myAvatar").replaceChildren(avatar(profile, "lg"));
-  updateFeedComposerAvatar();
   $("myEmail").textContent = me.email || "";
   $("pUsername").value = profile.username || "";
   $("pName").value = profile.full_name || "";
