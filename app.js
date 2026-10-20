@@ -350,7 +350,7 @@ async function handleSession(session) {
     me = user;
     await loadMyProfile();
     startRealtime();
-    show(profile.username ? "chats" : "profile");
+    show(profile.username ? "feed" : "profile");
     if (!profile.username) toast("Atur username dulu agar bisa dicari orang lain.");
   } else if (!user && me) {
     me = null; profile = {}; peer = null; stopRealtime();
