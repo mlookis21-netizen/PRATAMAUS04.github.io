@@ -443,36 +443,52 @@
   <div id="statusList" class="list"></div>
 </section>
       
-      <form id="postForm" class="card">
-        <textarea
-          id="postCaption"
-          rows="2"
-          maxlength="500"
-          placeholder="Tulis caption"
-        ></textarea>
+      <button type="button" id="openPostComposer" class="feed-composer-trigger" aria-haspopup="dialog" aria-controls="postComposerDialog">
+        <span id="feedComposerAvatar" class="feed-composer-avatar" aria-hidden="true"></span>
+        <span class="feed-composer-prompt">Mau berbagi sesuatu?</span>
+        <span class="feed-composer-plus" aria-hidden="true">+</span>
+      </button>
 
-        <img
-          id="postPreview"
-          class="preview hidden"
-          alt="Pratinjau foto"
-        >
-
-        <div class="row">
-          <label class="btn soft file">
-            Pilih foto
-            <input
-              id="postFile"
-              type="file"
-              accept="image/*"
-              hidden
-            >
-          </label>
-
-          <button class="btn primary" type="submit">
-            Posting
-          </button>
+      <dialog id="postComposerDialog" class="post-composer-dialog" aria-labelledby="postComposerTitle">
+        <div class="post-composer-heading">
+          <div>
+            <span class="post-composer-eyebrow">BERANDA</span>
+            <h3 id="postComposerTitle">Buat postingan</h3>
+          </div>
+          <button type="button" id="closePostComposer" class="post-composer-close" aria-label="Tutup formulir posting">×</button>
         </div>
-      </form>
+
+        <form id="postForm" class="card post-composer-form">
+          <textarea
+            id="postCaption"
+            rows="3"
+            maxlength="500"
+            placeholder="Tulis caption"
+          ></textarea>
+
+          <img
+            id="postPreview"
+            class="preview hidden"
+            alt="Pratinjau foto"
+          >
+
+          <div class="row">
+            <label class="btn soft file">
+              Pilih foto
+              <input
+                id="postFile"
+                type="file"
+                accept="image/*"
+                hidden
+              >
+            </label>
+
+            <button class="btn primary" type="submit">
+              Posting
+            </button>
+          </div>
+        </form>
+      </dialog>
 
       <div id="feedList" class="list"></div>
     </section>
