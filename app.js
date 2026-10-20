@@ -43,8 +43,16 @@ function displayName(p) { return p.full_name || p.username || "Pengguna"; }
 function avatar(p, cls = "") {
   const a = el("div", "avatar " + cls);
   const url = safeUrl(p && p.avatar_url);
-  if (url) { const i = el("img"); i.src = url; i.alt = ""; a.appendChild(i); }
-  else a.textContent = (displayName(p || {})[0] || "?").toUpperCase();
+  if (url) {
+    const i = el("img");
+    i.src = url;
+    i.alt = "";
+    i.loading = "lazy";
+    i.decoding = "async";
+    a.appendChild(i);
+  } else {
+    a.textContent = (displayName(p || {})[0] || "?").toUpperCase();
+  }
   return a;
 }
 function setProfileTarget(node, p, label) {
@@ -94,14 +102,55 @@ async function detectImageType(file) {
   throw new Error("Format gambar tidak didukung. Gunakan JPG, PNG, GIF, atau WebP.");
 }
 
+async function optimizeImageForUpload(file, imageType) {
+  // GIF dibiarkan utuh agar animasinya tidak hilang.
+  if (imageType.mime === "image/gif" || typeof createImageBitmap !== "function") {
+    return { file, imageType };
+  }
+
+  let bitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+    const maxDimension = 1600;
+    const needsResize = bitmap.width > maxDimension || bitmap.height > maxDimension;
+    if (!needsResize && file.size <= 700 * 1024) {
+      return { file, imageType };
+    }
+
+    const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const context = canvas.getContext("2d");
+    if (!context) return { file, imageType };
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.82));
+    if (!blob || blob.size >= file.size) return { file, imageType };
+
+    const mime = blob.type || "image/webp";
+    const ext = mime === "image/webp" ? "webp" : mime === "image/png" ? "png" : "jpg";
+    const optimizedFile = new File([blob], `optimized.${ext}`, { type: mime, lastModified: Date.now() });
+    return { file: optimizedFile, imageType: { mime, ext } };
+  } catch (error) {
+    // Jika browser tidak bisa memproses gambar, tetap gunakan file asli.
+    return { file, imageType };
+  } finally {
+    if (bitmap && typeof bitmap.close === "function") bitmap.close();
+  }
+}
+
 async function upload(file, folder) {
   if (!file) return "";
   if (file.size <= 0) throw new Error("File gambar kosong atau tidak valid.");
   if (file.size > 5 * 1024 * 1024) throw new Error("Ukuran foto maksimal 5 MB.");
 
-  const imageType = await detectImageType(file);
+  const detectedType = await detectImageType(file);
+  const optimized = await optimizeImageForUpload(file, detectedType);
+  const uploadFile = optimized.file;
+  const imageType = optimized.imageType;
   const path = `${me.id}/${folder}-${Date.now()}.${imageType.ext}`;
-  const { error } = await sb.storage.from("media").upload(path, file, {
+  const { error } = await sb.storage.from("media").upload(path, uploadFile, {
     contentType: imageType.mime,
     upsert: false
   });
@@ -527,7 +576,7 @@ async function loadStatus() {
     return;
   }
   const { data, error } = await sb.from("statuses")
-  .select("*")
+  .select("id, user_id, type, content, media_url, created_at, expires_at")
   .gt("expires_at", new Date().toISOString())
   .order("created_at", { ascending: false });
 
@@ -636,6 +685,8 @@ statusProfileMap = pm;
       const image = el("img");
       image.src = avatarUrl;
       image.alt = "";
+      image.loading = "lazy";
+      image.decoding = "async";
       avatar.appendChild(image);
     } else {
       avatar.textContent = name.trim().charAt(0).toUpperCase() || "?";
@@ -1051,7 +1102,7 @@ $("postForm").onsubmit = (e) => {
 async function loadFeed() {
   const box = $("feedList");
   if (!me) return empty(box, "Login untuk melihat beranda.");
-  const { data, error } = await sb.from("posts").select("*").order("created_at", { ascending: false }).limit(50);
+  const { data, error } = await sb.from("posts").select("id, user_id, caption, image_url, created_at").order("created_at", { ascending: false }).limit(50);
   if (error) return empty(box, "Gagal memuat postingan. Pastikan sql/setup.sql sudah dijalankan.");
   if (!data.length) return empty(box, "Belum ada postingan. Bagikan foto pertamamu.");
   const pm = await profilesFor(data.map((x) => x.user_id));
@@ -1071,7 +1122,14 @@ async function loadFeed() {
     }
     card.appendChild(head);
     const url = safeUrl(x.image_url);
-    if (url) { const i = el("img", "pic"); i.src = url; i.alt = "Foto postingan"; i.loading = "lazy"; card.appendChild(i); }
+    if (url) {
+      const i = el("img", "pic");
+      i.src = url;
+      i.alt = "Foto postingan";
+      i.loading = "lazy";
+      i.decoding = "async";
+      card.appendChild(i);
+    }
     if (x.caption) card.appendChild(el("p", "", x.caption));
     box.appendChild(card);
   });
