@@ -1021,6 +1021,16 @@ $("profileForm").onsubmit = (e) => {
   if (website && !safeUrl(website)) return toast("Website harus diawali http:// atau https://");
   busy(e.submitter, async () => {
     try {
+      // Periksa username lebih awal agar tidak mengunggah avatar jika username sudah dipakai.
+      const { data: usernameOwner, error: usernameCheckError } = await sb
+        .from("profiles")
+        .select("user_id")
+        .eq("username", username)
+        .neq("user_id", me.id)
+        .limit(1);
+      if (usernameCheckError) throw new Error("Tidak bisa memeriksa username. Coba lagi.");
+      if (usernameOwner && usernameOwner.length) throw new Error("Username sudah dipakai.");
+
       const avatar_url = (await upload($("pAvatarFile").files[0], "avatar")) || profile.avatar_url || null;
       const row = { user_id: me.id, username, full_name: $("pName").value.trim(), bio: $("pBio").value.trim(), website, location: $("pLocation").value.trim(), avatar_url };
       const { error } = await sb.from("profiles").upsert(row, { onConflict: "user_id" });
