@@ -357,6 +357,41 @@ function startRealtime() {
 }
 function stopRealtime() { if (channel) { sb.removeChannel(channel); channel = null; } }
 
+/* ===== Pesan: daftar percakapan + pencarian seperti inbox ===== */
+function filterInbox() {
+  const box = $("inboxList");
+  const input = $("chatSearchInput");
+  const clear = $("clearChatSearch");
+  if (!box || !input) return;
+  const q = input.value.trim().toLocaleLowerCase("id-ID");
+  if (clear) clear.hidden = !q;
+
+  const items = [...box.querySelectorAll(".item")];
+  const oldNotice = $("inboxSearchEmpty");
+  if (oldNotice) oldNotice.remove();
+
+  // Jangan mengubah pesan status kosong/error yang dibuat oleh loadInbox.
+  if (!items.length) return;
+  let visible = 0;
+  items.forEach((item) => {
+    const match = !q || (item.dataset.search || item.textContent).toLocaleLowerCase("id-ID").includes(q);
+    item.hidden = !match;
+    if (match) visible++;
+  });
+  if (q && !visible) {
+    const notice = el("div", "empty", "Tidak ada chat atau pesan yang cocok.");
+    notice.id = "inboxSearchEmpty";
+    box.appendChild(notice);
+  }
+}
+
+$("chatSearchInput").addEventListener("input", filterInbox);
+$("clearChatSearch").addEventListener("click", () => {
+  $("chatSearchInput").value = "";
+  filterInbox();
+  $("chatSearchInput").focus();
+});
+
 /* ===== Pesan: daftar percakapan ===== */
 async function loadInbox() {
   const box = $("inboxList");
@@ -374,11 +409,14 @@ async function loadInbox() {
     const b = el("button", "item");
     const meta = el("div", "meta");
     const name = el("div", "name"); name.append(el("span", "", displayName(p)), el("small", "", fmt(m.created_at)));
-    meta.append(name, el("div", "sub", (m.sender_id === me.id ? "Kamu: " : "") + m.content));
+    const preview = (m.sender_id === me.id ? "Kamu: " : "") + (m.content || "");
+    meta.append(name, el("div", "sub", preview));
+    b.dataset.search = [displayName(p), p.username || "", preview].join(" ");
     b.append(avatar(p), meta);
     b.onclick = () => openRoom(p);
     box.appendChild(b);
   });
+  filterInbox();
 }
 $("btnRefresh").onclick = loadInbox;
 
