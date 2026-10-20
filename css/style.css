@@ -3892,3 +3892,113 @@ select {
 #v-room .load-older-messages[hidden] {
   display: none !important;
 }
+
+
+/* ===== Transisi global yang halus dan ringan ===== */
+/* Animasi hanya berjalan saat tampilan dibuka; tidak ada gerakan berulang. */
+@keyframes ik-view-enter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ik-overlay-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ik-dialog-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+main > .view:not(.hidden) {
+  animation: ik-view-enter .2s cubic-bezier(.2, .7, .25, 1) both;
+}
+#viewer:not(.hidden) {
+  animation: ik-overlay-enter .16s ease-out both;
+}
+#postComposerDialog[open] {
+  animation: ik-dialog-enter .2s cubic-bezier(.2, .7, .25, 1) both;
+}
+
+/* Feedback interaksi konsisten, tanpa mengubah ukuran layout. */
+button,
+a,
+.item,
+.post,
+.story,
+.settings-section,
+.settings-link,
+.theme-option,
+#v-feed .feed-heading .feed-composer-trigger {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+a,
+.item,
+.post,
+.story,
+.settings-section,
+.settings-link,
+.theme-option {
+  transition:
+    color .16s ease,
+    background-color .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease,
+    opacity .16s ease;
+}
+button:active:not(:disabled),
+.settings-link:active,
+.theme-option:active {
+  transition-duration: .08s;
+}
+html {
+  scroll-behavior: smooth;
+}
+#roomMsgs {
+  scroll-behavior: smooth;
+}
+#viewerBody img,
+#postPreview,
+.post img.pic,
+.story.photo img,
+.avatar img {
+  transition: opacity .18s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  main > .view:not(.hidden),
+  #viewer:not(.hidden),
+  #postComposerDialog[open] {
+    animation: none !important;
+  }
+  html,
+  #roomMsgs {
+    scroll-behavior: auto !important;
+  }
+  button,
+  a,
+  .item,
+  .post,
+  .story,
+  .settings-section,
+  .settings-link,
+  .theme-option,
+  #viewerBody img,
+  #postPreview,
+  .post img.pic,
+  .story.photo img,
+  .avatar img {
+    transition: none !important;
+  }
+}
