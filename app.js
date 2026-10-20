@@ -21,6 +21,7 @@ let viewerProgressFills = [];
 let viewerProgressIndexes = [];
 
 const STORY_DURATION = 5000;
+let statusExpiryTimer = null;
 
 /* ===== Util ===== */
 function el(tag, cls, text) {
@@ -427,7 +428,18 @@ async function loadStatus() {
   const myStatusBox = $("myStatusList");
   myStatusBox.replaceChildren();
   
-  if (!me) return empty(box, "Login untuk melihat status.");
+  if (statusExpiryTimer) {
+    clearTimeout(statusExpiryTimer);
+    statusExpiryTimer = null;
+  }
+
+  if (!me) {
+    activeStatuses = [];
+    if (!$("viewer").classList.contains("hidden")) closeStoryViewer();
+    empty(box, "Login untuk melihat status.");
+    empty(myStatusBox, "Belum ada status milikmu.");
+    return;
+  }
   const { data, error } = await sb.from("statuses")
   .select("*")
   .gt("expires_at", new Date().toISOString())
@@ -435,12 +447,19 @@ async function loadStatus() {
 
 if (error) return empty(box, "Gagal memuat status.");
 
+// Filter kedua di browser untuk memastikan status kedaluwarsa tidak ditampilkan.
+const now = Date.now();
+const validStatuses = (data || []).filter((status) => {
+  const expiry = Date.parse(status.expires_at);
+  return Number.isFinite(expiry) && expiry > now;
+});
+
 // Kelompokkan status berdasarkan pemilik.
 // Urutan pengguna mengikuti status terbaru mereka.
 // Di dalam kelompok, status diputar dari yang paling lama.
 const groupedStatuses = new Map();
 
-(data || []).forEach((status) => {
+validStatuses.forEach((status) => {
   if (!groupedStatuses.has(status.user_id)) {
     groupedStatuses.set(status.user_id, []);
   }
@@ -459,9 +478,45 @@ groupedStatuses.forEach((statuses) => {
 });
 
 if (!activeStatuses.length) {
+  if (!$("viewer").classList.contains("hidden")) closeStoryViewer();
   empty(box, "Belum ada status aktif. Jadi yang pertama membagikan.");
   empty(myStatusBox, "Belum ada status milikmu.");
   return;
+}
+
+// Jadwalkan penyegaran tepat setelah status terdekat kedaluwarsa.
+const nextExpiry = Math.min(...activeStatuses.map((status) => Date.parse(status.expires_at)).filter(Number.isFinite));
+if (Number.isFinite(nextExpiry)) {
+  statusExpiryTimer = setTimeout(async () => {
+    const viewerOpen = !$("viewer").classList.contains("hidden");
+    const oldStatuses = [...activeStatuses];
+    const oldIndex = viewerIndex;
+    const currentStory = oldStatuses[oldIndex] || null;
+    await loadStatus();
+
+    if (!viewerOpen || !currentStory) return;
+    const currentStillActive = activeStatuses.findIndex((status) => status.id === currentStory.id);
+    if (currentStillActive >= 0) {
+      viewerIndex = currentStillActive;
+      renderStoryViewer();
+      return;
+    }
+
+    // Jika Story yang sedang dibuka habis masa berlakunya, lanjut ke Story aktif berikutnya.
+    const nextActiveId = oldStatuses.slice(oldIndex + 1).find((oldStatus) =>
+      activeStatuses.some((status) => status.id === oldStatus.id)
+    )?.id;
+    const nextIndex = nextActiveId
+      ? activeStatuses.findIndex((status) => status.id === nextActiveId)
+      : 0;
+
+    if (!activeStatuses.length) {
+      closeStoryViewer();
+    } else {
+      viewerIndex = Math.max(0, nextIndex);
+      renderStoryViewer();
+    }
+  }, Math.max(0, nextExpiry - Date.now()) + 100);
 }
 
 const pm = await profilesFor(activeStatuses.map((s) => s.user_id));
@@ -640,6 +695,11 @@ function renderStoryViewer() {
     return;
   }
 
+  if (!Number.isFinite(Date.parse(story.expires_at)) || Date.parse(story.expires_at) <= Date.now()) {
+    showNextStory();
+    return;
+  }
+
   const p = statusProfileMap.get(story.user_id) || {};
   const url = safeUrl(story.media_url);
 
@@ -745,9 +805,16 @@ function openViewer(s) {
 function showNextStory() {
   if (viewerIndex < 0) return;
 
-  const nextIndex = viewerIndex + 1;
+  let nextIndex = viewerIndex + 1;
+  while (
+    nextIndex < activeStatuses.length &&
+    (!Number.isFinite(Date.parse(activeStatuses[nextIndex].expires_at)) ||
+      Date.parse(activeStatuses[nextIndex].expires_at) <= Date.now())
+  ) {
+    nextIndex++;
+  }
 
-  // Tutup viewer jika seluruh story sudah selesai.
+  // Tutup viewer jika tidak ada Story aktif berikutnya.
   if (nextIndex >= activeStatuses.length) {
     closeStoryViewer();
     return;
