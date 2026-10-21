@@ -4413,3 +4413,132 @@ textarea {
     animation: none !important;
   }
 }
+
+
+/* MAVIKO — kontras mode gelap untuk layout WhatsApp-style
+   Hanya menyesuaikan warna; struktur dan fungsi chat tetap. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111418;
+  --surface: #1b2026;
+  --ink: #e9edef;
+  --muted: #a5b0b8;
+  --line: #303840;
+  --brand: #7da7ff;
+  --brand-ink: #ffffff;
+  --soft: #263447;
+  --danger: #ff8585;
+  --mine: #244b70;
+  --ring: #7da7ff;
+}
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] main,
+:root[data-theme="dark"] main > .view:not(.hidden),
+:root[data-theme="dark"] main > #v-room:not(.hidden),
+:root[data-theme="dark"] main:has(#v-room:not(.hidden)),
+:root[data-theme="dark"] main:has(#v-room:not(.hidden)) > #v-room:not(.hidden),
+:root[data-theme="dark"] #v-room .msgs,
+:root[data-theme="dark"] #v-room .composer {
+  background-color: #111418;
+  color: #e9edef;
+}
+:root[data-theme="dark"] .top,
+:root[data-theme="dark"] .sidebar,
+:root[data-theme="dark"] #v-room .room-head,
+:root[data-theme="dark"] main:has(#v-room:not(.hidden)) > #v-chats:not(.hidden),
+:root[data-theme="dark"] nav#tabs {
+  background-color: #1b2026;
+  color: #e9edef;
+  border-color: #303840;
+}
+:root[data-theme="dark"] .sidebar-nav button,
+:root[data-theme="dark"] .sidebar-bottom > button,
+:root[data-theme="dark"] .sidebar-brand,
+:root[data-theme="dark"] #v-chats .head h2,
+:root[data-theme="dark"] #v-feed .head h2,
+:root[data-theme="dark"] #v-status .head h2,
+:root[data-theme="dark"] #v-search .head h2,
+:root[data-theme="dark"] #v-profile .head h2,
+:root[data-theme="dark"] #v-settings .head h2 {
+  color: #e9edef;
+}
+:root[data-theme="dark"] .sidebar-nav button:hover,
+:root[data-theme="dark"] .sidebar-bottom > button:hover,
+:root[data-theme="dark"] .item:hover,
+:root[data-theme="dark"] main:has(#v-room:not(.hidden)) #v-chats #inboxList .item:hover,
+:root[data-theme="dark"] .top-settings:hover,
+:root[data-theme="dark"] .icon:hover {
+  background-color: #252c33;
+}
+:root[data-theme="dark"] .sidebar-nav button.active,
+:root[data-theme="dark"] .sidebar-bottom > button.active,
+:root[data-theme="dark"] nav#tabs button.active,
+:root[data-theme="dark"] .theme-option.active {
+  background-color: #263447;
+  color: #a8c5ff;
+}
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .item,
+:root[data-theme="dark"] .post,
+:root[data-theme="dark"] .settings-section,
+:root[data-theme="dark"] .theme-option {
+  background-color: #1b2026;
+  color: #e9edef;
+  border-color: #303840;
+}
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] #v-room .composer input {
+  background-color: #252c33;
+  color: #e9edef;
+  border-color: #3a444d;
+}
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: #a5b0b8;
+}
+:root[data-theme="dark"] .bubble {
+  background-color: #252c33;
+  border-color: #353e47;
+  color: #e9edef;
+  box-shadow: 0 1px 1px rgba(0,0,0,.12);
+}
+:root[data-theme="dark"] .bubble.mine {
+  background-color: #244b70;
+  border-color: #315d82;
+  color: #f5f8ff;
+}
+:root[data-theme="dark"] #v-room .msgs {
+  background-image: radial-gradient(rgba(190,205,216,.055) .7px, transparent .7px);
+  border-color: #303840;
+}
+:root[data-theme="dark"] #v-room .room-head,
+:root[data-theme="dark"] main:has(#v-room:not(.hidden)) #v-chats #inboxList .item {
+  border-color: #303840;
+}
+:root[data-theme="dark"] .btn.ghost {
+  color: #e9edef;
+  border-color: #3a444d;
+}
+:root[data-theme="dark"] .btn.soft {
+  background-color: #263447;
+  color: #a8c5ff;
+}
+:root[data-theme="dark"] .avatar {
+  background-color: #263447;
+  color: #a8c5ff;
+}
+:root[data-theme="dark"] #toast {
+  background-color: #e9edef;
+  color: #111418;
+}
+@media (max-width: 899px) {
+  :root[data-theme="dark"] body,
+  :root[data-theme="dark"] main,
+  :root[data-theme="dark"] main > .view:not(.hidden),
+  :root[data-theme="dark"] main > #v-room:not(.hidden),
+  :root[data-theme="dark"] #v-room .msgs,
+  :root[data-theme="dark"] #v-room .composer {
+    background-color: #111418;
+  }
+}
