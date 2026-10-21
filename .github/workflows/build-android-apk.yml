@@ -1,4 +1,4 @@
-name: Build MAVIKO Android APK
+name: Build and publish MAVIKO Android APK
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: maviko-android-apk-${{ github.ref }}
@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   build-apk:
-    name: Build debug APK
+    name: Build and publish APK
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -52,3 +52,18 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish public GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: MAVIKO Android v1.0.0
+          body: |
+            MAVIKO Android app — initial debug release.
+
+            **Install:** Download `MAVIKO-v1.0.0-debug.apk` below and install it on an Android device.
+            **Note:** This is a debug build. Some authentication flows (especially Google sign-in in WebView) may need device testing.
+          files: android/app/build/outputs/apk/debug/app-debug.apk
+          asset_name: MAVIKO-v1.0.0-debug.apk
+          fail_on_unmatched_files: true
+          make_latest: true
