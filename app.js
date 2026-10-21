@@ -75,6 +75,67 @@ function setProfileTarget(node, p, label) {
     }
   };
 }
+
+/* ===== Lihat foto profil ukuran besar ===== */
+let profilePhotoDialog = null;
+function openProfilePhoto(p) {
+  const url = safeUrl(p && p.avatar_url);
+  if (!url) return toast("Pengguna ini belum memasang foto profil.");
+
+  if (!profilePhotoDialog) {
+    const dialog = document.createElement("dialog");
+    dialog.className = "profile-photo-dialog";
+    dialog.setAttribute("aria-label", "Foto profil");
+
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "profile-photo-close";
+    close.textContent = "×";
+    close.setAttribute("aria-label", "Tutup foto profil");
+
+    const img = document.createElement("img");
+    img.className = "profile-photo-full";
+    img.alt = "Foto profil";
+
+    const caption = document.createElement("div");
+    caption.className = "profile-photo-caption";
+
+    close.onclick = () => dialog.close();
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", () => img.removeAttribute("src"));
+    dialog.append(close, img, caption);
+    document.body.appendChild(dialog);
+    profilePhotoDialog = { dialog, img, caption };
+  }
+
+  profilePhotoDialog.img.src = url;
+  profilePhotoDialog.img.alt = "Foto profil " + displayName(p);
+  profilePhotoDialog.caption.textContent =
+    displayName(p) + (p.username ? " · @" + p.username : "");
+  if (!profilePhotoDialog.dialog.open) profilePhotoDialog.dialog.showModal();
+}
+
+function setProfilePhotoTarget(node, p) {
+  if (!node || !p) return;
+  node.classList.add("profile-photo-target");
+  node.setAttribute("role", "button");
+  node.tabIndex = 0;
+  node.setAttribute("aria-label", "Lihat foto profil " + displayName(p));
+  node.title = "Klik untuk melihat foto profil";
+  node.onclick = (event) => {
+    event.stopPropagation();
+    openProfilePhoto(p);
+  };
+  node.onkeydown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      event.stopPropagation();
+      openProfilePhoto(p);
+    }
+  };
+}
 async function busy(btn, fn) {
   if (btn) btn.disabled = true;
   try { await fn(); } finally { if (btn) btn.disabled = false; }
@@ -1235,7 +1296,9 @@ function openUser(p, returnView = currentView) {
   if (!p || !p.user_id) return toast("Profil pengguna tidak tersedia.");
   previousUserView = returnView || "search";
   const c = $("userCard");
-  c.replaceChildren(avatar(p, "lg"), el("h3", "", displayName(p)), el("div", "note", p.username ? "@" + p.username : ""));
+  const userPhoto = avatar(p, "lg");
+  setProfilePhotoTarget(userPhoto, p);
+  c.replaceChildren(userPhoto, el("h3", "", displayName(p)), el("div", "note", p.username ? "@" + p.username : ""));
   if (p.bio) c.appendChild(el("p", "user-profile-bio", p.bio));
   if (p.location) c.appendChild(el("div", "note", "📍 " + p.location));
   const site = safeUrl(p.website);
@@ -1256,7 +1319,9 @@ $("btnBackUser").onclick = () => show(previousUserView || "search");
 /* ===== Profil saya ===== */
 function fillProfile() {
   if (!me) return;
-  $("myAvatar").replaceChildren(avatar(profile, "lg"));
+  const myPhoto = avatar(profile, "lg");
+  setProfilePhotoTarget(myPhoto, profile);
+  $("myAvatar").replaceChildren(myPhoto);
   $("myEmail").textContent = me.email || "";
   $("pUsername").value = profile.username || "";
   $("pName").value = profile.full_name || "";
