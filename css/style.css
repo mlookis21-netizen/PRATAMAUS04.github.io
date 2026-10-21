@@ -4963,3 +4963,45 @@ nav#tabs button:focus-visible {
     to { transform: scale(1); opacity: 1; }
   }
 }
+
+/* =========================================
+   UNDUH APK MAVIKO
+========================================= */
+
+.auth-download {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--bg);
+}
+
+.auth-download h3 {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.25px;
+}
+
+.auth-download p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.auth-download ol,
+.download-steps {
+  display: grid;
+  gap: 7px;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.auth-download small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
