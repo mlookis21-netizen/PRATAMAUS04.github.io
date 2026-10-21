@@ -4073,3 +4073,343 @@ html {
     right: -8px;
   }
 }
+
+
+/* =====================================================
+   MAVIKO — TATA LETAK DESKTOP TERINSPIRASI WHATSAPP WEB
+   Perubahan visual/layout saja; komponen dan ID fitur lama dipertahankan.
+===================================================== */
+:root {
+  color-scheme: light;
+  --bg: #f0f2f5;
+  --surface: #ffffff;
+  --ink: #202c33;
+  --muted: #667781;
+  --line: #dfe3e5;
+  --brand: #2563eb;
+  --brand-ink: #ffffff;
+  --soft: #eaf1ff;
+  --danger: #d94848;
+  --mine: #dce8ff;
+  --ring: #8bb7f0;
+  --r: 10px;
+  --sidebar-width: 232px;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+body {
+  background: #e9edef;
+  color: var(--ink);
+}
+.top,
+.sidebar {
+  background: #ffffff;
+  color: #202c33;
+  border-color: #e5e9eb;
+}
+.brand-mark {
+  background: #2563eb;
+  border-radius: 9px;
+}
+.sidebar-nav,
+.sidebar-bottom {
+  gap: 4px;
+}
+.sidebar-nav button,
+.sidebar-bottom > button {
+  border-radius: 9px;
+  color: #41525c;
+}
+.sidebar-nav button:hover,
+.sidebar-bottom > button:hover {
+  background: #f0f2f5;
+}
+.sidebar-nav button.active,
+.sidebar-bottom > button.active {
+  background: #eaf1ff;
+  color: #1d4ed8;
+}
+.card,
+.item,
+.post,
+.settings-section {
+  border-color: #e3e7e9;
+  border-radius: 10px;
+  box-shadow: none;
+}
+input,
+textarea {
+  background: #f7f8fa;
+  border-color: #dfe3e5;
+  border-radius: 8px;
+}
+.btn {
+  border-radius: 8px;
+}
+.btn.primary {
+  background: #2563eb;
+}
+.item {
+  padding: 12px 10px;
+}
+.item:hover {
+  background: #f5f7f8;
+  border-color: #d8e0e4;
+}
+.bubble {
+  background: #ffffff;
+  border: 1px solid #e7ebed;
+  border-radius: 8px 8px 8px 2px;
+  color: #202c33;
+  box-shadow: 0 1px 1px rgba(11,20,26,.04);
+}
+.bubble.mine {
+  background: #dce8ff;
+  border-color: #cbdcff;
+  color: #172b4d;
+  border-radius: 8px 8px 2px 8px;
+}
+#v-room .room-head {
+  border-bottom: 1px solid #e5e9eb;
+  margin-bottom: 0;
+}
+#v-room .composer {
+  padding: 12px 0 0;
+}
+#v-room .composer input {
+  background: #ffffff;
+  border-radius: 9px;
+}
+#v-room .msgs {
+  background-color: #f7f8fa;
+  background-image: radial-gradient(rgba(101,119,129,.07) .7px, transparent .7px);
+  background-size: 17px 17px;
+  border: 0;
+  border-radius: 0;
+  padding: 20px clamp(12px, 3vw, 42px);
+}
+#v-room .room-head .avatar {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+}
+#v-chats .head h2,
+#v-feed .head h2,
+#v-status .head h2,
+#v-search .head h2,
+#v-profile .head h2,
+#v-settings .head h2 {
+  color: #202c33;
+}
+
+/* Desktop: panel navigasi kiri + ruang konten lebar penuh. */
+@media (min-width: 900px) {
+  body {
+    overflow: hidden;
+  }
+  .top {
+    display: none;
+  }
+  .sidebar {
+    width: var(--sidebar-width);
+    padding: 20px 12px 16px;
+    background: #ffffff;
+    border-right: 1px solid #dfe3e5;
+  }
+  .sidebar-brand {
+    padding: 5px 10px;
+    margin-bottom: 18px;
+  }
+  .sidebar-brand .brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+  .sidebar-nav button,
+  .sidebar-bottom > button {
+    min-height: 44px;
+    padding: 10px 12px;
+    gap: 12px;
+    font-size: 13px;
+  }
+  main {
+    display: block;
+    width: auto;
+    max-width: none;
+    height: 100dvh;
+    min-height: 0;
+    margin: 0 0 0 var(--sidebar-width);
+    padding: 0;
+    overflow: hidden;
+    background: #f7f8fa;
+  }
+  main > .view:not(.hidden) {
+    width: 100%;
+    max-width: 1040px;
+    height: 100dvh;
+    min-height: 0;
+    margin: 0 auto;
+    padding: 30px clamp(22px, 4vw, 54px);
+    overflow-y: auto;
+    background: #f7f8fa;
+  }
+  main > #v-auth:not(.hidden) {
+    max-width: none;
+    padding: 0;
+    overflow-y: auto;
+    background: #ffffff;
+  }
+  main > #v-chats:not(.hidden) {
+    max-width: 900px;
+    padding: 28px clamp(22px, 4vw, 42px);
+  }
+  main > #v-room:not(.hidden) {
+    max-width: none;
+    padding: 0 24px 18px;
+    background: #f7f8fa;
+  }
+  main:has(#v-room:not(.hidden)) {
+    display: grid;
+    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    align-items: stretch;
+    background: #ffffff;
+  }
+  main:has(#v-room:not(.hidden)) > #v-chats:not(.hidden) {
+    display: flex;
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    padding: 24px 12px 18px;
+    overflow-y: auto;
+    border-right: 1px solid #dfe3e5;
+    background: #ffffff;
+    gap: 14px;
+  }
+  main:has(#v-room:not(.hidden)) > #v-room:not(.hidden) {
+    display: flex;
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    height: 100dvh;
+    min-width: 0;
+    max-width: none;
+    padding: 0 24px 18px;
+    border: 0;
+    background: #f7f8fa;
+  }
+  main:has(#v-room:not(.hidden)) #v-chats .head {
+    padding: 0 5px;
+  }
+  main:has(#v-room:not(.hidden)) #v-chats .inbox-search {
+    margin: 0 3px;
+  }
+  main:has(#v-room:not(.hidden)) #v-chats #inboxList {
+    gap: 2px;
+  }
+  main:has(#v-room:not(.hidden)) #v-chats #inboxList .item {
+    border: 0;
+    border-bottom: 1px solid #edf0f2;
+    border-radius: 0;
+    padding: 12px 7px;
+  }
+  main:has(#v-room:not(.hidden)) #v-chats #inboxList .item:hover {
+    background: #f3f6f8;
+  }
+  #v-room .room-head {
+    flex: 0 0 auto;
+    min-height: 70px;
+    margin: 0 -24px;
+    padding: 12px 24px;
+    background: #ffffff;
+  }
+  #v-room .msgs {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0 -24px;
+  }
+  #v-room .composer {
+    flex: 0 0 auto;
+    margin: 0 -24px;
+    padding: 12px 24px 0;
+    background: #f0f2f5;
+  }
+  #v-room .composer input {
+    min-height: 46px;
+    padding-inline: 16px;
+  }
+  #v-room .composer .btn {
+    min-height: 46px;
+  }
+}
+
+/* HP: layout tetap ringan, navigasi bawah tetap berfungsi. */
+@media (max-width: 899px) {
+  body {
+    background: #f0f2f5;
+  }
+  .top {
+    position: sticky;
+    min-height: 58px;
+    padding: 8px 14px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e9eb;
+  }
+  .sidebar {
+    display: none !important;
+  }
+  main {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 16px 12px calc(86px + env(safe-area-inset-bottom, 0px));
+    background: #f0f2f5;
+  }
+  main > .view:not(.hidden) {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  main:has(#v-room:not(.hidden)) #v-chats {
+    display: none !important;
+  }
+  main > #v-room:not(.hidden) {
+    height: calc(100dvh - 148px);
+    min-height: 280px;
+    padding: 0;
+    background: #f7f8fa;
+  }
+  #v-room .room-head {
+    margin: 0;
+    padding: 8px 0 12px;
+    background: #ffffff;
+  }
+  #v-room .msgs {
+    padding: 12px;
+    background-color: #f7f8fa;
+  }
+  #v-room .composer {
+    padding-top: 9px;
+    background: #f0f2f5;
+  }
+  nav#tabs {
+    background: #ffffff;
+    border-top: 1px solid #e1e6e8;
+    box-shadow: 0 -3px 12px rgba(11,20,26,.035);
+  }
+  nav#tabs button.active {
+    background: #eaf1ff;
+    color: #1d4ed8;
+  }
+  #toast {
+    background: #202c33;
+    color: #ffffff;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  main > .view:not(.hidden) {
+    animation: none !important;
+  }
+}
