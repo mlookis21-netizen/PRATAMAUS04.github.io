@@ -296,7 +296,10 @@ function show(v) {
     const section = $("v-" + x);
 
     if (section) {
-      section.classList.toggle("hidden", x !== v);
+      // Desktop: pertahankan daftar percakapan di samping ruang chat.
+      // Pada HP, CSS menyembunyikan daftar saat ruang chat dibuka.
+      const keepInboxBesideRoom = v === "room" && x === "chats";
+      section.classList.toggle("hidden", x !== v && !keepInboxBesideRoom);
     }
   });
 
@@ -414,7 +417,7 @@ document.querySelectorAll("[data-theme-choice]").forEach((button) => {
 });
 
 /* Pulihkan tema saat halaman dibuka */
-let savedTheme = "system";
+let savedTheme = "light";
 
 try {
   savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "system";
