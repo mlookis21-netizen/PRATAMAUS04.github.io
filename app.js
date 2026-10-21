@@ -420,7 +420,7 @@ document.querySelectorAll("[data-theme-choice]").forEach((button) => {
 let savedTheme = "light";
 
 try {
-  savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "system";
+  savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "light";
 } catch (err) {
   console.warn("Preferensi tema tidak dapat dibaca.", err);
 }
