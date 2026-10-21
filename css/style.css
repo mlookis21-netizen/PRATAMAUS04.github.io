@@ -4862,3 +4862,104 @@ nav#tabs button:focus-visible {
     transition: none !important;
   }
 }
+
+
+/* MAVIKO — indikator pesan dan status baca */
+#v-chats #inboxList .preview-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-top: 3px;
+}
+#v-chats #inboxList .preview-row .sub {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#v-chats #inboxList .item.has-unread .name {
+  font-weight: 800;
+}
+#v-chats #inboxList .item.has-unread .preview-row .sub {
+  color: var(--ink);
+  font-weight: 600;
+}
+#v-chats #inboxList .unread-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+#v-room .bubble .bubble-content {
+  margin: 0;
+  color: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#v-room .bubble .bubble-meta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  min-height: 12px;
+  margin-top: 3px;
+  line-height: 1;
+}
+#v-room .bubble .bubble-meta .bubble-time {
+  display: inline-block;
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+#v-room .bubble.mine .bubble-meta .bubble-time {
+  color: inherit;
+  opacity: .72;
+}
+#v-room .bubble .read-receipt {
+  display: inline-block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: -2.5px;
+  line-height: 1;
+  padding-right: 2px;
+  white-space: nowrap;
+}
+#v-room .bubble .read-receipt.is-read {
+  color: #2563eb;
+}
+:root[data-theme="dark"] #v-chats #inboxList .item.has-unread .preview-row .sub {
+  color: #f2f5f7;
+}
+:root[data-theme="dark"] #v-chats #inboxList .unread-badge {
+  background: #8ab4ff;
+  color: #111820;
+}
+:root[data-theme="dark"] #v-room .bubble .read-receipt.is-read {
+  color: #9fc2ff;
+}
+@media (prefers-reduced-motion: no-preference) {
+  #v-chats #inboxList .unread-badge {
+    animation: maviko-unread-in .18s ease-out both;
+  }
+  @keyframes maviko-unread-in {
+    from { transform: scale(.82); opacity: .6; }
+    to { transform: scale(1); opacity: 1; }
+  }
+}
