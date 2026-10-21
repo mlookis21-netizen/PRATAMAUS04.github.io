@@ -484,8 +484,14 @@ function startRealtime() {
   channel = sb.channel("incoming-" + me.id)
     .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `receiver_id=eq.${me.id}` }, (p) => {
       const m = p.new;
-      if (currentView === "room" && peer && m.sender_id === peer.user_id) { addBubble(m); scrollMsgs(); }
-      else { toast("Pesan baru"); if (currentView === "chats") loadInbox(); }
+      if (currentView === "room" && peer && m.sender_id === peer.user_id) {
+        addBubble(m); scrollMsgs(); void markConversationRead(m.sender_id);
+      } else { toast("Pesan baru"); if (currentView === "chats") loadInbox(); }
+    })
+    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "messages", filter: `sender_id=eq.${me.id}` }, (p) => {
+      const m = p.new;
+      if (m.read_at) updateReadReceipt(m);
+      if (currentView === "chats") loadInbox();
     }).subscribe();
 }
 function stopRealtime() { if (channel) { sb.removeChannel(channel); channel = null; } }
@@ -529,9 +535,13 @@ $("clearChatSearch").addEventListener("click", () => {
 async function loadInbox() {
   const box = $("inboxList");
   if (!me) return empty(box, "Login untuk melihat pesan.");
-  const { data, error } = await sb.from("messages").select("id, sender_id, receiver_id, content, created_at")
+  const { data, error } = await sb.from("messages").select("id, sender_id, receiver_id, content, created_at, read_at")
     .or(`sender_id.eq.${me.id},receiver_id.eq.${me.id}`).order("created_at", { ascending: false }).limit(500);
   if (error) return empty(box, "Gagal memuat pesan.");
+  const { data: unreadRows, error: unreadError } = await sb.from("messages")
+    .select("sender_id").eq("receiver_id", me.id).is("read_at", null);
+  const unreadCounts = new Map();
+  if (!unreadError) (unreadRows || []).forEach((row) => unreadCounts.set(row.sender_id, (unreadCounts.get(row.sender_id) || 0) + 1));
   const last = new Map();
   (data || []).forEach((m) => { const o = m.sender_id === me.id ? m.receiver_id : m.sender_id; if (!last.has(o)) last.set(o, m); });
   if (!last.size) return empty(box, "Belum ada percakapan. Cari pengguna untuk memulai.");
@@ -546,7 +556,12 @@ async function loadInbox() {
     setProfileTarget(nameTarget, p, "Lihat profil " + displayName(p));
     name.append(nameTarget, el("small", "", fmt(m.created_at)));
     const preview = (m.sender_id === me.id ? "Kamu: " : "") + (m.content || "");
-    meta.append(name, el("div", "sub", preview));
+    const previewRow = el("div", "preview-row");
+    previewRow.appendChild(el("div", "sub", preview));
+    const unreadCount = unreadCounts.get(uid) || 0;
+    if (unreadCount > 0) previewRow.appendChild(el("span", "unread-badge", unreadCount > 99 ? "99+" : String(unreadCount)));
+    meta.append(name, previewRow);
+    b.classList.toggle("has-unread", unreadCount > 0);
     b.dataset.search = [displayName(p), p.username || "", preview].join(" ");
     const personAvatar = avatar(p);
     setProfileTarget(personAvatar, p, "Lihat profil " + displayName(p));
@@ -557,6 +572,17 @@ async function loadInbox() {
   filterInbox();
 }
 $("btnRefresh").onclick = loadInbox;
+
+async function markConversationRead(senderId) {
+  if (!me || !senderId) return;
+  const { error } = await sb.from("messages").update({ read_at: new Date().toISOString() })
+    .eq("receiver_id", me.id).eq("sender_id", senderId).is("read_at", null);
+  if (error) {
+    console.warn("Status baca pesan gagal diperbarui.", error.message);
+    return;
+  }
+  await loadInbox();
+}
 
 /* ===== Ruang chat ===== */
 async function openRoom(p) {
@@ -578,7 +604,7 @@ async function openRoom(p) {
   empty($("roomMsgs"), "Memuat pesan...");
   show("room");
   const a = me.id, b = p.user_id;
-  const { data, error } = await sb.from("messages").select("id, sender_id, receiver_id, content, created_at")
+  const { data, error } = await sb.from("messages").select("id, sender_id, receiver_id, content, created_at, read_at")
     .or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`)
     .order("created_at", { ascending: false }).limit(100);
   if (peer !== p || loadToken !== roomLoadToken) return;
@@ -595,6 +621,7 @@ async function openRoom(p) {
     $("loadOlderMessages").hidden = !roomCanLoadOlder;
   }
   scrollMsgs();
+  void markConversationRead(p.user_id);
 }
 
 $("loadOlderMessages").onclick = async () => {
@@ -614,7 +641,7 @@ $("loadOlderMessages").onclick = async () => {
   try {
     const a = me.id, b = currentPeer.user_id;
     const { data, error } = await sb.from("messages")
-      .select("id, sender_id, receiver_id, content, created_at")
+      .select("id, sender_id, receiver_id, content, created_at, read_at")
       .or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`)
       .lt("created_at", before)
       .order("created_at", { ascending: false })
@@ -658,10 +685,38 @@ function addBubble(m) {
   const box = $("roomMsgs");
   if (box.querySelector(`[data-id="${m.id}"]`)) return;
   const first = box.firstElementChild; if (first && first.classList.contains("empty")) first.remove();
-  const d = el("div", "bubble" + (m.sender_id === me.id ? " mine" : ""));
+  const ownMessage = m.sender_id === me.id;
+  const d = el("div", "bubble" + (ownMessage ? " mine" : ""));
   d.dataset.id = m.id;
-  d.append(el("div", "", m.content), el("small", "", fmt(m.created_at)));
+  d.appendChild(el("div", "bubble-content", m.content || ""));
+  const meta = el("div", "bubble-meta");
+  meta.appendChild(el("small", "bubble-time", fmt(m.created_at)));
+  if (ownMessage) {
+    const read = Boolean(m.read_at);
+    const receipt = el("span", "read-receipt", read ? "✓✓" : "✓");
+    receipt.title = read ? "Dibaca" : "Terkirim";
+    receipt.setAttribute("aria-label", read ? "Dibaca" : "Terkirim");
+    if (read) receipt.classList.add("is-read");
+    meta.appendChild(receipt);
+  }
+  d.appendChild(meta);
   box.appendChild(d);
+}
+function updateReadReceipt(m) {
+  if (!m || !m.read_at) return;
+  const box = $("roomMsgs");
+  const bubble = box && box.querySelector(`[data-id="${m.id}"]`);
+  if (!bubble || !bubble.classList.contains("mine")) return;
+  let receipt = bubble.querySelector(".read-receipt");
+  if (!receipt) {
+    receipt = el("span", "read-receipt");
+    const meta = bubble.querySelector(".bubble-meta");
+    if (meta) meta.appendChild(receipt);
+  }
+  receipt.textContent = "✓✓";
+  receipt.title = "Dibaca";
+  receipt.setAttribute("aria-label", "Dibaca");
+  receipt.classList.add("is-read");
 }
 function scrollMsgs() { requestAnimationFrame(() => { const b = $("roomMsgs"); b.scrollTop = b.scrollHeight; }); }
 $("btnBackRoom").onclick = () => { peer = null; show("chats"); };
@@ -671,7 +726,7 @@ $("roomForm").onsubmit = (e) => {
   if (!content || !peer) return;
   busy($("btnSend"), async () => {
     const { data, error } = await sb.from("messages").insert({ sender_id: me.id, receiver_id: peer.user_id, content })
-      .select("id, sender_id, receiver_id, content, created_at").single();
+      .select("id, sender_id, receiver_id, content, created_at, read_at").single();
     if (error) return toast("Pesan gagal dikirim: " + error.message);
     input.value = ""; addBubble(data); scrollMsgs();
   });
