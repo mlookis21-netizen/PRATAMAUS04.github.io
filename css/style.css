@@ -5670,3 +5670,118 @@ nav#tabs button:focus-visible {
     opacity: 1;
   }
 }
+
+
+/* MAVIKO — balas dengan swipe dan penyempurnaan header/composer */
+#v-room .room-head {
+  position: relative;
+  min-height: 70px;
+}
+#v-room .room-head .grow {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+#v-room #roomName,
+#v-room #roomUser {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#v-room #roomUser {
+  line-height: 1.35;
+}
+#v-room #roomMsgs {
+  touch-action: pan-y;
+}
+#v-room .bubble {
+  position: relative;
+  transform: translateX(0);
+  transition: transform .16s ease, box-shadow .16s ease;
+  will-change: transform;
+}
+#v-room .bubble.is-swiping-to-reply {
+  transition: none;
+  box-shadow: 0 3px 14px color-mix(in srgb, var(--brand) 20%, transparent);
+}
+#v-room .bubble.is-swiping-to-reply::before {
+  content: "↩";
+  position: absolute;
+  left: -31px;
+  top: 50%;
+  display: grid;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--brand) 22%, var(--line));
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--brand);
+  font-size: 14px;
+  font-weight: 800;
+  transform: translateY(-50%);
+  box-shadow: 0 2px 7px rgba(0,0,0,.08);
+}
+#v-room #roomForm {
+  align-items: center;
+}
+#v-room #roomForm #roomInput {
+  width: 100%;
+  min-height: 46px;
+  line-height: 1.45;
+}
+#v-room #roomForm #btnSend {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 78px;
+  white-space: nowrap;
+}
+#v-room #roomForm #btnSend:active {
+  transform: translateY(0) scale(.98);
+}
+#v-room .message-action-menu {
+  max-width: calc(100vw - 16px);
+  flex-wrap: wrap;
+  border-radius: 12px;
+  padding: 6px;
+  backdrop-filter: blur(12px);
+}
+#v-room .message-action-menu button {
+  min-height: 40px;
+  padding: 9px 13px;
+  font-size: 13px;
+  font-weight: 700;
+}
+#v-room .message-action-menu button:hover,
+#v-room .message-action-menu button:focus-visible {
+  background: var(--soft);
+  color: var(--brand);
+}
+@media (max-width: 899px) {
+  #v-room .room-head {
+    min-height: 62px;
+  }
+  #v-room #roomForm #roomInput {
+    min-height: 44px;
+    font-size: 16px;
+  }
+  #v-room #roomForm #btnSend {
+    min-width: 60px;
+    min-height: 44px;
+    padding-inline: 11px;
+  }
+  #v-room .message-action-menu button {
+    min-height: 42px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #v-room .bubble,
+  #v-room #roomForm #btnSend {
+    transition: none !important;
+  }
+}
