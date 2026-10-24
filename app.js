@@ -614,6 +614,7 @@ async function openRoom(p) {
   if (!me) return toast("Login dulu.");
   if (p.user_id === me.id) return toast("Tidak bisa mengirim pesan ke diri sendiri.");
   peer = p;
+  clearReply();
   const loadToken = ++roomLoadToken;
   roomOldestAt = null;
   roomCanLoadOlder = false;
