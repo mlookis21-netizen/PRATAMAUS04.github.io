@@ -19,7 +19,7 @@
   >
 
   <!-- CSS utama -->
-  <link rel="stylesheet" href="css/style.css?v=20261025-chat-polish-4">
+  <link rel="stylesheet" href="css/style.css?v=20261025-profile-message-actions-1">
 </head>
 
 <body>
@@ -563,7 +563,18 @@
       <form id="profileForm" class="card">
         <div id="myAvatar" class="center"></div>
 
-        <p class="note" id="myEmail"></p>
+        <div class="profile-preview" aria-live="polite">
+          <h3 id="profilePreviewName">Nama kamu</h3>
+          <p id="profilePreviewUsername" class="profile-preview-username">@username</p>
+          <p id="profilePreviewBio" class="profile-preview-bio">Bio kamu akan tampil di sini.</p>
+          <p id="profilePreviewLocation" class="profile-preview-detail">Lokasi belum diisi</p>
+          <p id="profilePreviewWebsite" class="profile-preview-detail" hidden></p>
+        </div>
+
+        <div class="profile-account-info">
+          <span class="profile-account-label">Email akun</span>
+          <p class="note" id="myEmail"></p>
+        </div>
 
         <label for="pUsername">Username</label>
         <input
@@ -573,10 +584,12 @@
         >
 
         <label for="pName">Nama lengkap</label>
-        <input id="pName" maxlength="60">
+        <input id="pName" maxlength="60" autocomplete="name">
+        <small class="profile-field-count" id="pNameCount">0/60</small>
 
         <label for="pBio">Bio</label>
-        <textarea id="pBio" rows="3" maxlength="200"></textarea>
+        <textarea id="pBio" rows="3" maxlength="200" placeholder="Ceritakan sedikit tentang dirimu"></textarea>
+        <small class="profile-field-count" id="pBioCount">0/200</small>
 
         <label for="pWebsite">Website</label>
         <input
@@ -586,7 +599,7 @@
         >
 
         <label for="pLocation">Lokasi</label>
-        <input id="pLocation" maxlength="60">
+        <input id="pLocation" maxlength="60" autocomplete="address-level2" placeholder="Kota atau daerah">
 
         <label class="btn soft file">
           Ganti foto profil
