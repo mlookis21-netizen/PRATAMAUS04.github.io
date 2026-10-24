@@ -775,6 +775,9 @@ function attachMessageActions(bubble, m) {
   });
   bubble.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 || !event.isPrimary) return;
+    if (event.pointerType === "touch" && bubble.setPointerCapture) {
+      try { bubble.setPointerCapture(event.pointerId); } catch (_) {}
+    }
     messagePressStart = { x: event.clientX, y: event.clientY, id: m.id };
     messageSwipeStart = event.pointerType === "touch"
       ? { x: event.clientX, y: event.clientY, id: m.id }
