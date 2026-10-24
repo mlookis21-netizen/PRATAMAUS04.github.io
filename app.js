@@ -707,7 +707,6 @@ $("loadOlderMessages").onclick = async () => {
     }
   }
 };
-async 
 function clearReply() {
   replyingTo = null;
   const preview = $("replyPreview");
