@@ -221,7 +221,7 @@ async function upload(file, folder) {
     contentType: imageType.mime,
     upsert: false
   });
-  if (error) throw error;
+  if (error) throw new Error("Supabase menolak pemuatan pesan lama: " + error.message);
   return sb.storage.from("media").getPublicUrl(path).data.publicUrl;
 }
 
@@ -542,7 +542,10 @@ async function loadInbox() {
   if (!me) return empty(box, "Login untuk melihat pesan.");
   const { data, error } = await sb.from("messages").select("id, sender_id, receiver_id, content, created_at, read_at")
     .or(`sender_id.eq.${me.id},receiver_id.eq.${me.id}`).order("created_at", { ascending: false }).limit(500);
-  if (error) return empty(box, "Gagal memuat pesan.");
+  if (error) {
+    console.error("Gagal memuat inbox:", error);
+    return empty(box, "Gagal memuat pesan: " + error.message);
+  }
   const { data: unreadRows, error: unreadError } = await sb.from("messages")
     .select("sender_id").eq("receiver_id", me.id).is("read_at", null);
   const unreadCounts = new Map();
@@ -632,12 +635,15 @@ async function openRoom(p) {
   show("room");
   const a = me.id, b = p.user_id;
   const { data, error } = await sb.from("messages")
-    .select("id, sender_id, receiver_id, content, created_at, read_at, reply_to_id, reply_to:messages!messages_reply_to_id_fkey(id, content, sender_id)")
+    .select("id, sender_id, receiver_id, content, created_at, read_at, reply_to_id")
     .or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`)
     .order("created_at", { ascending: false }).limit(100);
   if (peer !== p || loadToken !== roomLoadToken) return;
   const box = $("roomMsgs");
-  if (error) return empty(box, "Gagal memuat pesan.");
+  if (error) {
+    console.error("Gagal memuat ruang chat:", error);
+    return empty(box, "Gagal memuat pesan: " + error.message);
+  }
   const messages = (data || []).reverse();
   box.replaceChildren();
   if (!messages.length) {
@@ -669,7 +675,7 @@ $("loadOlderMessages").onclick = async () => {
   try {
     const a = me.id, b = currentPeer.user_id;
     const { data, error } = await sb.from("messages")
-      .select("id, sender_id, receiver_id, content, created_at, read_at, reply_to_id, reply_to:messages!messages_reply_to_id_fkey(id, content, sender_id)")
+      .select("id, sender_id, receiver_id, content, created_at, read_at, reply_to_id")
       .or(`and(sender_id.eq.${a},receiver_id.eq.${b}),and(sender_id.eq.${b},receiver_id.eq.${a})`)
       .lt("created_at", before)
       .order("created_at", { ascending: false })
@@ -935,8 +941,11 @@ $("roomForm").onsubmit = (e) => {
   busy($("btnSend"), async () => {
     const payload = { sender_id: me.id, receiver_id: peer.user_id, content, reply_to_id: replyingTo ? replyingTo.id : null };
     const { data, error } = await sb.from("messages").insert(payload)
-      .select("id, sender_id, receiver_id, content, created_at, read_at, reply_to_id, reply_to:messages!messages_reply_to_id_fkey(id, content, sender_id)").single();
-    if (error) return toast("Pesan gagal dikirim: " + error.message);
+      .select("id, sender_id, receiver_id, content, created_at, read_at, reply_to_id").single();
+    if (error) {
+      console.error("Gagal mengirim pesan:", error);
+      return toast("Pesan gagal dikirim: " + error.message);
+    }
     input.value = "";
     clearReply();
     await addBubble(data);
