@@ -578,7 +578,7 @@ async function loadInbox() {
     b.append(personAvatar, meta);
     b.onclick = () => openRoom(p);
     row.appendChild(b);
-    const pin = el("button", "chat-pin" + (pinned.has(uid) ? " is-pinned" : ""), pinned.has(uid) ? "📌" : "Sematkan");
+    const pin = el("button", "chat-pin" + (pinned.has(uid) ? " is-pinned" : ""), "📌");
     pin.type = "button";
     pin.title = pinned.has(uid) ? "Lepas sematan chat" : "Sematkan chat";
     pin.setAttribute("aria-label", pin.title);
