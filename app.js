@@ -732,10 +732,37 @@ function showMessageActions(bubble, m) {
   closeMessageActionMenu();
   const menu = el("div", "message-action-menu");
   menu.setAttribute("role", "menu");
-  const reply = el("button", "", "Balas");
+  const reply = el("button", "", "↩ Balas");
   reply.type = "button";
+  reply.setAttribute("role", "menuitem");
   reply.onclick = () => { closeMessageActionMenu(); beginReply(m); };
-  const forward = el("button", "", "Teruskan");
+  const copy = el("button", "", "⧉ Salin teks");
+  copy.type = "button";
+  copy.setAttribute("role", "menuitem");
+  copy.onclick = async () => {
+    closeMessageActionMenu();
+    const textToCopy = String(m.content || "");
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(textToCopy);
+      } else {
+        const helper = el("textarea");
+        helper.value = textToCopy;
+        helper.setAttribute("readonly", "");
+        helper.style.position = "fixed";
+        helper.style.opacity = "0";
+        document.body.appendChild(helper);
+        helper.select();
+        const copied = document.execCommand("copy");
+        helper.remove();
+        if (!copied) throw new Error("copy failed");
+      }
+      toast("Teks pesan disalin.");
+    } catch (_) {
+      toast("Tidak bisa menyalin pesan di browser ini.");
+    }
+  };
+  const forward = el("button", "", "➦ Teruskan");
   forward.type = "button";
   forward.onclick = async () => {
     closeMessageActionMenu();
@@ -756,7 +783,8 @@ function showMessageActions(bubble, m) {
     toast("Pesan diteruskan ke @" + target.username + ".");
     if (currentView === "chats") void loadInbox();
   };
-  menu.append(reply, forward);
+  forward.setAttribute("role", "menuitem");
+  menu.append(reply, copy, forward);
   document.body.appendChild(menu);
   const rect = bubble.getBoundingClientRect();
   menu.style.left = Math.max(8, Math.min(rect.left, window.innerWidth - menu.offsetWidth - 8)) + "px";
@@ -765,6 +793,11 @@ function showMessageActions(bubble, m) {
 }
 document.addEventListener("pointerdown", (event) => {
   if (messageActionMenu && !messageActionMenu.contains(event.target)) closeMessageActionMenu();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && messageActionMenu) {
+    closeMessageActionMenu();
+  }
 });
 function attachMessageActions(bubble, m) {
   bubble.title = "Geser ke kanan untuk membalas, atau tekan lama untuk aksi pesan";
@@ -1554,18 +1587,58 @@ function openUser(p, returnView = currentView) {
 $("btnBackUser").onclick = () => show(previousUserView || "search");
 
 /* ===== Profil saya ===== */
+function updateProfilePreview() {
+  const username = $("pUsername").value.trim();
+  const name = $("pName").value.trim() || username || "Nama kamu";
+  $("profilePreviewName").textContent = name;
+  $("profilePreviewUsername").textContent = username ? "@" + username : "@username";
+  $("profilePreviewBio").textContent = $("pBio").value.trim() || "Bio kamu akan tampil di sini.";
+  $("profilePreviewLocation").textContent = $("pLocation").value.trim() || "Lokasi belum diisi";
+  $("profilePreviewWebsite").textContent = $("pWebsite").value.trim() || "Website belum diisi";
+  $("profilePreviewWebsite").hidden = !$("pWebsite").value.trim();
+  $("pNameCount").textContent = $("pName").value.length + "/60";
+  $("pBioCount").textContent = $("pBio").value.length + "/200";
+}
 function fillProfile() {
   if (!me) return;
   const myPhoto = avatar(profile, "lg");
   setProfilePhotoTarget(myPhoto, profile);
   $("myAvatar").replaceChildren(myPhoto);
-  $("myEmail").textContent = me.email || "";
+  $("myEmail").textContent = me.email || "Email akun tidak tersedia";
   $("pUsername").value = profile.username || "";
   $("pName").value = profile.full_name || "";
   $("pBio").value = profile.bio || "";
   $("pWebsite").value = profile.website || "";
   $("pLocation").value = profile.location || "";
+  $("pAvatarFile").value = "";
+  updateProfilePreview();
 }
+["pUsername", "pName", "pBio", "pWebsite", "pLocation"].forEach((id) => {
+  $(id).addEventListener("input", updateProfilePreview);
+});
+$("pAvatarFile").addEventListener("change", () => {
+  const file = $("pAvatarFile").files && $("pAvatarFile").files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    $("pAvatarFile").value = "";
+    return toast("Pilih file gambar untuk foto profil.");
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    $("pAvatarFile").value = "";
+    return toast("Ukuran foto maksimal 5 MB.");
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = el("img", "");
+    img.src = reader.result;
+    img.alt = "Pratinjau foto profil";
+    const previewAvatar = el("div", "avatar lg profile-avatar-preview");
+    previewAvatar.appendChild(img);
+    $("myAvatar").replaceChildren(previewAvatar);
+  };
+  reader.onerror = () => toast("Foto tidak bisa dibaca. Coba file lain.");
+  reader.readAsDataURL(file);
+});
 $("profileForm").onsubmit = (e) => {
   e.preventDefault();
   const username = $("pUsername").value.trim().toLowerCase();
