@@ -5581,3 +5581,92 @@ nav#tabs button:focus-visible {
     transition: none !important;
   }
 }
+
+
+/* Sidebar MAVIKO: navigasi desktop lebih tegas dan konsisten */
+@media (min-width: 900px) {
+  .sidebar {
+    padding: 24px 14px 18px;
+    border-right: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: 3px 0 18px rgba(16, 24, 40, .025);
+  }
+  .sidebar-brand {
+    gap: 10px;
+    min-height: 50px;
+    margin: 0 2px 30px;
+    padding: 5px 8px;
+  }
+  .sidebar-brand .brand-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px color-mix(in srgb, var(--brand) 20%, transparent);
+  }
+  .sidebar-brand .brand-name {
+    font-size: 17px;
+    letter-spacing: -.6px;
+  }
+  .sidebar-nav {
+    gap: 5px;
+  }
+  .sidebar-nav button,
+  .sidebar-bottom > button {
+    position: relative;
+    min-height: 46px;
+    gap: 13px;
+    padding: 11px 13px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 650;
+    transition: color .15s ease, background-color .15s ease, border-color .15s ease;
+  }
+  .sidebar-nav button .ui-icon,
+  .sidebar-bottom > button .ui-icon {
+    width: 19px;
+    height: 19px;
+    flex: 0 0 19px;
+    opacity: .88;
+  }
+  .sidebar-nav button:hover,
+  .sidebar-bottom > button:hover {
+    background: var(--bg);
+    border-color: var(--line);
+  }
+  .sidebar-nav button.active,
+  .sidebar-bottom > button.active {
+    border-color: color-mix(in srgb, var(--brand) 17%, var(--line));
+    background: var(--soft);
+    color: var(--brand);
+    font-weight: 800;
+  }
+  .sidebar-nav button.active::before {
+    position: absolute;
+    left: -1px;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--brand);
+    content: "";
+  }
+  .sidebar-nav button.active .ui-icon,
+  .sidebar-bottom > button.active .ui-icon {
+    opacity: 1;
+  }
+  .sidebar-bottom {
+    padding-top: 14px;
+  }
+  .sidebar-caption {
+    padding-top: 13px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+}
+@media (hover: none) {
+  #v-chats #inboxList .chat-pin {
+    opacity: 1;
+  }
+}
