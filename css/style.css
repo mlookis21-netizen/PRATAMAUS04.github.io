@@ -627,7 +627,7 @@ textarea:focus {
   font-size: 12px;
   opacity: 0.9;
 }
-.bubble-reply-quote small {
+.bubble .bubble-reply-quote small {
   display: block;
   text-align: left;
   font-weight: 800;
