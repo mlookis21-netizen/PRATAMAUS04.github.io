@@ -11,6 +11,7 @@ let replyingTo = null;
 let messageActionMenu = null;
 let messagePressTimer = null;
 let messagePressStart = null;
+let messageSwipeStart = null;
 
 /* ===== Kontrol Story/Status Viewer ===== */
 let activeStatuses = [];
@@ -766,35 +767,76 @@ document.addEventListener("pointerdown", (event) => {
   if (messageActionMenu && !messageActionMenu.contains(event.target)) closeMessageActionMenu();
 });
 function attachMessageActions(bubble, m) {
-  bubble.title = "Tekan lama untuk membalas atau meneruskan";
+  bubble.title = "Geser ke kanan untuk membalas, atau tekan lama untuk aksi pesan";
+  bubble.setAttribute("aria-label", "Pesan. Geser ke kanan untuk membalas atau tekan lama untuk aksi pesan.");
   bubble.addEventListener("contextmenu", (event) => {
     event.preventDefault();
     showMessageActions(bubble, m);
   });
   bubble.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) return;
+    if (event.button !== 0 || !event.isPrimary) return;
     messagePressStart = { x: event.clientX, y: event.clientY, id: m.id };
+    messageSwipeStart = event.pointerType === "touch"
+      ? { x: event.clientX, y: event.clientY, id: m.id }
+      : null;
     clearTimeout(messagePressTimer);
     messagePressTimer = setTimeout(() => {
       if (messagePressStart && messagePressStart.id === m.id) {
+        messageSwipeStart = null;
+        bubble.classList.remove("is-swiping-to-reply");
+        bubble.style.transform = "";
         showMessageActions(bubble, m);
         messagePressStart = null;
       }
     }, 480);
   });
   bubble.addEventListener("pointermove", (event) => {
-    if (!messagePressStart) return;
-    if (Math.abs(event.clientX - messagePressStart.x) > 12 || Math.abs(event.clientY - messagePressStart.y) > 12) {
+    if (messagePressStart && (Math.abs(event.clientX - messagePressStart.x) > 12 || Math.abs(event.clientY - messagePressStart.y) > 12)) {
       clearTimeout(messagePressTimer);
       messagePressStart = null;
     }
+    if (!messageSwipeStart || messageSwipeStart.id !== m.id) return;
+    const dx = event.clientX - messageSwipeStart.x;
+    const dy = event.clientY - messageSwipeStart.y;
+    if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx) * 0.85) {
+      messageSwipeStart = null;
+      bubble.classList.remove("is-swiping-to-reply");
+      bubble.style.transform = "";
+      return;
+    }
+    if (dx > 8 && dx > Math.abs(dy) * 1.15) {
+      bubble.classList.add("is-swiping-to-reply");
+      bubble.style.transform = "translateX(" + Math.min(dx, 64) + "px)";
+    }
   });
-  const endPress = () => {
+  const endPress = (event) => {
     clearTimeout(messagePressTimer);
     messagePressStart = null;
+    if (messageSwipeStart && messageSwipeStart.id === m.id) {
+      const dx = event.clientX - messageSwipeStart.x;
+      const dy = event.clientY - messageSwipeStart.y;
+      const shouldReply = dx >= 56 && dx > Math.abs(dy) * 1.35;
+      messageSwipeStart = null;
+      bubble.classList.remove("is-swiping-to-reply");
+      bubble.style.transform = "";
+      if (shouldReply) {
+        beginReply(m);
+        toast("Membalas pesan");
+      }
+    } else {
+      messageSwipeStart = null;
+      bubble.classList.remove("is-swiping-to-reply");
+      bubble.style.transform = "";
+    }
   };
   bubble.addEventListener("pointerup", endPress);
-  bubble.addEventListener("pointercancel", endPress);
+  bubble.addEventListener("pointercancel", () => {
+    clearTimeout(messagePressTimer);
+    messagePressStart = null;
+    messageSwipeStart = null;
+    bubble.classList.remove("is-swiping-to-reply");
+    bubble.style.transform = "";
+  });
 }
 
 async function addBubble(m) {
