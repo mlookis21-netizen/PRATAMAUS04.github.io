@@ -6707,3 +6707,36 @@ nav#tabs button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   #v-feed .feed-composer-trigger { transition: none; }
 }
+
+
+/* MAVIKO — perbaikan scroll Beranda di desktop.
+   main memakai overflow:hidden; karena itu Beranda harus tetap menjadi scroll container.
+   Jangan gunakan overflow:visible pada view aktif di breakpoint desktop. */
+@media (min-width: 900px) {
+  main > #v-feed:not(.hidden) {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    pointer-events: auto;
+  }
+
+  main > #v-feed:not(.hidden) .feed-heading,
+  main > #v-feed:not(.hidden) .feed-composer-trigger,
+  main > #v-feed:not(.hidden) .home-stories,
+  main > #v-feed:not(.hidden) #statusList,
+  main > #v-feed:not(.hidden) #feedList,
+  main > #v-feed:not(.hidden) #feedList button,
+  main > #v-feed:not(.hidden) #feedList a {
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 899px) {
+  main > #v-feed:not(.hidden) {
+    overflow: visible;
+    min-height: calc(100dvh - 160px);
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    -webkit-overflow-scrolling: touch;
+  }
+}
