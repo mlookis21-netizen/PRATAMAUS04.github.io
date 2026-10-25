@@ -6345,3 +6345,75 @@ nav#tabs button:focus-visible {
     animation: none !important;
   }
 }
+
+
+/* MAVIKO — tactile, app-like back control in chat */
+#v-room .room-head .room-back-btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 42px;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0;
+  margin: 0 1px 0 -2px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: 0 2px 5px rgba(15, 23, 42, .07), inset 0 1px 0 rgba(255,255,255,.55);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+#v-room .room-back-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: translateX(-1px);
+  transition: transform .16s ease;
+}
+#v-room .room-head .room-back-btn:hover {
+  background: var(--bg);
+  border-color: var(--ring, var(--brand));
+  box-shadow: 0 4px 10px rgba(15, 23, 42, .10);
+}
+#v-room .room-head .room-back-btn:hover .room-back-icon {
+  transform: translateX(-3px);
+}
+#v-room .room-head .room-back-btn:active {
+  transform: scale(.94);
+  box-shadow: inset 0 1px 3px rgba(15, 23, 42, .12);
+}
+#v-room .room-head .room-back-btn:focus-visible {
+  outline: 3px solid var(--ring, var(--brand));
+  outline-offset: 3px;
+}
+:root[data-theme="dark"] #v-room .room-head .room-back-btn {
+  background: var(--surface, #151c25);
+  border-color: var(--line, #303846);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255,255,255,.04);
+}
+@media (max-width: 520px) {
+  #v-room .room-head .room-back-btn {
+    flex-basis: 40px;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+    border-radius: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #v-room .room-head .room-back-btn,
+  #v-room .room-back-icon {
+    transition: none !important;
+  }
+}
