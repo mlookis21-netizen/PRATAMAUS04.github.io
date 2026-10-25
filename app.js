@@ -613,6 +613,94 @@ async function markConversationRead(senderId) {
   await loadInbox();
 }
 
+/* ===== Menu profesional ruang chat ===== */
+let roomMoreMenu = null;
+function closeRoomMoreMenu() {
+  if (roomMoreMenu) {
+    roomMoreMenu.remove();
+    roomMoreMenu = null;
+  }
+  const trigger = $("btnRoomMore");
+  if (trigger) trigger.setAttribute("aria-expanded", "false");
+}
+function showRoomMoreMenu() {
+  closeRoomMoreMenu();
+  const menu = el("div", "room-more-menu");
+  menu.id = "roomMoreMenu";
+  menu.setAttribute("role", "menu");
+  const addItem = (label, icon, action) => {
+    const button = el("button", "room-more-item");
+    button.type = "button";
+    button.setAttribute("role", "menuitem");
+    const symbol = el("span", "room-more-item-icon", icon);
+    const text = el("span", "", label);
+    button.append(symbol, text);
+    button.onclick = () => { closeRoomMoreMenu(); action(); };
+    menu.appendChild(button);
+  };
+  addItem("Cari dalam chat", "⌕", () => {
+    const bar = $("roomSearchBar");
+    bar.classList.remove("hidden");
+    $("roomSearchInput").focus();
+    filterRoomMessages();
+  });
+  addItem("Lihat profil kontak", "♙", () => {
+    if (peer) openUser(peer, "room");
+  });
+  addItem("Tutup percakapan", "←", () => {
+    resetRoomSearch();
+    peer = null;
+    show("chats");
+  });
+  document.body.appendChild(menu);
+  const trigger = $("btnRoomMore");
+  if (trigger) trigger.setAttribute("aria-expanded", "true");
+  const rect = trigger ? trigger.getBoundingClientRect() : {right: window.innerWidth - 12, bottom: 60};
+  const width = menu.offsetWidth || 224;
+  menu.style.left = Math.max(8, Math.min(rect.right - width, window.innerWidth - width - 8)) + "px";
+  menu.style.top = Math.max(8, Math.min(rect.bottom + 6, window.innerHeight - menu.offsetHeight - 8)) + "px";
+  roomMoreMenu = menu;
+}
+function resetRoomSearch() {
+  const bar = $("roomSearchBar");
+  const input = $("roomSearchInput");
+  if (bar) bar.classList.add("hidden");
+  if (input) input.value = "";
+  $("roomSearchCount").textContent = "";
+  $("roomMsgs")?.querySelectorAll(".bubble").forEach((bubble) => {
+    bubble.hidden = false;
+    bubble.classList.remove("room-search-match");
+  });
+}
+function filterRoomMessages() {
+  const input = $("roomSearchInput");
+  const box = $("roomMsgs");
+  if (!input || !box) return;
+  const query = input.value.trim().toLocaleLowerCase("id-ID");
+  const bubbles = [...box.querySelectorAll(".bubble")];
+  let matches = 0;
+  bubbles.forEach((bubble) => {
+    const found = !query || bubble.textContent.toLocaleLowerCase("id-ID").includes(query);
+    bubble.hidden = !found;
+    bubble.classList.toggle("room-search-match", Boolean(query && found));
+    if (found && query) matches++;
+  });
+  $("roomSearchCount").textContent = query ? matches + " hasil" : "";
+}
+$("btnRoomMore").onclick = (event) => {
+  event.stopPropagation();
+  if (roomMoreMenu) closeRoomMoreMenu();
+  else showRoomMoreMenu();
+};
+$("roomSearchInput").addEventListener("input", filterRoomMessages);
+$("closeRoomSearch").onclick = resetRoomSearch;
+document.addEventListener("pointerdown", (event) => {
+  if (roomMoreMenu && !roomMoreMenu.contains(event.target) && !event.target.closest("#btnRoomMore")) closeRoomMoreMenu();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && roomMoreMenu) closeRoomMoreMenu();
+});
+
 /* ===== Ruang chat ===== */
 async function openRoom(p) {
   if (!me) return toast("Login dulu.");
@@ -633,6 +721,8 @@ async function openRoom(p) {
   setProfileTarget($("roomName").parentElement, p, "Lihat profil " + displayName(p));
   empty($("roomMsgs"), "Memuat pesan...");
   show("room");
+  closeRoomMoreMenu();
+  resetRoomSearch();
   const a = me.id, b = p.user_id;
   const { data, error } = await sb.from("messages")
     .select("id, sender_id, receiver_id, content, created_at, read_at, reply_to_id")
