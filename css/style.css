@@ -6604,3 +6604,106 @@ nav#tabs button:focus-visible {
   #v-feed #feedList > .post,
   #postComposerDialog .post-composer-close { transition: none !important; }
 }
+
+
+/* MAVIKO — Beranda header & tombol buat postingan */
+#v-feed .feed-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  padding: 6px 0 20px;
+  border-bottom: 1px solid var(--line);
+}
+#v-feed .feed-heading-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+#v-feed .feed-heading-eyebrow {
+  color: var(--brand);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .14em;
+}
+#v-feed .feed-heading-copy h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(25px, 3vw, 32px);
+  line-height: 1.18;
+  letter-spacing: -.045em;
+}
+#v-feed .feed-heading-copy p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+#v-feed .feed-composer-trigger {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 0 17px;
+  border: 1px solid color-mix(in srgb, var(--brand) 80%, transparent);
+  border-radius: 14px;
+  background: var(--brand);
+  color: var(--brand-ink);
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--brand) 22%, transparent);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  white-space: nowrap;
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+#v-feed .feed-composer-trigger:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--brand) 27%, transparent);
+}
+#v-feed .feed-composer-trigger:active {
+  transform: translateY(0) scale(.98);
+  box-shadow: 0 2px 7px color-mix(in srgb, var(--brand) 20%, transparent);
+}
+#v-feed .feed-composer-trigger:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 4px;
+}
+#v-feed .feed-composer-icon {
+  display: block;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+@media (max-width: 520px) {
+  #v-feed .feed-heading {
+    align-items: flex-start;
+    gap: 12px;
+    padding: 3px 0 15px;
+  }
+  #v-feed .feed-heading-copy h2 { font-size: 25px; }
+  #v-feed .feed-heading-copy p { max-width: 220px; font-size: 12px; }
+  #v-feed .feed-heading-eyebrow { font-size: 9px; }
+  #v-feed .feed-composer-trigger {
+    min-height: 42px;
+    gap: 6px;
+    padding: 0 11px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+  #v-feed .feed-composer-icon { width: 17px; height: 17px; }
+}
+@media (max-width: 360px) {
+  #v-feed .feed-heading-copy p { display: none; }
+  #v-feed .feed-composer-trigger { min-height: 40px; padding-inline: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #v-feed .feed-composer-trigger { transition: none; }
+}
