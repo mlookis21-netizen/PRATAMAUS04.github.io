@@ -5927,3 +5927,78 @@ nav#tabs button:focus-visible {
   #profileForm .row { flex-wrap: wrap; }
   #profileForm .row > button { flex: 1 1 140px; }
 }
+
+
+/* MAVIKO — kontras bubble chat adaptif untuk tema terang/gelap.
+   Warna latar dibuat solid agar teks tidak tampak transparan di HP maupun desktop. */
+:root[data-theme="light"] #v-room .msgs,
+:root:not([data-theme="dark"]) #v-room .msgs {
+  background-color: #f7f9fb;
+}
+:root[data-theme="light"] #v-room .bubble:not(.mine),
+:root:not([data-theme="dark"]) #v-room .bubble:not(.mine) {
+  background: #ffffff !important;
+  border: 1px solid #dce2e8;
+  color: #202c33 !important;
+}
+:root[data-theme="light"] #v-room .bubble.mine,
+:root:not([data-theme="dark"]) #v-room .bubble.mine {
+  background: #d9e8ff !important;
+  border: 1px solid #c1d7fb;
+  color: #172b4d !important;
+}
+:root[data-theme="light"] #v-room .bubble .bubble-meta .bubble-time,
+:root:not([data-theme="dark"]) #v-room .bubble .bubble-meta .bubble-time {
+  color: #586879;
+  opacity: 1;
+}
+:root[data-theme="light"] #v-room .bubble.mine .bubble-meta .bubble-time,
+:root:not([data-theme="dark"]) #v-room .bubble.mine .bubble-meta .bubble-time {
+  color: #405a7b;
+  opacity: 1;
+}
+:root[data-theme="dark"] #v-room .msgs {
+  background-color: #111820;
+}
+:root[data-theme="dark"] #v-room .bubble:not(.mine) {
+  background: #26313c !important;
+  border: 1px solid #3b4a58;
+  color: #f1f5f9 !important;
+}
+:root[data-theme="dark"] #v-room .bubble.mine {
+  background: #174a70 !important;
+  border: 1px solid #28638e;
+  color: #ffffff !important;
+}
+:root[data-theme="dark"] #v-room .bubble .bubble-meta .bubble-time {
+  color: #c5d0db;
+  opacity: 1;
+}
+:root[data-theme="dark"] #v-room .bubble.mine .bubble-meta .bubble-time {
+  color: #e0efff;
+  opacity: 1;
+}
+/* Tema Sistem: ikuti preferensi perangkat jika pengguna memilih Sistem. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) #v-room .msgs {
+    background-color: #111820;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) #v-room .bubble:not(.mine) {
+    background: #26313c !important;
+    border: 1px solid #3b4a58;
+    color: #f1f5f9 !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) #v-room .bubble.mine {
+    background: #174a70 !important;
+    border: 1px solid #28638e;
+    color: #ffffff !important;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) #v-room .bubble .bubble-meta .bubble-time {
+    color: #c5d0db;
+    opacity: 1;
+  }
+  :root:not([data-theme="light"]):not([data-theme="dark"]) #v-room .bubble.mine .bubble-meta .bubble-time {
+    color: #e0efff;
+    opacity: 1;
+  }
+}
