@@ -6002,3 +6002,131 @@ nav#tabs button:focus-visible {
     opacity: 1;
   }
 }
+
+
+/* MAVIKO Chat polish — menu titik tiga dan pencarian percakapan */
+#v-room .room-head {
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+#v-room .room-contact {
+  min-width: 0;
+  cursor: pointer;
+}
+#v-room .room-contact strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 700;
+}
+#v-room .room-contact small {
+  font-size: 12px;
+}
+.room-more-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font-size: 26px;
+  line-height: 1;
+  transition: background-color .16s ease, transform .16s ease;
+}
+.room-more-btn:hover,
+.room-more-btn[aria-expanded="true"] {
+  background: var(--soft);
+}
+.room-more-btn:active { transform: scale(.94); }
+.room-more-menu {
+  position: fixed;
+  z-index: 10010;
+  width: 232px;
+  max-width: calc(100vw - 16px);
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 14px 40px rgba(0,0,0,.18);
+  animation: roomMenuIn .14s ease-out both;
+}
+.room-more-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  text-align: left;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  transition: background-color .14s ease;
+}
+.room-more-item:hover,
+.room-more-item:focus-visible { background: var(--soft); }
+.room-more-item-icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  flex: 0 0 22px;
+  color: var(--muted);
+  font-size: 19px;
+}
+.room-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 10px;
+  padding: 0 10px;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--muted);
+}
+.room-search-bar input {
+  min-width: 0;
+  flex: 1;
+  width: 100%;
+  padding: 8px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  box-shadow: none;
+}
+.room-search-bar input:focus { outline: 0; box-shadow: none; }
+.room-search-count { white-space: nowrap; font-size: 11px; }
+.room-search-bar button {
+  padding: 2px 6px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 22px;
+}
+#roomMsgs .bubble[hidden] { display: none !important; }
+#roomMsgs .bubble.room-search-match {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+@keyframes roomMenuIn {
+  from { opacity: 0; transform: translateY(-4px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .room-more-menu { animation: none; }
+  .room-more-btn { transition: none; }
+}
+:root[data-theme="dark"] #v-room .room-head { background: #1b2026; border-color: #303840; }
+:root[data-theme="dark"] #v-room .room-search-bar { background: #1b2026; }
+@media (max-width: 899px) {
+  #v-room .room-head { padding: 8px 10px; }
+  .room-more-btn { width: 38px; height: 38px; flex-basis: 38px; }
+}
