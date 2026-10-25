@@ -1562,79 +1562,187 @@ $("viewer").onclick = (e) => {
 
 /* ===== Feed postingan ===== */
 const postComposerDialog = $("postComposerDialog");
+let postPreviewObjectUrl = null;
+
+function closePostComposer() {
+  if (typeof postComposerDialog.close === "function" && postComposerDialog.open) {
+    postComposerDialog.close();
+  } else {
+    postComposerDialog.removeAttribute("open");
+  }
+}
+
+function clearPostPreview() {
+  const img = $("postPreview");
+  if (postPreviewObjectUrl) {
+    URL.revokeObjectURL(postPreviewObjectUrl);
+    postPreviewObjectUrl = null;
+  }
+  img.removeAttribute("src");
+  img.classList.add("hidden");
+}
+
+function syncPostCaptionCount() {
+  const caption = $("postCaption");
+  const count = $("postCaptionCount");
+  if (caption && count) count.textContent = `${caption.value.length}/500`;
+}
+
 $("openPostComposer").onclick = () => {
   if (!me) return toast("Login dulu untuk membuat postingan.");
   if (typeof postComposerDialog.showModal === "function") {
-    postComposerDialog.showModal();
-    $("postCaption").focus();
+    if (!postComposerDialog.open) postComposerDialog.showModal();
   } else {
     postComposerDialog.setAttribute("open", "");
-    $("postCaption").focus();
   }
+  syncPostCaptionCount();
+  $("postCaption").focus();
 };
-$("closePostComposer").onclick = () => {
-  if (typeof postComposerDialog.close === "function") postComposerDialog.close();
-  else postComposerDialog.removeAttribute("open");
-};
-postComposerDialog.addEventListener("click", (e) => {
-  if (e.target === postComposerDialog) {
-    if (typeof postComposerDialog.close === "function") postComposerDialog.close();
-    else postComposerDialog.removeAttribute("open");
-  }
+
+$("closePostComposer").onclick = closePostComposer;
+postComposerDialog.addEventListener("close", () => {
+  // Bersihkan URL preview agar file foto tidak tertahan di memori.
+  clearPostPreview();
 });
+
+postComposerDialog.addEventListener("click", (e) => {
+  if (e.target === postComposerDialog) closePostComposer();
+});
+
+$("postCaption").addEventListener("input", syncPostCaptionCount);
+
 $("postFile").onchange = (e) => {
-  const f = e.target.files[0], img = $("postPreview");
-  if (!f) return img.classList.add("hidden");
-  img.src = URL.createObjectURL(f); img.classList.remove("hidden");
+  const file = e.target.files && e.target.files[0];
+  const img = $("postPreview");
+  const note = $("postFileNote");
+
+  clearPostPreview();
+  if (!file) {
+    if (note) note.textContent = "Foto opsional · Maksimal 5 MB";
+    return;
+  }
+
+  if (!file.type.startsWith("image/")) {
+    e.target.value = "";
+    if (note) note.textContent = "File harus berupa gambar.";
+    return toast("Pilih file gambar yang valid.");
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    e.target.value = "";
+    if (note) note.textContent = "Ukuran foto melebihi batas 5 MB.";
+    return toast("Ukuran foto maksimal 5 MB.");
+  }
+
+  postPreviewObjectUrl = URL.createObjectURL(file);
+  img.src = postPreviewObjectUrl;
+  img.classList.remove("hidden");
+  if (note) note.textContent = `${file.name} · ${(file.size / (1024 * 1024)).toFixed(2)} MB`;
 };
+
 $("postForm").onsubmit = (e) => {
   e.preventDefault();
-  const caption = $("postCaption").value.trim(), file = $("postFile").files[0];
+  const caption = $("postCaption").value.trim();
+  const file = $("postFile").files[0];
+
   if (!caption && !file) return toast("Tulis caption atau pilih foto.");
+  if (!me) return toast("Sesi login berakhir. Login kembali untuk memposting.");
+  if (file && (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024)) {
+    return toast(file.size > 5 * 1024 * 1024 ? "Ukuran foto maksimal 5 MB." : "Pilih file gambar yang valid.");
+  }
+
   busy(e.submitter, async () => {
     try {
       const image_url = await upload(file, "post");
-      const { error } = await sb.from("posts").insert({ user_id: me.id, caption, image_url: image_url || null });
+      const { error } = await sb.from("posts").insert({
+        user_id: me.id,
+        caption,
+        image_url: image_url || null
+      });
       if (error) throw error;
-      $("postCaption").value = ""; $("postFile").value = ""; $("postPreview").classList.add("hidden");
-      if (typeof postComposerDialog.close === "function") postComposerDialog.close();
-      else postComposerDialog.removeAttribute("open");
-      toast("Postingan dibagikan."); loadFeed();
-    } catch (err) { toast("Posting gagal: " + err.message); }
+
+      $("postCaption").value = "";
+      $("postFile").value = "";
+      syncPostCaptionCount();
+      if ($("postFileNote")) $("postFileNote").textContent = "Foto opsional · Maksimal 5 MB";
+      closePostComposer();
+      clearPostPreview();
+      toast("Postingan berhasil dibagikan.");
+      await loadFeed();
+    } catch (err) {
+      toast("Posting gagal: " + (err && err.message ? err.message : "terjadi kesalahan."));
+    }
   });
 };
+
 async function loadFeed() {
   const box = $("feedList");
   if (!me) return empty(box, "Login untuk melihat beranda.");
-  const { data, error } = await sb.from("posts").select("id, user_id, caption, image_url, created_at").order("created_at", { ascending: false }).limit(50);
-  if (error) return empty(box, "Gagal memuat postingan. Pastikan sql/setup.sql sudah dijalankan.");
-  if (!data.length) return empty(box, "Belum ada postingan. Bagikan foto pertamamu.");
+
+  empty(box, "Memuat postingan...");
+  const { data, error } = await sb
+    .from("posts")
+    .select("id, user_id, caption, image_url, created_at")
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error) return empty(box, "Gagal memuat postingan. Periksa koneksi lalu coba buka Beranda lagi.");
+  if (!data || !data.length) return empty(box, "Belum ada postingan. Jadilah yang pertama berbagi.");
+
   const pm = await profilesFor(data.map((x) => x.user_id));
   box.replaceChildren();
+
   data.forEach((x) => {
     const p = pm.get(x.user_id) || {};
-    const card = el("article", "post"), head = el("header");
-    const who = el("div", "grow"); who.append(el("strong", "", displayName(p)), el("br"), el("small", "time", fmt(x.created_at)));
+    const card = el("article", "post");
+    const head = el("header");
+    const who = el("div", "grow");
+    who.append(
+      el("strong", "", displayName(p)),
+      el("br"),
+      el("small", "time", fmt(x.created_at))
+    );
+
     const postAvatar = avatar(p);
     setProfileTarget(postAvatar, p, "Lihat profil " + displayName(p));
     setProfileTarget(who, p, "Lihat profil " + displayName(p));
     head.append(postAvatar, who);
+
     if (x.user_id === me.id) {
-      const del = el("button", "btn danger sm", "Hapus");
-      del.onclick = async () => { const { error } = await sb.from("posts").delete().eq("id", x.id); error ? toast("Gagal menghapus.") : loadFeed(); };
+      const del = el("button", "btn danger sm post-delete-btn", "Hapus");
+      del.type = "button";
+      del.setAttribute("aria-label", "Hapus postingan ini");
+      del.onclick = async () => {
+        if (!window.confirm("Hapus postingan ini? Tindakan ini tidak bisa dibatalkan.")) return;
+        del.disabled = true;
+        try {
+          const { error: deleteError } = await sb.from("posts").delete().eq("id", x.id).eq("user_id", me.id);
+          if (deleteError) throw deleteError;
+          toast("Postingan dihapus.");
+          await loadFeed();
+        } catch (err) {
+          del.disabled = false;
+          toast("Gagal menghapus postingan: " + (err && err.message ? err.message : "coba lagi."));
+        }
+      };
       head.appendChild(del);
     }
+
     card.appendChild(head);
     const url = safeUrl(x.image_url);
     if (url) {
-      const i = el("img", "pic");
-      i.src = url;
-      i.alt = "Foto postingan";
-      i.loading = "lazy";
-      i.decoding = "async";
-      card.appendChild(i);
+      const img = el("img", "pic");
+      img.src = url;
+      img.alt = "Foto postingan dari " + displayName(p);
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.onerror = () => {
+        img.alt = "Foto postingan tidak dapat dimuat";
+        img.classList.add("post-image-unavailable");
+      };
+      card.appendChild(img);
     }
-    if (x.caption) card.appendChild(el("p", "", x.caption));
+    if (x.caption) card.appendChild(el("p", "post-caption", x.caption));
     box.appendChild(card);
   });
 }
