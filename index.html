@@ -19,7 +19,7 @@
   >
 
   <!-- CSS utama -->
-  <link rel="stylesheet" href="css/style.css?v=20261026-feed-pass-1">
+  <link rel="stylesheet" href="css/style.css?v=20261026-feed-composer-2">
 </head>
 
 <body>
@@ -474,9 +474,16 @@
     <!-- 4.5 BERANDA DAN POSTINGAN -->
     <section id="v-feed" class="view hidden">
       <div class="head feed-heading">
-        <h2>Beranda</h2>
+        <div class="feed-heading-copy">
+          <span class="feed-heading-eyebrow">RUANG BERBAGI</span>
+          <h2>Beranda</h2>
+          <p>Lihat kabar terbaru dan bagikan ceritamu.</p>
+        </div>
         <button type="button" id="openPostComposer" class="feed-composer-trigger" aria-label="Buat postingan" title="Buat postingan" aria-haspopup="dialog" aria-controls="postComposerDialog">
-          <span class="feed-composer-plus" aria-hidden="true">+</span>
+          <svg class="feed-composer-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 5v14M5 12h14"></path>
+          </svg>
+          <span>Buat postingan</span>
         </button>
       </div>
 
@@ -782,7 +789,7 @@
        8. SUPABASE DAN JAVASCRIPT
   ========================================== -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=20261026-feed-pass-1"></script>
+  <script src="app.js?v=20261026-feed-composer-2"></script>
 
 </body>
 </html>
