@@ -19,7 +19,7 @@
   >
 
   <!-- CSS utama -->
-  <link rel="stylesheet" href="css/style.css?v=20261026-room-back-1">
+  <link rel="stylesheet" href="css/style.css?v=20261026-feed-pass-1">
 </head>
 
 <body>
@@ -499,22 +499,28 @@
         </div>
 
         <form id="postForm" class="card post-composer-form">
+          <label class="post-caption-label" for="postCaption">Caption</label>
           <textarea
             id="postCaption"
-            rows="3"
+            rows="4"
             maxlength="500"
-            placeholder="Tulis caption"
+            placeholder="Apa yang ingin kamu bagikan?"
+            aria-describedby="postCaptionCount postFileNote"
           ></textarea>
+          <div class="post-composer-meta">
+            <small id="postFileNote">Foto opsional · Maksimal 5 MB</small>
+            <small id="postCaptionCount" aria-live="polite">0/500</small>
+          </div>
 
           <img
             id="postPreview"
             class="preview hidden"
-            alt="Pratinjau foto"
+            alt="Pratinjau foto yang akan diposting"
           >
 
-          <div class="row">
-            <label class="btn soft file">
-              Pilih foto
+          <div class="row post-composer-actions">
+            <label class="btn soft file post-pick-file">
+              <span aria-hidden="true">＋</span> Pilih foto
               <input
                 id="postFile"
                 type="file"
@@ -523,8 +529,8 @@
               >
             </label>
 
-            <button class="btn primary" type="submit">
-              Posting
+            <button class="btn primary post-submit-btn" type="submit">
+              Bagikan postingan
             </button>
           </div>
         </form>
@@ -776,7 +782,7 @@
        8. SUPABASE DAN JAVASCRIPT
   ========================================== -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=20261026-room-back-1"></script>
+  <script src="app.js?v=20261026-feed-pass-1"></script>
 
 </body>
 </html>
