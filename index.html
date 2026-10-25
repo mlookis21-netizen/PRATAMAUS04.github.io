@@ -19,7 +19,7 @@
   >
 
   <!-- CSS utama -->
-  <link rel="stylesheet" href="css/style.css?v=20261026-chat-contrast-1">
+  <link rel="stylesheet" href="css/style.css?v=20261026-chat-menu-1">
 </head>
 
 <body>
@@ -388,10 +388,18 @@
 
         <div id="roomAvatar"></div>
 
-        <div class="grow">
+        <div class="grow room-contact" id="roomContact">
           <strong id="roomName"></strong>
           <small id="roomUser"></small>
         </div>
+        <button class="room-more-btn" id="btnRoomMore" type="button" aria-label="Menu percakapan" aria-haspopup="menu" aria-expanded="false" title="Opsi percakapan">⋮</button>
+      </div>
+
+      <div id="roomSearchBar" class="room-search-bar hidden">
+        <span aria-hidden="true">⌕</span>
+        <input id="roomSearchInput" type="search" placeholder="Cari dalam percakapan..." autocomplete="off" aria-label="Cari dalam percakapan">
+        <span id="roomSearchCount" class="room-search-count"></span>
+        <button id="closeRoomSearch" type="button" aria-label="Tutup pencarian">×</button>
       </div>
 
       <button id="loadOlderMessages" class="btn soft sm load-older-messages" type="button" hidden>
@@ -764,7 +772,7 @@
        8. SUPABASE DAN JAVASCRIPT
   ========================================== -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=20261025-chat-load-fix-1"></script>
+  <script src="app.js?v=20261026-chat-menu-1"></script>
 
 </body>
 </html>
