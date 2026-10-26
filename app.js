@@ -1675,77 +1675,280 @@ $("postForm").onsubmit = (e) => {
   });
 };
 
+let activePostDetail = null;
+let activePostComments = [];
+let postDetailBusy = false;
+
+function postActionButton(label, icon, className, pressed = false) {
+  const b = el("button", "post-action " + (className || ""));
+  b.type = "button";
+  b.setAttribute("aria-pressed", String(pressed));
+  b.innerHTML = icon + "<span>" + label + "</span>";
+  return b;
+}
+function postIcon(name) {
+  const paths = {
+    like: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.4 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>',
+    comment: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7A8.4 8.4 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>',
+    share: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>'
+  };
+  return paths[name] || "";
+}
+function formatCount(n) {
+  const count = Number(n) || 0;
+  return count.toLocaleString("id-ID");
+}
+function createPostActions(post, likes, comments, liked) {
+  const row = el("div", "post-actions");
+  const like = postActionButton(liked ? "Disukai" : "Suka", postIcon("like"), "post-like-action" + (liked ? " is-liked" : ""), liked);
+  like.dataset.postLike = post.id;
+  like.onclick = async () => {
+    if (!me) return toast("Login untuk menyukai postingan.");
+    like.disabled = true;
+    try {
+      if (like.getAttribute("aria-pressed") === "true") {
+        const { error } = await sb.from("post_likes").delete().eq("post_id", post.id).eq("user_id", me.id);
+        if (error) throw error;
+      } else {
+        const { error } = await sb.from("post_likes").insert({ post_id: post.id, user_id: me.id });
+        if (error && !String(error.code || "").includes("23505")) throw error;
+      }
+      await loadFeed();
+      if (activePostDetail && activePostDetail.id === post.id) await openPostDetail(post.id, true);
+    } catch (err) {
+      toast("Like gagal disimpan: " + (err?.message || "coba lagi."));
+    } finally { like.disabled = false; }
+  };
+  const comment = postActionButton("Komentar", postIcon("comment"), "post-comment-action");
+  comment.onclick = () => openPostDetail(post.id);
+  const share = postActionButton("Bagikan", postIcon("share"), "post-share-action");
+  share.onclick = () => sharePost(post);
+  row.append(like, comment, share);
+  const summary = el("div", "post-engagement-summary");
+  const likeText = el("strong", "post-like-count", formatCount(likes) + " suka");
+  const commentText = el("button", "post-comment-count", comments ? "Lihat " + formatCount(comments) + " komentar" : "Jadilah yang pertama berkomentar");
+  commentText.type = "button";
+  commentText.onclick = () => openPostDetail(post.id);
+  summary.append(likeText, commentText);
+  return { row, summary };
+}
+async function sharePost(post) {
+  const url = window.location.href.split("#")[0] + "#post-" + post.id;
+  const shareData = { title: "Postingan MAVIKO", text: post.caption || "Lihat postingan ini di MAVIKO", url };
+  try {
+    if (navigator.share) await navigator.share(shareData);
+    else if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(shareData.text + "\n" + url);
+      toast("Teks dan tautan postingan disalin.");
+    } else toast("Fitur berbagi tidak tersedia di browser ini.");
+  } catch (err) {
+    if (err?.name !== "AbortError") toast("Postingan belum bisa dibagikan dari perangkat ini.");
+  }
+}
 async function loadFeed() {
   const box = $("feedList");
   if (!me) return empty(box, "Login untuk melihat beranda.");
-
   empty(box, "Memuat postingan...");
-  const { data, error } = await sb
-    .from("posts")
+  const { data, error } = await sb.from("posts")
     .select("id, user_id, caption, image_url, created_at")
-    .order("created_at", { ascending: false })
-    .limit(50);
-
+    .order("created_at", { ascending: false }).limit(50);
   if (error) return empty(box, "Gagal memuat postingan. Periksa koneksi lalu coba buka Beranda lagi.");
   if (!data || !data.length) return empty(box, "Belum ada postingan. Jadilah yang pertama berbagi.");
-
   const pm = await profilesFor(data.map((x) => x.user_id));
+  const ids = data.map((x) => x.id);
+  const [likesResult, commentsResult] = await Promise.all([
+    sb.from("post_likes").select("post_id,user_id").in("post_id", ids),
+    sb.from("post_comments").select("post_id").in("post_id", ids)
+  ]);
+  const likes = likesResult.error ? [] : (likesResult.data || []);
+  const comments = commentsResult.error ? [] : (commentsResult.data || []);
+  const likeCounts = new Map(), commentCounts = new Map(), likedByMe = new Set();
+  likes.forEach((like) => {
+    likeCounts.set(like.post_id, (likeCounts.get(like.post_id) || 0) + 1);
+    if (like.user_id === me.id) likedByMe.add(like.post_id);
+  });
+  comments.forEach((comment) => commentCounts.set(comment.post_id, (commentCounts.get(comment.post_id) || 0) + 1));
   box.replaceChildren();
-
   data.forEach((x) => {
     const p = pm.get(x.user_id) || {};
     const card = el("article", "post");
-    const head = el("header");
-    const who = el("div", "grow");
-    who.append(
-      el("strong", "", displayName(p)),
-      el("br"),
-      el("small", "time", fmt(x.created_at))
-    );
-
+    card.dataset.postId = x.id;
+    const head = el("header", "post-header");
+    const who = el("div", "grow post-author");
+    who.append(el("strong", "", displayName(p)), el("br"), el("small", "time", fmt(x.created_at)));
     const postAvatar = avatar(p);
     setProfileTarget(postAvatar, p, "Lihat profil " + displayName(p));
     setProfileTarget(who, p, "Lihat profil " + displayName(p));
     head.append(postAvatar, who);
-
     if (x.user_id === me.id) {
-      const del = el("button", "btn danger sm post-delete-btn", "Hapus");
-      del.type = "button";
-      del.setAttribute("aria-label", "Hapus postingan ini");
-      del.onclick = async () => {
+      const menu = el("button", "post-menu-btn", "⋯");
+      menu.type = "button";
+      menu.setAttribute("aria-label", "Opsi postingan");
+      menu.title = "Opsi postingan";
+      menu.onclick = async () => {
         if (!window.confirm("Hapus postingan ini? Tindakan ini tidak bisa dibatalkan.")) return;
-        del.disabled = true;
+        menu.disabled = true;
         try {
           const { error: deleteError } = await sb.from("posts").delete().eq("id", x.id).eq("user_id", me.id);
           if (deleteError) throw deleteError;
           toast("Postingan dihapus.");
           await loadFeed();
         } catch (err) {
-          del.disabled = false;
-          toast("Gagal menghapus postingan: " + (err && err.message ? err.message : "coba lagi."));
+          menu.disabled = false;
+          toast("Gagal menghapus postingan: " + (err?.message || "coba lagi."));
         }
       };
-      head.appendChild(del);
+      head.appendChild(menu);
     }
-
     card.appendChild(head);
     const url = safeUrl(x.image_url);
     if (url) {
-      const img = el("img", "pic");
+      const img = el("img", "pic post-open-target");
       img.src = url;
       img.alt = "Foto postingan dari " + displayName(p);
-      img.loading = "lazy";
-      img.decoding = "async";
-      img.onerror = () => {
-        img.alt = "Foto postingan tidak dapat dimuat";
-        img.classList.add("post-image-unavailable");
-      };
+      img.loading = "lazy"; img.decoding = "async";
+      img.tabIndex = 0; img.setAttribute("role", "button"); img.setAttribute("aria-label", "Buka postingan");
+      img.onerror = () => { img.alt = "Foto postingan tidak dapat dimuat"; img.classList.add("post-image-unavailable"); };
+      img.onclick = () => openPostDetail(x.id);
+      img.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPostDetail(x.id); } };
       card.appendChild(img);
     }
-    if (x.caption) card.appendChild(el("p", "post-caption", x.caption));
+    if (x.caption) {
+      const caption = el("p", "post-caption post-open-target", x.caption);
+      caption.tabIndex = 0;
+      caption.setAttribute("role", "button");
+      caption.setAttribute("aria-label", "Buka detail postingan");
+      caption.onclick = () => openPostDetail(x.id);
+      caption.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPostDetail(x.id); } };
+      card.appendChild(caption);
+    }
+    const engagement = createPostActions(x, likeCounts.get(x.id) || 0, commentCounts.get(x.id) || 0, likedByMe.has(x.id));
+    card.append(engagement.row, engagement.summary);
     box.appendChild(card);
   });
 }
+async function openPostDetail(postId, keepFocus = false) {
+  const dialog = $("postDetailDialog"), content = $("postDetailContent");
+  if (!dialog || !content) return;
+  if (!me) return toast("Login untuk melihat detail postingan.");
+  const post = activePostDetail?.id === postId ? activePostDetail : null;
+  const { data: fetched, error } = await sb.from("posts").select("id,user_id,caption,image_url,created_at").eq("id", postId).maybeSingle();
+  if (error || !fetched) return toast("Postingan tidak ditemukan atau tidak bisa dibuka.");
+  activePostDetail = fetched;
+  const profileMap = await profilesFor([fetched.user_id]);
+  const profile = profileMap.get(fetched.user_id) || {};
+  const [{ data: likeRows, error: likeError }, { data: commentRows, error: commentError }] = await Promise.all([
+    sb.from("post_likes").select("id,user_id").eq("post_id", postId),
+    sb.from("post_comments").select("id,user_id,content,created_at").eq("post_id", postId).order("created_at", { ascending: true })
+  ]);
+  if (likeError || commentError) {
+    toast("Interaksi postingan belum bisa dimuat. Coba muat ulang halaman.");
+    return;
+  }
+  activePostComments = commentRows || [];
+  const author = el("div", "post-detail-author");
+  const av = avatar(profile);
+  setProfileTarget(av, profile, "Lihat profil " + displayName(profile));
+  const authorMeta = el("div", "grow");
+  authorMeta.append(el("strong", "", displayName(profile)), el("small", "time", fmt(fetched.created_at)));
+  author.append(av, authorMeta);
+  if (fetched.user_id === me.id) {
+    const del = el("button", "post-detail-delete", "Hapus");
+    del.type = "button";
+    del.onclick = async () => {
+      if (!confirm("Hapus postingan ini?")) return;
+      const { error: delError } = await sb.from("posts").delete().eq("id", fetched.id).eq("user_id", me.id);
+      if (delError) return toast("Postingan gagal dihapus.");
+      dialog.close(); activePostDetail = null; await loadFeed(); toast("Postingan dihapus.");
+    };
+    author.appendChild(del);
+  }
+  content.replaceChildren(author);
+  const imageUrl = safeUrl(fetched.image_url);
+  if (imageUrl) {
+    const img = el("img", "post-detail-image");
+    img.src = imageUrl; img.alt = "Foto postingan dari " + displayName(profile); img.decoding = "async";
+    content.appendChild(img);
+  }
+  if (fetched.caption) content.appendChild(el("p", "post-detail-caption", fetched.caption));
+  const liked = (likeRows || []).some((r) => r.user_id === me.id);
+  const actions = el("div", "post-detail-actions");
+  const likeBtn = postActionButton(liked ? "Disukai" : "Suka", postIcon("like"), "post-like-action" + (liked ? " is-liked" : ""), liked);
+  likeBtn.onclick = async () => {
+    likeBtn.disabled = true;
+    try {
+      if (liked) {
+        const { error: e } = await sb.from("post_likes").delete().eq("post_id", fetched.id).eq("user_id", me.id);
+        if (e) throw e;
+      } else {
+        const { error: e } = await sb.from("post_likes").insert({ post_id: fetched.id, user_id: me.id });
+        if (e && !String(e.code || "").includes("23505")) throw e;
+      }
+      await openPostDetail(fetched.id, true); await loadFeed();
+    } catch (err) { toast("Like gagal disimpan: " + (err?.message || "coba lagi.")); }
+    finally { likeBtn.disabled = false; }
+  };
+  const commentBtn = postActionButton("Komentar", postIcon("comment"), "post-comment-action");
+  commentBtn.onclick = () => $("postCommentInput")?.focus();
+  const shareBtn = postActionButton("Bagikan", postIcon("share"), "post-share-action");
+  shareBtn.onclick = () => sharePost(fetched);
+  actions.append(likeBtn, commentBtn, shareBtn);
+  content.appendChild(actions);
+  const likeCount = el("strong", "post-detail-like-count", formatCount((likeRows || []).length) + " suka");
+  content.appendChild(likeCount);
+  $("postDetailCommentCount").textContent = formatCount(activePostComments.length) + " komentar";
+  const commentsBox = $("postDetailComments");
+  commentsBox.replaceChildren();
+  if (!activePostComments.length) commentsBox.appendChild(el("div", "post-comments-empty", "Belum ada komentar. Mulai percakapan yang baik."));
+  else {
+    const userMap = await profilesFor(activePostComments.map((c) => c.user_id));
+    activePostComments.forEach((c) => {
+      const row = el("article", "post-comment");
+      const cp = userMap.get(c.user_id) || {};
+      const ca = avatar(cp); setProfileTarget(ca, cp, "Lihat profil " + displayName(cp));
+      const body = el("div", "post-comment-body");
+      const bubble = el("div", "post-comment-bubble");
+      bubble.append(el("strong", "", displayName(cp)), el("p", "", c.content));
+      body.appendChild(bubble);
+      const meta = el("div", "post-comment-meta");
+      meta.append(el("time", "", fmt(c.created_at)));
+      if (c.user_id === me.id) {
+        const remove = el("button", "post-comment-delete", "Hapus");
+        remove.type = "button";
+        remove.onclick = async () => {
+          const { error: e } = await sb.from("post_comments").delete().eq("id", c.id).eq("user_id", me.id);
+          if (e) return toast("Komentar gagal dihapus.");
+          await openPostDetail(fetched.id, true); await loadFeed();
+        };
+        meta.appendChild(remove);
+      }
+      body.appendChild(meta); row.append(ca, body); commentsBox.appendChild(row);
+    });
+  }
+  if (!dialog.open) dialog.showModal();
+  if (keepFocus) $("postCommentInput")?.focus({ preventScroll: true });
+}
+$("closePostDetail")?.addEventListener("click", () => $("postDetailDialog")?.close());
+$("postDetailDialog")?.addEventListener("click", (e) => { if (e.target === $("postDetailDialog")) $("postDetailDialog").close(); });
+$("postCommentForm")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = $("postCommentInput");
+  const content = input.value.trim();
+  if (!me) return toast("Login untuk berkomentar.");
+  if (!activePostDetail || !content || postDetailBusy) return;
+  postDetailBusy = true;
+  $("postCommentSubmit").disabled = true;
+  try {
+    const { error } = await sb.from("post_comments").insert({ post_id: activePostDetail.id, user_id: me.id, content });
+    if (error) throw error;
+    input.value = "";
+    await openPostDetail(activePostDetail.id);
+    await loadFeed();
+    $("postCommentInput")?.focus({ preventScroll: true });
+  } catch (err) {
+    toast("Komentar gagal dikirim: " + (err?.message || "coba lagi."));
+  } finally { postDetailBusy = false; $("postCommentSubmit").disabled = false; }
+});
 
 /* ===== Cari pengguna (sebagian username juga cocok) ===== */
 $("searchForm").onsubmit = async (e) => {
