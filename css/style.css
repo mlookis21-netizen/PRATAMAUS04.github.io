@@ -6740,3 +6740,143 @@ nav#tabs button:focus-visible {
     -webkit-overflow-scrolling: touch;
   }
 }
+
+
+/* MAVIKO — penyempurnaan ukuran Cerita dan tombol buat postingan */
+#v-feed .home-stories {
+  padding: 13px 12px 9px;
+  border-radius: 16px;
+}
+#v-feed .home-stories > .head {
+  margin-bottom: 8px;
+}
+#v-feed #statusList {
+  gap: 13px;
+  padding: 2px 1px 6px;
+}
+#v-feed #statusList > .story-account {
+  flex-basis: 72px;
+  width: 72px;
+  min-width: 72px;
+  gap: 6px;
+}
+#v-feed #statusList .story-account-avatar {
+  flex-basis: 62px;
+  width: 62px;
+  height: 62px;
+  font-size: 22px;
+}
+#v-feed #statusList .story-account-name {
+  font-size: 10.5px;
+  line-height: 1.35;
+}
+#v-feed .feed-heading {
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 17px;
+}
+#v-feed .feed-heading-copy {
+  gap: 4px;
+}
+#v-feed .feed-heading-copy p {
+  max-width: 390px;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+#v-feed .feed-heading .feed-composer-trigger {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  min-width: 0;
+  height: 44px;
+  min-height: 44px;
+  margin: 0 0 0 auto;
+  padding: 0 15px;
+  border: 1px solid color-mix(in srgb, var(--brand) 78%, transparent);
+  border-radius: 13px;
+  background: var(--brand);
+  color: var(--brand-ink);
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--brand) 20%, transparent);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+#v-feed .feed-heading .feed-composer-trigger .feed-composer-icon {
+  display: block;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  overflow: visible;
+  transform: none;
+}
+#v-feed .feed-heading .feed-composer-trigger span {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+}
+#v-feed .feed-heading .feed-composer-trigger:hover {
+  border-color: color-mix(in srgb, var(--brand) 88%, transparent);
+  background: var(--brand);
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+#v-feed .feed-heading .feed-composer-trigger:active {
+  transform: translateY(0) scale(.98);
+}
+@media (max-width: 520px) {
+  #v-feed .home-stories {
+    padding: 12px 10px 8px;
+  }
+  #v-feed #statusList {
+    gap: 11px;
+  }
+  #v-feed #statusList > .story-account {
+    flex-basis: 68px;
+    width: 68px;
+    min-width: 68px;
+  }
+  #v-feed #statusList .story-account-avatar {
+    flex-basis: 58px;
+    width: 58px;
+    height: 58px;
+  }
+  #v-feed .feed-heading {
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 14px;
+  }
+  #v-feed .feed-heading-copy p {
+    max-width: 210px;
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+  #v-feed .feed-heading .feed-composer-trigger {
+    height: 40px;
+    min-height: 40px;
+    gap: 6px;
+    padding: 0 10px;
+    border-radius: 11px;
+    font-size: 11px;
+  }
+  #v-feed .feed-heading .feed-composer-trigger .feed-composer-icon {
+    flex-basis: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+@media (max-width: 360px) {
+  #v-feed .feed-heading-copy p {
+    display: none;
+  }
+  #v-feed .feed-heading .feed-composer-trigger {
+    height: 38px;
+    min-height: 38px;
+    padding: 0 9px;
+  }
+}
