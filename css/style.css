@@ -6880,3 +6880,122 @@ nav#tabs button:focus-visible {
     padding: 0 9px;
   }
 }
+
+
+/* MAVIKO — audit ruang: compact balanced
+   Mengurangi celah yang berulang tanpa mengorbankan keterbacaan,
+   target sentuh, atau perilaku scroll tiap halaman. */
+:root {
+  --sidebar-width: 238px;
+}
+
+main {
+  padding-top: 16px;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+}
+
+.view {
+  gap: 13px;
+}
+
+.view > .head:first-child {
+  margin-bottom: 0;
+}
+
+.list {
+  gap: 9px;
+}
+
+.card {
+  padding: 15px;
+  gap: 10px;
+}
+
+.item {
+  gap: 10px;
+  padding: 10px 11px;
+}
+
+.settings-section {
+  padding: 15px;
+}
+
+.settings-heading {
+  margin-bottom: 12px;
+}
+
+.settings-link {
+  padding: 10px 0;
+}
+
+.settings-link-icon {
+  width: 39px;
+  height: 39px;
+}
+
+.empty {
+  padding: 24px 12px;
+}
+
+@media (min-width: 900px) {
+  .sidebar {
+    padding: 20px 14px 18px;
+  }
+
+  .sidebar-brand {
+    min-height: 44px;
+    margin-bottom: 22px;
+  }
+
+  .sidebar-nav {
+    gap: 5px;
+  }
+
+  .sidebar-nav button,
+  .sidebar-bottom > button {
+    min-height: 44px;
+    gap: 12px;
+    padding: 10px 12px;
+  }
+
+  .sidebar-bottom {
+    padding-top: 14px;
+  }
+
+  main {
+    padding: 26px 22px 38px;
+  }
+
+  .room {
+    height: calc(100dvh - 54px);
+  }
+}
+
+@media (max-width: 899px) {
+  main {
+    padding-top: 14px;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .view {
+    gap: 12px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .settings-section {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 380px) {
+  main {
+    padding-top: 12px;
+  }
+
+  .view {
+    gap: 11px;
+  }
+}
