@@ -7542,7 +7542,7 @@ main {
   }
 
   #v-room.room {
-    height: calc(100dvh - 194px);
+    height: calc(100dvh - 206px);
     min-height: 240px;
   }
 
@@ -7573,7 +7573,7 @@ main {
 
 @media (max-width: 380px) {
   #v-room.room {
-    height: calc(100dvh - 190px);
+    height: calc(100dvh - 206px);
   }
 
   #v-room .room-head {
