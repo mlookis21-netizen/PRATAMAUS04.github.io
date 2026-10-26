@@ -7159,3 +7159,160 @@ main {
   .settings-preference-icon { width: 36px; height: 36px; flex-basis: 36px; }
   .settings-feature-list > div { gap: 8px; }
 }
+
+
+/* MAVIKO — soft surfaces: feed dan chat lebih menyatu, tanpa garis kotak tajam */
+:root {
+  --surface-shadow: 0 8px 28px rgba(24, 39, 75, .055);
+  --surface-shadow-hover: 0 13px 34px rgba(24, 39, 75, .085);
+}
+#v-feed #feedList > .post {
+  border: 1px solid transparent;
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: var(--surface-shadow);
+  overflow: clip;
+  transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease;
+}
+#v-feed #feedList > .post:hover {
+  border-color: transparent;
+  box-shadow: var(--surface-shadow-hover);
+  transform: translateY(-1px);
+}
+#v-feed #feedList > .post > header { gap: 12px; padding: 15px 17px 12px; }
+#v-feed #feedList > .post > header .avatar {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 9%, var(--surface));
+}
+#v-feed #feedList > .post > .pic {
+  background: color-mix(in srgb, var(--bg) 75%, var(--surface));
+}
+#v-feed #feedList > .post > .post-caption,
+#v-feed #feedList > .post > p {
+  padding: 13px 17px 17px;
+  line-height: 1.75;
+}
+#v-feed #feedList > .post .danger { border-radius: 999px; }
+#v-feed .home-stories {
+  border: 1px solid transparent;
+  background: var(--surface);
+  box-shadow: 0 5px 20px rgba(24, 39, 75, .035);
+}
+#v-feed .feed-heading { border-bottom-color: transparent; }
+
+#v-chats .card,
+#v-room .card {
+  border: 1px solid transparent;
+  border-radius: 23px;
+  background: var(--surface);
+  box-shadow: var(--surface-shadow);
+}
+#v-chats #inboxList { gap: 3px; }
+#v-chats #inboxList .item {
+  border: 1px solid transparent;
+  border-radius: 17px;
+  padding: 12px 13px;
+  transition: background-color .18s ease;
+}
+#v-chats #inboxList .item:hover {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--brand) 5%, var(--surface));
+}
+#v-chats #inboxList .item:active {
+  background: color-mix(in srgb, var(--brand) 9%, var(--surface));
+}
+#v-chats #inboxList .item .avatar {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 7%, var(--surface));
+}
+
+/* Area pesan bersih dan tenang, hilangkan pola titik */
+#v-room #roomMsgs {
+  border: 0;
+  border-radius: 20px;
+  padding: 16px 12px;
+  background: color-mix(in srgb, var(--bg) 68%, var(--surface));
+  background-image: none;
+}
+#v-room #roomMsgs .bubble {
+  max-width: min(82%, 500px);
+  padding: 11px 15px 8px;
+  border: 1px solid transparent;
+  border-radius: 19px 19px 19px 7px;
+  background: var(--surface);
+  box-shadow: 0 3px 12px rgba(24, 39, 75, .055);
+  line-height: 1.6;
+}
+#v-room #roomMsgs .bubble.mine {
+  border-color: transparent;
+  border-radius: 19px 19px 7px 19px;
+  background: var(--mine, var(--brand));
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--brand) 17%, transparent);
+  color: #fff;
+}
+#v-room #roomMsgs .bubble .bubble-reply-quote {
+  border-color: color-mix(in srgb, currentColor 12%, transparent);
+  border-radius: 11px;
+}
+#v-room #roomMsgs .bubble.mine .bubble-reply-quote { background: rgba(255,255,255,.12); }
+
+/* Kolom mengetik jadi satu bidang rounded */
+#v-room #roomForm {
+  align-items: center;
+  gap: 9px;
+  margin-top: 10px;
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+  border-radius: 23px;
+  background: var(--surface);
+  box-shadow: 0 5px 20px rgba(24, 39, 75, .055);
+}
+#v-room #roomForm #roomInput {
+  flex: 1;
+  min-width: 0;
+  min-height: 42px;
+  max-height: 140px;
+  padding: 10px 13px;
+  border: 1px solid transparent;
+  border-radius: 17px;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  resize: none;
+}
+#v-room #roomForm #roomInput:focus { border-color: transparent; box-shadow: none; }
+#v-room #roomForm #roomInput::placeholder { color: var(--muted); opacity: .82; }
+#v-room #roomForm #btnSend {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border-radius: 17px;
+  box-shadow: none;
+}
+#v-room .room-head { border-color: transparent; }
+:root[data-theme="dark"] #v-room #roomMsgs {
+  background: color-mix(in srgb, var(--bg) 76%, var(--surface));
+}
+:root[data-theme="dark"] #v-room #roomMsgs .bubble:not(.mine) {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--surface) 88%, #fff 2%);
+}
+:root[data-theme="dark"] #v-chats .card,
+:root[data-theme="dark"] #v-room .card,
+:root[data-theme="dark"] #v-feed #feedList > .post {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .13);
+}
+@media (max-width: 520px) {
+  #v-feed #feedList > .post { border-radius: 19px; }
+  #v-feed #feedList > .post > header { padding: 12px 13px 10px; }
+  #v-feed #feedList > .post > .post-caption,
+  #v-feed #feedList > .post > p { padding: 11px 14px 15px; }
+  #v-chats .card, #v-room .card { border-radius: 19px; }
+  #v-room #roomMsgs { padding: 12px 5px; border-radius: 17px; }
+  #v-room #roomMsgs .bubble { border-radius: 17px 17px 17px 6px; }
+  #v-room #roomMsgs .bubble.mine { border-radius: 17px 17px 6px 17px; }
+  #v-room #roomForm { border-radius: 20px; padding: 5px; }
+  #v-room #roomForm #roomInput { padding-inline: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #v-feed #feedList > .post, #v-chats #inboxList .item { transition: none !important; }
+}
