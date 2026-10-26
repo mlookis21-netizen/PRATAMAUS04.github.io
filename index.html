@@ -19,7 +19,7 @@
   >
 
   <!-- CSS utama -->
-  <link rel="stylesheet" href="css/style.css?v=20261026-balanced-compact-1">
+  <link rel="stylesheet" href="css/style.css?v=20261026-settings-expanded-1">
 </head>
 
 <body>
@@ -701,6 +701,78 @@
           </span>
           <span class="settings-arrow" aria-hidden="true">›</span>
         </button>
+      </section>
+
+
+      <section class="settings-section" aria-labelledby="settingsPrefsTitle">
+        <div class="settings-heading">
+          <h3 id="settingsPrefsTitle">Preferensi aplikasi</h3>
+          <p class="note">Sesuaikan tampilan MAVIKO dengan kenyamananmu. Pilihan disimpan di perangkat ini.</p>
+        </div>
+
+        <div class="settings-preference-row">
+          <span class="settings-preference-icon" aria-hidden="true">
+            <svg class="ui-icon"><use href="#i-monitor"></use></svg>
+          </span>
+          <span class="settings-link-text">
+            <strong>Tampilan lebih ringkas</strong>
+            <small>Kurangi jarak antarkomponen agar lebih banyak konten terlihat.</small>
+          </span>
+          <button type="button" class="settings-switch" id="settingCompact" role="switch" aria-checked="false" aria-label="Tampilan lebih ringkas">
+            <span></span>
+          </button>
+        </div>
+
+        <div class="settings-preference-row">
+          <span class="settings-preference-icon" aria-hidden="true">
+            <svg class="ui-icon"><use href="#i-sun"></use></svg>
+          </span>
+          <span class="settings-link-text">
+            <strong>Kurangi animasi</strong>
+            <small>Kurangi gerakan transisi pada antarmuka.</small>
+          </span>
+          <button type="button" class="settings-switch" id="settingReduceMotion" role="switch" aria-checked="false" aria-label="Kurangi animasi">
+            <span></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="settings-section" aria-labelledby="settingsSafetyTitle">
+        <div class="settings-heading">
+          <h3 id="settingsSafetyTitle">Privasi & keamanan</h3>
+          <p class="note">Beberapa pengingat sederhana untuk menjaga akunmu.</p>
+        </div>
+        <div class="settings-info-row">
+          <span class="settings-info-mark" aria-hidden="true">✓</span>
+          <div><strong>Jaga keamanan akun</strong><p>Gunakan kata sandi yang kuat dan jangan bagikan kata sandi atau kode verifikasi kepada siapa pun.</p></div>
+        </div>
+        <div class="settings-info-row">
+          <span class="settings-info-mark" aria-hidden="true">◎</span>
+          <div><strong>Periksa sebelum membagikan</strong><p>Hindari mengunggah alamat rumah, data keuangan, atau informasi pribadi yang sensitif ke postingan dan status.</p></div>
+        </div>
+        <div class="settings-info-row">
+          <span class="settings-info-mark" aria-hidden="true">↗</span>
+          <div><strong>Informasi profil</strong><p>Informasi yang kamu isi di profil dapat ditampilkan kepada pengguna lain sesuai fitur yang tersedia.</p></div>
+        </div>
+      </section>
+
+      <section class="settings-section" aria-labelledby="settingsAboutTitle">
+        <div class="settings-heading">
+          <h3 id="settingsAboutTitle">Tentang MAVIKO</h3>
+          <p class="note">Info aplikasi dan fitur utama.</p>
+        </div>
+        <div class="settings-about-brand">
+          <span class="settings-about-logo" aria-hidden="true">M</span>
+          <div><strong>MAVIKO</strong><small>Connect · Share · Grow</small></div>
+          <span class="settings-version">Versi 1.0.0</span>
+        </div>
+        <div class="settings-feature-list">
+          <div><span>Beranda</span><small>Berbagi postingan dan melihat cerita.</small></div>
+          <div><span>Pesan</span><small>Berkomunikasi dan membalas pesan.</small></div>
+          <div><span>Status</span><small>Membagikan pembaruan sementara.</small></div>
+          <div><span>Profil</span><small>Mengelola informasi akun dan identitas.</small></div>
+        </div>
+        <p class="note settings-version-note">Versi Android yang tersedia saat ini adalah build pengujian (debug), bukan rilis final Play Store.</p>
       </section>
 
       <!-- UNDUH APK MAVIKO -->
