@@ -1698,24 +1698,53 @@ function formatCount(n) {
   const count = Number(n) || 0;
   return count.toLocaleString("id-ID");
 }
+async function syncPostLikeUI(postId) {
+  const { data, error } = await sb.from("post_likes").select("user_id").eq("post_id", postId);
+  if (error) throw error;
+  const rows = data || [];
+  const liked = rows.some((item) => item.user_id === me?.id);
+  document.querySelectorAll("[data-post-like]").forEach((button) => {
+    if (button.dataset.postLike !== String(postId)) return;
+    button.setAttribute("aria-pressed", String(liked));
+    button.classList.toggle("is-liked", liked);
+    const label = button.querySelector("span");
+    if (label) label.textContent = liked ? "Disukai" : "Suka";
+  });
+  const card = [...document.querySelectorAll("#feedList [data-post-id]")].find((item) => item.dataset.postId === String(postId));
+  const countText = formatCount(rows.length) + " suka";
+  card?.querySelectorAll(".post-like-count").forEach((node) => { node.textContent = countText; });
+  $("postDetailContent")?.querySelectorAll(".post-detail-like-count").forEach((node) => { node.textContent = countText; });
+  return { liked, count: rows.length };
+}
+async function togglePostLike(postId, wasLiked) {
+  if (!me) throw new Error("Login untuk menyukai postingan.");
+  if (wasLiked) {
+    const { error } = await sb.from("post_likes").delete().eq("post_id", postId).eq("user_id", me.id);
+    if (error) throw error;
+  } else {
+    const { error } = await sb.from("post_likes").insert({ post_id: postId, user_id: me.id });
+    if (error && error.code !== "23505") throw error;
+  }
+  return syncPostLikeUI(postId);
+}
 function createPostActions(post, likes, comments, liked) {
   const row = el("div", "post-actions");
   const like = postActionButton(liked ? "Disukai" : "Suka", postIcon("like"), "post-like-action" + (liked ? " is-liked" : ""), liked);
   like.dataset.postLike = post.id;
   like.onclick = async () => {
     if (!me) return toast("Login untuk menyukai postingan.");
+    if (like.disabled) return;
+    const wasLiked = like.getAttribute("aria-pressed") === "true";
     like.disabled = true;
+    // Respons visual langsung; daftar feed tidak dibangun ulang.
+    like.setAttribute("aria-pressed", String(!wasLiked));
+    like.classList.toggle("is-liked", !wasLiked);
+    const label = like.querySelector("span");
+    if (label) label.textContent = wasLiked ? "Suka" : "Disukai";
     try {
-      if (like.getAttribute("aria-pressed") === "true") {
-        const { error } = await sb.from("post_likes").delete().eq("post_id", post.id).eq("user_id", me.id);
-        if (error) throw error;
-      } else {
-        const { error } = await sb.from("post_likes").insert({ post_id: post.id, user_id: me.id });
-        if (error && !String(error.code || "").includes("23505")) throw error;
-      }
-      await loadFeed();
-      if (activePostDetail && activePostDetail.id === post.id) await openPostDetail(post.id, true);
+      await togglePostLike(post.id, wasLiked);
     } catch (err) {
+      try { await syncPostLikeUI(post.id); } catch (_) {}
       toast("Like gagal disimpan: " + (err?.message || "coba lagi."));
     } finally { like.disabled = false; }
   };
@@ -1731,6 +1760,17 @@ function createPostActions(post, likes, comments, liked) {
   commentText.onclick = () => openPostDetail(post.id);
   summary.append(likeText, commentText);
   return { row, summary };
+}
+async function refreshPostCommentCount(postId) {
+  const { data, error } = await sb.from("post_comments").select("id").eq("post_id", postId);
+  if (error) {
+    console.error("Gagal memperbarui jumlah komentar:", error);
+    return;
+  }
+  const count = (data || []).length;
+  const card = [...document.querySelectorAll("#feedList [data-post-id]")].find((item) => item.dataset.postId === String(postId));
+  const label = count ? "Lihat " + formatCount(count) + " komentar" : "Jadilah yang pertama berkomentar";
+  card?.querySelectorAll(".post-comment-count").forEach((node) => { node.textContent = label; });
 }
 async function sharePost(post) {
   const url = window.location.href.split("#")[0] + "#post-" + post.id;
@@ -1831,7 +1871,6 @@ async function openPostDetail(postId, keepFocus = false) {
   const dialog = $("postDetailDialog"), content = $("postDetailContent");
   if (!dialog || !content) return;
   if (!me) return toast("Login untuk melihat detail postingan.");
-  const post = activePostDetail?.id === postId ? activePostDetail : null;
   const { data: fetched, error } = await sb.from("posts").select("id,user_id,caption,image_url,created_at").eq("id", postId).maybeSingle();
   if (error || !fetched) return toast("Postingan tidak ditemukan atau tidak bisa dibuka.");
   activePostDetail = fetched;
@@ -1842,7 +1881,9 @@ async function openPostDetail(postId, keepFocus = false) {
     sb.from("post_comments").select("id,user_id,content,created_at").eq("post_id", postId).order("created_at", { ascending: true })
   ]);
   if (likeError || commentError) {
-    toast("Interaksi postingan belum bisa dimuat. Coba muat ulang halaman.");
+    const detail = likeError ? "Like: " + likeError.message : "Komentar: " + commentError.message;
+    console.error("Gagal memuat interaksi postingan:", { likeError, commentError, postId });
+    toast("Interaksi postingan gagal dimuat. " + detail);
     return;
   }
   activePostComments = commentRows || [];
@@ -1874,19 +1915,23 @@ async function openPostDetail(postId, keepFocus = false) {
   const liked = (likeRows || []).some((r) => r.user_id === me.id);
   const actions = el("div", "post-detail-actions");
   const likeBtn = postActionButton(liked ? "Disukai" : "Suka", postIcon("like"), "post-like-action" + (liked ? " is-liked" : ""), liked);
+  likeBtn.dataset.postLike = fetched.id;
   likeBtn.onclick = async () => {
+    if (likeBtn.disabled) return;
+    const wasLiked = likeBtn.getAttribute("aria-pressed") === "true";
     likeBtn.disabled = true;
+    likeBtn.setAttribute("aria-pressed", String(!wasLiked));
+    likeBtn.classList.toggle("is-liked", !wasLiked);
+    const label = likeBtn.querySelector("span");
+    if (label) label.textContent = wasLiked ? "Suka" : "Disukai";
     try {
-      if (liked) {
-        const { error: e } = await sb.from("post_likes").delete().eq("post_id", fetched.id).eq("user_id", me.id);
-        if (e) throw e;
-      } else {
-        const { error: e } = await sb.from("post_likes").insert({ post_id: fetched.id, user_id: me.id });
-        if (e && !String(e.code || "").includes("23505")) throw e;
-      }
-      await openPostDetail(fetched.id, true); await loadFeed();
-    } catch (err) { toast("Like gagal disimpan: " + (err?.message || "coba lagi.")); }
-    finally { likeBtn.disabled = false; }
+      await togglePostLike(fetched.id, wasLiked);
+      const count = $("postDetailContent")?.querySelector(".post-detail-like-count");
+      if (count) count.textContent = formatCount((await sb.from("post_likes").select("id").eq("post_id", fetched.id)).data?.length || 0) + " suka";
+    } catch (err) {
+      try { await syncPostLikeUI(fetched.id); } catch (_) {}
+      toast("Like gagal disimpan: " + (err?.message || "coba lagi."));
+    } finally { likeBtn.disabled = false; }
   };
   const commentBtn = postActionButton("Komentar", postIcon("comment"), "post-comment-action");
   commentBtn.onclick = () => $("postCommentInput")?.focus();
@@ -1918,7 +1963,7 @@ async function openPostDetail(postId, keepFocus = false) {
         remove.onclick = async () => {
           const { error: e } = await sb.from("post_comments").delete().eq("id", c.id).eq("user_id", me.id);
           if (e) return toast("Komentar gagal dihapus.");
-          await openPostDetail(fetched.id, true); await loadFeed();
+          await openPostDetail(fetched.id, true); await refreshPostCommentCount(fetched.id);
         };
         meta.appendChild(remove);
       }
@@ -1942,8 +1987,8 @@ $("postCommentForm")?.addEventListener("submit", async (e) => {
     const { error } = await sb.from("post_comments").insert({ post_id: activePostDetail.id, user_id: me.id, content });
     if (error) throw error;
     input.value = "";
-    await openPostDetail(activePostDetail.id);
-    await loadFeed();
+    await openPostDetail(activePostDetail.id, true);
+    await refreshPostCommentCount(activePostDetail.id);
     $("postCommentInput")?.focus({ preventScroll: true });
   } catch (err) {
     toast("Komentar gagal dikirim: " + (err?.message || "coba lagi."));
