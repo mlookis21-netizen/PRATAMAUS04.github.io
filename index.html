@@ -19,7 +19,7 @@
   >
 
   <!-- CSS utama -->
-  <link rel="stylesheet" href="css/style.css?v=20261026-feed-chat-mobile-2">
+  <link rel="stylesheet" href="css/style.css?v=20261026-post-detail-1">
 </head>
 
 <body>
@@ -543,6 +543,23 @@
         </form>
       </dialog>
 
+      <dialog id="postDetailDialog" class="post-detail-dialog" aria-labelledby="postDetailTitle">
+        <div class="post-detail-shell">
+          <div class="post-detail-topbar">
+            <h3 id="postDetailTitle">Postingan</h3>
+            <button type="button" id="closePostDetail" class="post-detail-close" aria-label="Tutup postingan">×</button>
+          </div>
+          <div id="postDetailContent" class="post-detail-content"></div>
+          <section class="post-detail-comments" aria-label="Komentar postingan">
+            <div class="post-detail-comments-heading"><strong>Komentar</strong><span id="postDetailCommentCount">0 komentar</span></div>
+            <div id="postDetailComments" class="post-detail-comments-list"></div>
+            <form id="postCommentForm" class="post-comment-form">
+              <input id="postCommentInput" type="text" maxlength="1000" placeholder="Tulis komentar..." autocomplete="off" aria-label="Tulis komentar">
+              <button id="postCommentSubmit" type="submit" aria-label="Kirim komentar">Kirim</button>
+            </form>
+          </section>
+        </div>
+      </dialog>
       <div id="feedList" class="list"></div>
     </section>
 
