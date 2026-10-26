@@ -1873,3 +1873,50 @@ $("profileForm").onsubmit = (e) => {
     } catch (err) { toast("Gagal menyimpan: " + err.message); }
   });
 };
+
+
+/* Preferensi aplikasi: disimpan secara lokal pada perangkat ini. */
+const APP_PREFS_KEY = "maviko-app-preferences-v1";
+const defaultAppPrefs = { compact: false, reduceMotion: false };
+let appPrefs = { ...defaultAppPrefs };
+try {
+  const storedPrefs = JSON.parse(localStorage.getItem(APP_PREFS_KEY) || "{}");
+  appPrefs = {
+    compact: storedPrefs.compact === true,
+    reduceMotion: storedPrefs.reduceMotion === true
+  };
+} catch (err) {
+  console.warn("Preferensi aplikasi tidak dapat dibaca.", err);
+}
+function applyAppPrefs(save = false) {
+  document.documentElement.dataset.density = appPrefs.compact ? "compact" : "comfortable";
+  document.documentElement.dataset.reduceMotion = String(appPrefs.reduceMotion);
+  const compactToggle = $("settingCompact");
+  const motionToggle = $("settingReduceMotion");
+  if (compactToggle) {
+    compactToggle.setAttribute("aria-checked", String(appPrefs.compact));
+    compactToggle.title = appPrefs.compact ? "Matikan tampilan ringkas" : "Aktifkan tampilan ringkas";
+  }
+  if (motionToggle) {
+    motionToggle.setAttribute("aria-checked", String(appPrefs.reduceMotion));
+    motionToggle.title = appPrefs.reduceMotion ? "Aktifkan kembali animasi" : "Kurangi animasi";
+  }
+  if (save) {
+    try {
+      localStorage.setItem(APP_PREFS_KEY, JSON.stringify(appPrefs));
+    } catch (err) {
+      console.warn("Preferensi aplikasi tidak dapat disimpan.", err);
+    }
+  }
+}
+$("settingCompact")?.addEventListener("click", () => {
+  appPrefs.compact = !appPrefs.compact;
+  applyAppPrefs(true);
+  toast(appPrefs.compact ? "Tampilan ringkas diaktifkan." : "Tampilan normal diaktifkan.");
+});
+$("settingReduceMotion")?.addEventListener("click", () => {
+  appPrefs.reduceMotion = !appPrefs.reduceMotion;
+  applyAppPrefs(true);
+  toast(appPrefs.reduceMotion ? "Animasi dikurangi." : "Animasi normal diaktifkan.");
+});
+applyAppPrefs(false);
